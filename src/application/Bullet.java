@@ -5,13 +5,16 @@ import java.awt.*;
 
 public class Bullet {
     private int x, y;
+    private int dame;
+    private boolean isActive = true;
     private double speedY;
     private double acceleration;
     private Image image;
 
-    public Bullet(int x, int y, double initialSpeedY, double acceleration) {
+    public Bullet(int x, int y, int dame, double initialSpeedY, double acceleration) {
         this.x = x;
         this.y = y;
+        this.dame = dame;
         this.speedY = initialSpeedY;
         this.acceleration = acceleration;
 
@@ -29,11 +32,11 @@ public class Bullet {
 
     public void update() {
         speedY += acceleration;
-        y -= (int) speedY;
+        y -= (int)speedY;
     }
 
     public void render(Graphics g) {
-        if (image != null) {
+        if(image != null) {
             g.drawImage(image, x, y, null);
         }
     }
@@ -41,9 +44,15 @@ public class Bullet {
     public boolean isOffScreen(int screenHeight) {
         return y < -30;
     }
+    
+    public void deactivate() {isActive = false;} 
 
     public int getX() {
         return x;
+    }
+    
+    public int getDamage() {
+    	return dame;
     }
 
     public int getY() {
