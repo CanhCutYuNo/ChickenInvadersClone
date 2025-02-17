@@ -1,4 +1,4 @@
-package application;
+package application.Models;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,8 +34,12 @@ public class Player {
         return hp;
     }
 
-    public void setHp(int hp) {
-        this.hp = hp;
+    public void setHp() {
+        this.hp = 1;
+    }
+    
+    public boolean death() {
+    	return hp <= 0;
     }
 
     public int getDamage() {

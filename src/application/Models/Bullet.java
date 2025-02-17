@@ -1,4 +1,4 @@
-package application;
+package application.Models;
 
 import javax.swing.*;
 import java.awt.*;
