@@ -19,7 +19,7 @@ public class Main {
     	    CardLayout cardLayout = new CardLayout();
     	    JPanel mainPanel = new JPanel(cardLayout);
 
-    	    Manager gameManager = new Manager();
+    	    Manager gameManager = new Manager(cardLayout, mainPanel);
     	    GamePanel gamePanel = new GamePanel(gameManager);
 
     	    MenuPanel menuPanel = new MenuPanel(() -> {
@@ -32,6 +32,10 @@ public class Main {
     	    frame.add(mainPanel);
     	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	    frame.setVisible(true);
+    	    
+    	    frame.addKeyListener(new Controller(frame, cardLayout, mainPanel));
+            frame.setFocusable(true);
+            frame.requestFocus();
     	    
     	    GameLoop gameLoop = new GameLoop(100, gameManager::update, gamePanel::repaint);
         	gameLoop.start();

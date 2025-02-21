@@ -4,19 +4,26 @@ import application.Models.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.awt.*;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 public class Manager {
     private Player player;
     private ArrayList<Bullet> bullets;
     private ArrayList<Enemy> enemies;
+    private CardLayout cardLayout;
+	private JPanel mainPanel;
 
-    public Manager() {
+    public Manager(CardLayout _cardLayout, JPanel _mainPanel) {
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
-        player = new Player(100, 10, 1.0, 400, 300);
+        player = new Player(100, 10, 1.0, 950, 540);
+        this.cardLayout = _cardLayout;
+		this.mainPanel = _mainPanel;
     }
 
     public void update() {
+    	
         // Cập nhật đạn
     	 updateBullets();
         bullets.removeIf(bullet ->  bullet.isOffScreen(1080));
@@ -24,12 +31,7 @@ public class Manager {
         // Cập nhật va chạm
         checkCollisions();
         checkBulletEnemyCollisions();
-    }
-    
-    private void updateGame() {
-       
-        //updateenemies();
-        
+        checkPlayerCollisions();
     }
     
     private void updateBullets() {
@@ -65,10 +67,28 @@ public class Manager {
         }
     }
     
+    private void checkPlayerCollisions() {
+    	Iterator<Enemy> enemyIterator = enemies.iterator();
+    	 while(enemyIterator.hasNext()) {
+             Enemy enemy = enemyIterator.next();
+
+             if(isColliding2(player, enemy)) {
+                	 JOptionPane.showMessageDialog(null, "Game Over! You lost.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+                	 enemies.clear();
+                	 player.setPosX(800);
+                	 player.setPosY(950);
+                	 bullets.clear();
+                	 spawnEnemies();
+                	 cardLayout.show(mainPanel, "Menu");
+                     break;
+                 }
+             }
+    }
+    
     public void spawnEnemies() {
         enemies = new ArrayList<>();
         for(int i = 0; i < 5; i++) {
-            enemies.add(new Enemy(100, 1920, 1080));
+            enemies.add(new Enemy(1000, 1920, 1080));
         }
     }
 
@@ -101,8 +121,14 @@ public class Manager {
     }
 
     private boolean isColliding(Bullet bullet, Enemy enemy) {
-        Rectangle bulletBounds = new Rectangle(bullet.getX(), bullet.getY(), 9, 57);
-        Rectangle enemyBounds = new Rectangle(enemy.getPosX(), enemy.getPosY(), 64, 64);
+        Rectangle bulletBounds = new Rectangle(bullet.getX(), bullet.getY(), 9, 52);
+        Rectangle enemyBounds = new Rectangle(enemy.getPosX(), enemy.getPosY(), 54, 50);
         return bulletBounds.intersects(enemyBounds);
+    }
+    
+    private boolean isColliding2(Player player, Enemy enemy) {
+        Rectangle playerBounds = new Rectangle(player.getPosX(), player.getPosY(), 54, 50);
+        Rectangle enemyBounds = new Rectangle(enemy.getPosX(), enemy.getPosY(), 54, 50);
+        return playerBounds.intersects(enemyBounds);
     }
 }

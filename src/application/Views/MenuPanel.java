@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class MenuPanel extends BasePanel {
-	
     public MenuPanel(Runnable onStart, Runnable onExit) {
         super("/asset/resources/background.png");
 
@@ -32,7 +31,6 @@ public class MenuPanel extends BasePanel {
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         startButton.setMaximumSize(new Dimension(200, 50));
         startButton.addActionListener(e -> {
-        	hideCursor();
         	onStart.run();
         });
 
@@ -60,13 +58,4 @@ public class MenuPanel extends BasePanel {
         add(buttonPanel, BorderLayout.CENTER);
 
     }
-	
-	private void hideCursor() {
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Image cursorImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-        Cursor invisibleCursor = toolkit.createCustomCursor(cursorImage, new Point(0, 0), "InvisibleCursor");
-
-        setCursor(invisibleCursor);
-    }
-
 }
