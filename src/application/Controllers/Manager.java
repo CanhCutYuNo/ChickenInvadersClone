@@ -23,9 +23,9 @@ public class Manager {
     }
 
     public void update() {
-    	
+    	player.update(); 
         // Cập nhật đạn
-    	 updateBullets();
+    	updateBullets();
         bullets.removeIf(bullet ->  bullet.isOffScreen(1080));
 
         // Cập nhật va chạm
@@ -93,13 +93,14 @@ public class Manager {
     }
 
     public void render(Graphics g) {
-        for (Bullet bullet : bullets) bullet.render(g);
+        for(Bullet bullet : bullets) bullet.render(g);
         player.render(g);
-        for (Enemy enemy : enemies) enemy.render(g);
+        for(Enemy enemy : enemies) enemy.render(g);
     }
 
     public void movePlayer(int x, int y) {
-        player.setPosX(x - 32);
+    	player.updateDirection(x-32);
+    	player.setPosX(x - 32);
         player.setPosY(y - 32);
     }
 

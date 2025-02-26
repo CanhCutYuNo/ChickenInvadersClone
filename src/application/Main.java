@@ -15,7 +15,7 @@ public class Main {
     	    JFrame frame = new JFrame("Chicken Invaders");
     	    frame.setUndecorated(true);
     	    frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-
+    	    
     	    CardLayout cardLayout = new CardLayout();
     	    JPanel mainPanel = new JPanel(cardLayout);
 
