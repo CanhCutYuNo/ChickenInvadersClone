@@ -23,10 +23,10 @@ public class Manager {
     }
 
     public void update() {
-    	player.update(); 
         // Cập nhật đạn
     	updateBullets();
         bullets.removeIf(bullet ->  bullet.isOffScreen(1080));
+        player.update(); 
 
         // Cập nhật va chạm
         checkCollisions();
@@ -99,9 +99,9 @@ public class Manager {
     }
 
     public void movePlayer(int x, int y) {
-    	player.updateDirection(x-32);
     	player.setPosX(x - 32);
         player.setPosY(y - 32);
+        player.updateDirection(x);
     }
 
     public void shoot() {

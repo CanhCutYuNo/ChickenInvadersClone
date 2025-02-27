@@ -37,7 +37,7 @@ public class Main {
             frame.setFocusable(true);
             frame.requestFocus();
     	    
-    	    GameLoop gameLoop = new GameLoop(100, gameManager::update, gamePanel::repaint);
+    	    GameLoop gameLoop = new GameLoop(gamePanel);
         	gameLoop.start();
     	});
     }

@@ -76,6 +76,7 @@ public class Player {
         } else {
             moving = false;
         }
+        initialPosX = newX;
     }
 
     public void update() {
