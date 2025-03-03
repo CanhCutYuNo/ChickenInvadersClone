@@ -4,6 +4,8 @@ import application.Models.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.awt.*;
+
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -13,6 +15,8 @@ public class Manager {
     private ArrayList<Enemy> enemies;
     private CardLayout cardLayout;
 	private JPanel mainPanel;
+	private int frameDelay = 0;
+	//private int frameCount = 0;
 
     public Manager(CardLayout _cardLayout, JPanel _mainPanel) {
         bullets = new ArrayList<>();
@@ -23,11 +27,17 @@ public class Manager {
     }
 
     public void update() {
-        // Cập nhật đạn
     	updateBullets();
         bullets.removeIf(bullet ->  bullet.isOffScreen(1080));
         player.update(); 
-
+        if(frameDelay == 1) {
+        	for(Enemy enemy : enemies) {
+            	enemy.nextFrame();
+            }
+        	 //frameCount++; // Tăng số đếm frame khi enemy đổi frame
+        	frameDelay = 0;
+        }
+        frameDelay++;
         // Cập nhật va chạm
         checkCollisions();
         checkBulletEnemyCollisions();
@@ -87,8 +97,10 @@ public class Manager {
     
     public void spawnEnemies() {
         enemies = new ArrayList<>();
+        Image bodyImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/chickenBody.png")).getImage();
+        Image wingsImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-wings.png")).getImage();
         for(int i = 0; i < 5; i++) {
-            enemies.add(new Enemy(1000, 1920, 1080));
+            enemies.add(new Enemy(100, bodyImage, wingsImage));
         }
     }
 
@@ -96,6 +108,14 @@ public class Manager {
         for(Bullet bullet : bullets) bullet.render(g);
         player.render(g);
         for(Enemy enemy : enemies) enemy.render(g);
+        if (!enemies.isEmpty()) {
+           // int currentEnemyFrame = enemies.get(0).getCurrentFrame(); // Lấy frame của enemy đầu tiên
+
+            // Vẽ giá trị currentFrame màu đỏ trên màn hình
+//            g.setColor(Color.RED);
+//            g.setFont(new Font("Arial", Font.BOLD, 20));
+//            g.drawString("Current Frame: " + currentEnemyFrame, 50, 50);
+        }
     }
 
     public void movePlayer(int x, int y) {

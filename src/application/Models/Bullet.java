@@ -23,7 +23,7 @@ public class Bullet {
 
     private void loadImage() {
         try {
-            image = new ImageIcon(getClass().getResource("/asset/resources/bullet.png")).getImage();
+            image = new ImageIcon(getClass().getResource("/asset/resources/gfx/bullet.png")).getImage();
         } catch (Exception e) {
             System.out.println("Error: Could not load bullet image.");
             e.printStackTrace();

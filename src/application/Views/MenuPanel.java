@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 public class MenuPanel extends BasePanel {
     private SoundController backgroundMenuMusic;
     public MenuPanel(Runnable onStart, Runnable onExit) {
-        super("/asset/resources/background.png");
+        super("/asset/resources/gfx/background.png");
 
         setLayout(new BorderLayout());
 
@@ -59,7 +59,7 @@ public class MenuPanel extends BasePanel {
         add(buttonPanel, BorderLayout.CENTER);
         
         // add Sound
-        backgroundMenuMusic = new SoundController(getClass().getResource("/asset/resources/CI4Theme.wav").getPath());
+        backgroundMenuMusic = new SoundController(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
         backgroundMenuMusic.loop();
 
     }

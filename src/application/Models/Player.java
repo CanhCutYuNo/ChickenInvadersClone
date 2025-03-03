@@ -41,7 +41,7 @@ public class Player {
         this.initialPosX = PosX;
 
         try {
-            spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/spaceship.png")).getImage();
+            spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/spaceship.png")).getImage();
         } catch (Exception e) {
             System.out.println("Error: Could not load player sprite sheet.");
             e.printStackTrace();
@@ -94,7 +94,7 @@ public class Player {
             int[] data = spriteData[curFrame];
             int sx = data[0], sy = data[1], sw = data[2], sh = data[3];
 
-            g.drawImage(spriteSheet, PosX, PosY, PosX + MODEL_WIDTH, PosY + MODEL_HEIGHT,
+            g.drawImage(spriteSheet, PosX, PosY, PosX + 80, PosY + 80,
                         sx, sy, sx + sw, sy + sh, null);
         } else {
             g.setColor(Color.RED);
