@@ -6,27 +6,38 @@ package application.Views;
 
 import application.Main;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.io.File;
+import java.io.IOError;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Map;
+import javax.imageio.ImageIO;
+import java.util.Timer;
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.plaf.basic.BasicArrowButton;
 
 /**
  *
  * @author hp
  */
-public class MenuPanel extends javax.swing.JPanel {
-
-    public MenuPanel(Runnable onStart1, Runnable onStart2){
-        initComponents(onStart1, onStart2);
+public class SettingPanel extends JPanel {
+    public SettingPanel(Runnable onStart) {
+        initComponents(onStart);
     }
     
-    private void initComponents(Runnable onStart1, Runnable onStart2) {
-        lineBorder1 = (javax.swing.border.LineBorder) javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0));
+    private void initComponents(Runnable onStart) {
         jLayeredPane = new javax.swing.JLayeredPane();
         containerPanel = new javax.swing.JPanel();
         backgroundPanel = new BackgroundPanel();
-        symbolPanel = new javax.swing.JPanel();
-        icon = new javax.swing.JLabel();
-        buttonPanel = new javax.swing.JPanel();
+        labelPanel = new javax.swing.JPanel();
+        label = new javax.swing.JLabel();
         buttonPanel1 = new javax.swing.JPanel();
         button1 = new Button(300, 50);
         buttonPanel2 = new javax.swing.JPanel();
@@ -44,22 +55,17 @@ public class MenuPanel extends javax.swing.JPanel {
         containerPanel.setBackground(new java.awt.Color(255, 0, 0));
         containerPanel.setOpaque(false);
         containerPanel.setPreferredSize(new java.awt.Dimension(485, 410));
-        containerPanel.setLayout(new java.awt.GridLayout(2, 1));
+        containerPanel.setLayout(new java.awt.GridLayout(4, 1));
 
-        symbolPanel.setMinimumSize(new java.awt.Dimension(0, 0));
-        symbolPanel.setOpaque(false);
-        symbolPanel.setLayout(new java.awt.GridBagLayout());
+        labelPanel.setLayout(new java.awt.GridBagLayout());
+        labelPanel.setOpaque(false);
 
-        icon.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
-        icon.setForeground(new java.awt.Color(255, 255, 255));
-        icon.setText("GAME");
-        icon.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        symbolPanel.add(icon, new java.awt.GridBagConstraints());
+        label.setFont(new java.awt.Font("Segoe UI", 0, 42)); // NOI18N
+        label.setForeground(new java.awt.Color(255, 255, 255));
+        label.setText("Options");
+        labelPanel.add(label, new java.awt.GridBagConstraints());
 
-        containerPanel.add(symbolPanel);
-
-        buttonPanel.setOpaque(false);
-        buttonPanel.setLayout(new java.awt.GridLayout(3, 1));
+        containerPanel.add(labelPanel);
 
         //Button 1
         buttonPanel1.setOpaque(false);
@@ -68,15 +74,15 @@ public class MenuPanel extends javax.swing.JPanel {
         //Button 1 On Clicked Event
         button1.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-                onStart1.run();                
+                throw new UnsupportedOperationException("Not supported yet.");
             }
         });
 
-        button1.setText("Play");
-        button1.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
+        button1.setFont(new java.awt.Font("SansSerif", 0, 30)); // NOI18N
+        button1.setText("Audio Settings");
         buttonPanel1.add(button1, new java.awt.GridBagConstraints());
 
-        buttonPanel.add(buttonPanel1);
+        containerPanel.add(buttonPanel1);
 
         //Button 2
         buttonPanel2.setOpaque(false);
@@ -85,15 +91,16 @@ public class MenuPanel extends javax.swing.JPanel {
         //Button 2 On Clicked Event
         button2.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-                onStart2.run();
+                throw new UnsupportedOperationException("Not supported yet.");
             }
         });
 
-        button2.setText("Options");
-        button2.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
+        button2.setFont(new java.awt.Font("SansSerif", 0, 30)); // NOI18N
+        button2.setText("Credit");
+        button2.setPreferredSize(new java.awt.Dimension(300, 50));
         buttonPanel2.add(button2, new java.awt.GridBagConstraints());
 
-        buttonPanel.add(buttonPanel2);
+        containerPanel.add(buttonPanel2);
 
         //Button 3
         buttonPanel3.setOpaque(false);
@@ -102,36 +109,33 @@ public class MenuPanel extends javax.swing.JPanel {
         //Button 3 On Clicked Event        
         button3.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-                System.exit(0);
+                onStart.run();
             }
         });
 
-        button3.setText("Quit Game");
-        button3.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
+        button3.setFont(new java.awt.Font("SansSerif", 0, 30)); // NOI18N
+        button3.setText("Done");
+        button3.setPreferredSize(new java.awt.Dimension(300, 50));
         buttonPanel3.add(button3, new java.awt.GridBagConstraints());
 
-        buttonPanel.add(buttonPanel3);
-
-        containerPanel.add(buttonPanel);
+        containerPanel.add(buttonPanel3);
 
         jLayeredPane.setLayer(containerPanel, 1);
         jLayeredPane.add(containerPanel);
 
         add(jLayeredPane);
+
     }// </editor-fold>                        
 
     private javax.swing.JPanel backgroundPanel;
     private Button button1;
     private Button button2;
     private Button button3;
-    private javax.swing.JPanel buttonPanel;
     private javax.swing.JPanel buttonPanel1;
     private javax.swing.JPanel buttonPanel2;
     private javax.swing.JPanel buttonPanel3;
-    private javax.swing.JPanel containerPanel;
-    private javax.swing.JLabel icon;
+    private javax.swing.JLabel label;
+    private javax.swing.JPanel labelPanel;
     private javax.swing.JLayeredPane jLayeredPane;
-    private javax.swing.border.LineBorder lineBorder1;
-    private javax.swing.JPanel symbolPanel;
-    // End of variables declaration  
+    private javax.swing.JPanel containerPanel;
 }
