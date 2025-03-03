@@ -13,6 +13,7 @@ public class Manager {
     private ArrayList<Enemy> enemies;
     private CardLayout cardLayout;
 	private JPanel mainPanel;
+    private int level = 1;
 
     public Manager(CardLayout _cardLayout, JPanel _mainPanel) {
         bullets = new ArrayList<>();
@@ -32,6 +33,21 @@ public class Manager {
         checkCollisions();
         checkBulletEnemyCollisions();
         checkPlayerCollisions();
+
+        //Cap nhat ga bay
+        for (Enemy enemy : enemies) {
+            enemy.update(level); // Cập nhật vị trí kẻ địch
+        }
+
+        //Cap nhat con Ga khong?
+        if(enemies.isEmpty()){
+            level++;
+            System.out.println("New level !!");
+            spawnEnemies();
+
+        }
+
+
     }
     
     private void updateBullets() {
@@ -86,10 +102,35 @@ public class Manager {
     }
     
     public void spawnEnemies() {
-        enemies = new ArrayList<>();
-        for(int i = 0; i < 5; i++) {
-            enemies.add(new Enemy(1000, 1920, 1080));
+
+        if(level == 1){
+            enemies = new ArrayList<>();
+            int nums = 10;
+            int spacing = 120;
+            int startX = 100;
+            int posY = 50;
+            for(int i = 0; i < 4; i++){
+                for(int j = 0; j < nums; j++){
+                    int posX = startX + j * spacing;
+                    enemies.add(new Enemy(100,posX, posY, 1));
+                }
+                posY+=100;
+            }
         }
+        else if(level == 2){
+            enemies = new ArrayList<>();
+            int nums = 10;
+            int centerX = 1560 / 2;
+            int centerY = 1080 / 4;
+            for(int i = 0; i < nums; i++){
+                double angle = 2 * Math.PI * i / nums;
+                int posX = centerX + (int) (100 * Math.cos(angle));
+                int posY = centerY + (int) (100 * Math.sin(angle));
+                enemies.add(new Enemy(100,posX,posY,2));
+            }
+        }
+
+
     }
 
     public void render(Graphics g) {
