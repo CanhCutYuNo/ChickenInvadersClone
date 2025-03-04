@@ -28,10 +28,11 @@ import javax.swing.plaf.basic.BasicArrowButton;
  * @author hp
  */
 public class SettingPanel extends JPanel {
+
     public SettingPanel(Runnable onStart) {
         initComponents(onStart);
     }
-    
+
     private void initComponents(Runnable onStart) {
         jLayeredPane = new javax.swing.JLayeredPane();
         containerPanel = new javax.swing.JPanel();
@@ -44,6 +45,8 @@ public class SettingPanel extends JPanel {
         button2 = new Button(300, 50);
         buttonPanel3 = new javax.swing.JPanel();
         button3 = new Button(300, 50);
+        buttonPanel4 = new javax.swing.JPanel();
+        button4 = new Button(300, 50);
 
         setLayout(new java.awt.GridLayout(1, 1));
 
@@ -55,7 +58,7 @@ public class SettingPanel extends JPanel {
         containerPanel.setBackground(new java.awt.Color(255, 0, 0));
         containerPanel.setOpaque(false);
         containerPanel.setPreferredSize(new java.awt.Dimension(485, 410));
-        containerPanel.setLayout(new java.awt.GridLayout(4, 1));
+        containerPanel.setLayout(new java.awt.GridLayout(5, 1));
 
         labelPanel.setLayout(new java.awt.GridBagLayout());
         labelPanel.setOpaque(false);
@@ -74,12 +77,12 @@ public class SettingPanel extends JPanel {
         //Button 1 On Clicked Event
         button1.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                incrementDifficulty();
             }
         });
 
         button1.setFont(new java.awt.Font("SansSerif", 0, 30)); // NOI18N
-        button1.setText("Audio Settings");
+        button1.setText("Difficulty: " + getDifficultyString());
         buttonPanel1.add(button1, new java.awt.GridBagConstraints());
 
         containerPanel.add(buttonPanel1);
@@ -109,16 +112,34 @@ public class SettingPanel extends JPanel {
         //Button 3 On Clicked Event        
         button3.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-                onStart.run();
+                throw new UnsupportedOperationException("Not supported yet.");
             }
         });
 
         button3.setFont(new java.awt.Font("SansSerif", 0, 30)); // NOI18N
-        button3.setText("Done");
+        button3.setText("Credit");
         button3.setPreferredSize(new java.awt.Dimension(300, 50));
         buttonPanel3.add(button3, new java.awt.GridBagConstraints());
 
         containerPanel.add(buttonPanel3);
+
+        //Button 4
+        buttonPanel4.setOpaque(false);
+        buttonPanel4.setLayout(new java.awt.GridBagLayout());
+
+        //Button 4 On Clicked Event        
+        button4.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent evt) {
+                onStart.run();
+            }
+        });
+
+        button4.setFont(new java.awt.Font("SansSerif", 0, 30)); // NOI18N
+        button4.setText("Done");
+        button4.setPreferredSize(new java.awt.Dimension(300, 50));
+        buttonPanel4.add(button4, new java.awt.GridBagConstraints());
+
+        containerPanel.add(buttonPanel4);
 
         jLayeredPane.setLayer(containerPanel, 1);
         jLayeredPane.add(containerPanel);
@@ -127,13 +148,42 @@ public class SettingPanel extends JPanel {
 
     }// </editor-fold>                        
 
+    public enum Difficulty {
+        PEACEFUL, EASY, NORMAL, HARD, EXTREME;
+    }
+
+    public String getDifficultyString() {
+        switch (Difficulty.values()[difficulty]) {
+            case PEACEFUL:
+                return "Peaceful";
+            case EASY:
+                return "Easy";
+            case NORMAL:
+                return "Normal";
+            case HARD:
+                return "Hard";
+            case EXTREME:
+                return "Extreme";
+            default:
+                throw new IllegalArgumentException("Invalid difficulty level: " + difficulty);
+        }
+    }
+
+    public void incrementDifficulty() {
+        difficulty = (difficulty + 1) % Difficulty.values().length;
+        button1.setText("Difficulty: " + getDifficultyString());
+    }
+    
+    private int difficulty;
     private javax.swing.JPanel backgroundPanel;
     private Button button1;
     private Button button2;
     private Button button3;
+    private Button button4;
     private javax.swing.JPanel buttonPanel1;
     private javax.swing.JPanel buttonPanel2;
     private javax.swing.JPanel buttonPanel3;
+    private javax.swing.JPanel buttonPanel4;
     private javax.swing.JLabel label;
     private javax.swing.JPanel labelPanel;
     private javax.swing.JLayeredPane jLayeredPane;
