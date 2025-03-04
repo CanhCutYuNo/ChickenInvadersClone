@@ -7,9 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Enemy {
+	private Image spriteHeadSheet;
     private Image spriteBodySheet;
     private Image spriteWingsSheet;
-    private int currentFrame = 0;
+    private Image blinkAnimation;
+    private int currentFrame = (int) (Math.random() * 40);
+    private int frameCount = (int) (Math.random() * 200);
+    private int[] headSprite;
     private int[] bodySprite; // Lưu tọa độ body
     private List<int[]> wingSprites = new ArrayList<>();
     private int hp;
@@ -21,10 +25,11 @@ public class Enemy {
     private static final int MAP_WIDTH = 1900;
     private static final int MAP_HEIGHT = 1080;
 
+    private static final int[][] SPRITE_HEAD = { {195, 93, 30, 45} };
     // Danh sách tọa độ của các body trên sprite sheet
     private static final int[][] SPRITE_BODY = {
-        {1, 1, 67, 108}, {71, 1, 67, 108}, {141, 1, 67, 108},
-        {211, 1, 67, 108}
+        {1, 1, 70, 53}, {217, 1, 70, 53}, {433, 1, 70, 53},
+        {217, 169, 70, 53}
     };
 
     // Danh sách các vị trí của cánh trên sprite sheet
@@ -67,10 +72,12 @@ public class Enemy {
             {779, 307, 152, 73}, {933, 307, 152, 73}, {1087, 307, 153, 73},
         };
 
-    public Enemy(int hp, Image bodySheet, Image wingsSheet) {
+    public Enemy(int hp, Image bodySheet, Image wingsSheet, Image headSheet, Image blinkAnimation) {
         this.hp = hp;
         this.spriteBodySheet = bodySheet;
         this.spriteWingsSheet = wingsSheet;
+        this.spriteHeadSheet = headSheet;
+        this.blinkAnimation = blinkAnimation;
 
         Random random = new Random();
         this.posX = random.nextInt(MAP_WIDTH);
@@ -78,7 +85,8 @@ public class Enemy {
 
         // Chọn ngẫu nhiên một phần của body
         this.bodySprite = SPRITE_BODY[random.nextInt(SPRITE_BODY.length)];
-
+        this.headSprite = SPRITE_HEAD[0];
+        
         // Thêm tất cả các frame của cánh vào danh sách
         for(int[] frame : SPRITE_WINGS) {
             wingSprites.add(frame);
@@ -119,7 +127,6 @@ public class Enemy {
         	int centerX = posX + bodySprite[2] / 2;
         	int centerY = posY + bodySprite[3] / 2;
 
-
         	// Vẽ cánh với offset
         	g.drawImage(spriteWingsSheet, 
         	    centerX - wingWidth / 2 + offsetX, centerY - wingHeight / 2 + offsetY - 1,  
@@ -135,13 +142,22 @@ public class Enemy {
 //        	g.setColor(Color.RED);
 //        	g.fillOval(centerX + offsetX - 2, centerY + offsetY - 2, 4, 4);
       
+            g.drawImage(spriteHeadSheet, posX + 15, posY - 50, posX + headSprite[2] + 15, posY + headSprite[3] - 50,
+                    headSprite[0], headSprite[1], headSprite[0] + headSprite[2], headSprite[1] + headSprite[3], null);
+            
             // Vẽ body
-            g.drawImage(spriteBodySheet, posX - 5, posY - 21, posX + bodySprite[2] - 5, posY + bodySprite[3] - 21,
+            g.drawImage(spriteBodySheet, posX - 5, posY - 10, posX + bodySprite[2] - 5, posY + bodySprite[3] - 10,
                     bodySprite[0], bodySprite[1], bodySprite[0] + bodySprite[2], bodySprite[1] + bodySprite[3], null);
 //           g.drawImage(spriteBodySheet, posX, posY, posX, posY,
 //                    bodySprite[0], bodySprite[1], bodySprite[0] + bodySprite[2], bodySprite[1] + bodySprite[3], null);
 //            g.setColor(Color.RED);
 //        	g.drawRect(posX, posY, bodySprite[2], bodySprite[3]);
+            if(frameCount < 50) {
+            	g.drawImage(blinkAnimation, posX + 23, posY - 40, 50, 40, null);
+            }
+            frameCount++;
+            if(frameCount > 200) frameCount = 0;
+            
         } else {
             g.setColor(Color.RED);
             g.fillRect(posX, posY, MODEL_WIDTH, MODEL_HEIGHT);

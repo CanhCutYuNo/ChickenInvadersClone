@@ -59,8 +59,8 @@ public class MenuPanel extends BasePanel {
         add(buttonPanel, BorderLayout.CENTER);
         
         // add Sound
-        backgroundMenuMusic = new SoundController(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
-        backgroundMenuMusic.loop();
+//        backgroundMenuMusic = new SoundController(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
+//        backgroundMenuMusic.loop();
 
     }
 }
