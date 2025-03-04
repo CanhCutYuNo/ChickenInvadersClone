@@ -4,6 +4,8 @@ import application.Models.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.awt.*;
+
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -13,7 +15,9 @@ public class Manager {
     private ArrayList<Enemy> enemies;
     private CardLayout cardLayout;
 	private JPanel mainPanel;
-    private int level = 1;
+	private int frameDelay = 0;
+	private int level = 1;
+	//private int frameCount = 0;
 
     public Manager(CardLayout _cardLayout, JPanel _mainPanel) {
         bullets = new ArrayList<>();
@@ -24,30 +28,29 @@ public class Manager {
     }
 
     public void update() {
-        // Cập nhật đạn
     	updateBullets();
         bullets.removeIf(bullet ->  bullet.isOffScreen(1080));
         player.update(); 
-
+        if(frameDelay == 1) {
+        	for(Enemy enemy : enemies) {
+            	enemy.nextFrame();
+            	enemy.update(level);
+            }
+        	 //frameCount++; // Tăng số đếm frame khi enemy đổi frame
+        	frameDelay = 0;
+        }
+        frameDelay++;
         // Cập nhật va chạm
         checkCollisions();
         checkBulletEnemyCollisions();
         checkPlayerCollisions();
-
-        //Cap nhat ga bay
-        for (Enemy enemy : enemies) {
-            enemy.update(level); // Cập nhật vị trí kẻ địch
-        }
-
-        //Cap nhat con Ga khong?
+        
         if(enemies.isEmpty()){
             level++;
             System.out.println("New level !!");
             spawnEnemies();
 
         }
-
-
     }
     
     private void updateBullets() {
@@ -102,17 +105,22 @@ public class Manager {
     }
     
     public void spawnEnemies() {
-
+        enemies = new ArrayList<>();
+        Image bodyImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-body-stripes.png")).getImage();
+        Image wingsImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-wings.png")).getImage();
+        Image headImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-face.png")).getImage();
+        Image blinkImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/chickenBlink.png")).getImage();
+        
         if(level == 1){
             enemies = new ArrayList<>();
-            int nums = 10;
+            int nums = 1;
             int spacing = 120;
             int startX = 100;
             int posY = 50;
             for(int i = 0; i < 4; i++){
                 for(int j = 0; j < nums; j++){
                     int posX = startX + j * spacing;
-                    enemies.add(new Enemy(100,posX, posY, 1));
+                    enemies.add(new Enemy(100, posX, posY, 1, bodyImage, wingsImage, headImage, blinkImage));
                 }
                 posY+=100;
             }
@@ -126,7 +134,7 @@ public class Manager {
                 double angle = 2 * Math.PI * i / nums;
                 int posX = centerX + (int) (100 * Math.cos(angle));
                 int posY = centerY + (int) (100 * Math.sin(angle));
-                enemies.add(new Enemy(100,posX,posY,2));
+                enemies.add(new Enemy(100, posX, posY, 2, bodyImage, wingsImage, headImage, blinkImage));
             }
         }
 
@@ -137,6 +145,13 @@ public class Manager {
         for(Bullet bullet : bullets) bullet.render(g);
         player.render(g);
         for(Enemy enemy : enemies) enemy.render(g);
+        
+        int currentPlayerFrame = player.getCurFrame(); // Lấy frame của enemy đầu tiên
+
+        // Vẽ giá trị currentFrame màu đỏ trên màn hình
+        g.setColor(Color.RED);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.drawString("Current Frame: " + currentPlayerFrame, 50, 50);
     }
 
     public void movePlayer(int x, int y) {

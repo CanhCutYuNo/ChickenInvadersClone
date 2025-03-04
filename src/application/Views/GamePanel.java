@@ -11,7 +11,7 @@ public class GamePanel extends BasePanel {
     private final MouseController mouseController;
 
     public GamePanel(Manager gameManager) {
-        super("/asset/resources/background.png");
+        super("/asset/resources/gfx/background.png");
         this.gameManager = gameManager;
 
         hideCursor();
