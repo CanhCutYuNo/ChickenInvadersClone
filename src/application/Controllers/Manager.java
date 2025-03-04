@@ -110,6 +110,13 @@ public class Manager {
         for(Bullet bullet : bullets) bullet.render(g);
         player.render(g);
         for(Enemy enemy : enemies) enemy.render(g);
+        
+        int currentPlayerFrame = player.getCurFrame(); // Lấy frame của enemy đầu tiên
+
+        // Vẽ giá trị currentFrame màu đỏ trên màn hình
+        g.setColor(Color.RED);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.drawString("Current Frame: " + currentPlayerFrame, 50, 50);
     }
 
     public void movePlayer(int x, int y) {

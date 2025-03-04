@@ -12,7 +12,7 @@ public class Enemy {
     private Image spriteWingsSheet;
     private Image blinkAnimation;
     private int currentFrame = (int) (Math.random() * 40);
-    private int frameCount = (int) (Math.random() * 200);
+    private int frameCount = (int) (Math.random() * 120);
     private int[] headSprite;
     private int[] bodySprite; // Lưu tọa độ body
     private List<int[]> wingSprites = new ArrayList<>();
@@ -26,33 +26,10 @@ public class Enemy {
     private static final int MAP_HEIGHT = 1080;
 
     private static final int[][] SPRITE_HEAD = { {195, 93, 30, 45} };
-    // Danh sách tọa độ của các body trên sprite sheet
     private static final int[][] SPRITE_BODY = {
         {1, 1, 70, 53}, {217, 1, 70, 53}, {433, 1, 70, 53},
         {217, 169, 70, 53}
     };
-
-    // Danh sách các vị trí của cánh trên sprite sheet
-//    private static final int[][] SPRITE_WINGS = {
-//        {1, 1, 125, 107}, {129, 1, 125, 107}, {257, 1, 125, 107},
-//        {385, 1, 125, 107}, {513, 1, 125, 107}, {641, 1, 125, 106},
-//        {769, 1, 125, 106}, {897, 1, 127, 106}, {1027, 1, 127, 105},
-//        {1157, 1, 127, 105}, {1287, 1, 127, 104}, {1, 111, 129, 104},
-//        {133, 111, 129, 103}, {265, 111, 129, 102}, {397, 111, 131, 101},
-//        {531, 111, 131, 100}, {665, 111, 131, 99}, {799, 111, 133, 98},
-//        {935, 111, 133, 96}, {1071, 111, 135, 95}, {1209, 111, 137, 94},
-//        {1349, 111, 139, 92}, {1, 217, 139, 90}, {143, 217, 141, 88},
-//        {287, 217, 142, 86}, {431, 217, 143, 84}, {577, 217, 143, 82},
-//        {723, 217, 145, 81}, {871, 217, 145, 79}, {1019, 217, 147, 78},
-//        {1169, 217, 149, 77}, {1321, 217, 149, 75}, {1, 309, 151, 74}, 
-//        {155, 309, 151, 73}, {309, 309, 153, 73}, {465, 309, 153, 73}, 
-//        {621, 309, 153, 72}, {777, 309, 153, 71}, {933, 309, 154, 71},
-//        {1089, 309, 153, 71}, {1245, 309, 153, 70}, {1, 385, 153, 70},
-//        {157, 385, 153, 70}, {313, 385, 153, 70}, {469, 285, 153, 70},
-//        {625, 385, 153, 70}, {781, 385, 153, 69}, {937, 385, 153, 69},
-//        {1093, 385, 153, 69}, {1249, 385, 153, 69}
-//    };
-    
     private static final int[][] SPRITE_WINGS = {
             {1, 1, 126, 112}, {129, 1, 126, 112}, {257, 1, 126, 112},
             {385, 1, 126, 112}, {513, 1, 126, 112}, {641, 1, 126, 111},
@@ -152,11 +129,11 @@ public class Enemy {
 //                    bodySprite[0], bodySprite[1], bodySprite[0] + bodySprite[2], bodySprite[1] + bodySprite[3], null);
 //            g.setColor(Color.RED);
 //        	g.drawRect(posX, posY, bodySprite[2], bodySprite[3]);
-            if(frameCount < 50) {
+            if(frameCount < 20) {
             	g.drawImage(blinkAnimation, posX + 23, posY - 40, 50, 40, null);
             }
             frameCount++;
-            if(frameCount > 200) frameCount = 0;
+            if(frameCount > 120) frameCount = 0;
             
         } else {
             g.setColor(Color.RED);
