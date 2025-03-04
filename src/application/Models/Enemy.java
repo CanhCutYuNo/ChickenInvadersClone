@@ -11,14 +11,20 @@ public class Enemy {
     private Image spriteBodySheet;
     private Image spriteWingsSheet;
     private Image blinkAnimation;
+    private boolean movingRight;
     private int currentFrame = (int) (Math.random() * 40);
     private int frameCount = (int) (Math.random() * 120);
     private int[] headSprite;
     private int[] bodySprite; // Lưu tọa độ body
     private List<int[]> wingSprites = new ArrayList<>();
     private int hp;
-    private int posX;
-    private int posY;
+    private int PosX;
+    private int PosY;
+    private int speed;
+//	private int level = 1;
+	private int centerX, centerY;
+	private int radius;
+	private double theta; // góc quay chuyển động tròn
     private boolean isForward = true; // Biến để theo dõi hướng di chuyển của animation
     private static final int MODEL_WIDTH = 64;
     private static final int MODEL_HEIGHT = 64;
@@ -49,7 +55,7 @@ public class Enemy {
             {779, 307, 152, 73}, {933, 307, 152, 73}, {1087, 307, 153, 73},
         };
 
-    public Enemy(int hp, Image bodySheet, Image wingsSheet, Image headSheet, Image blinkAnimation) {
+    public Enemy(int hp, int PosX, int PosY, int level, Image bodySheet, Image wingsSheet, Image headSheet, Image blinkAnimation) {
         this.hp = hp;
         this.spriteBodySheet = bodySheet;
         this.spriteWingsSheet = wingsSheet;
@@ -57,8 +63,19 @@ public class Enemy {
         this.blinkAnimation = blinkAnimation;
 
         Random random = new Random();
-        this.posX = random.nextInt(MAP_WIDTH);
-        this.posY = random.nextInt(MAP_HEIGHT / 2);
+        this.PosX = random.nextInt(MAP_WIDTH);
+        this.PosY = random.nextInt(MAP_HEIGHT / 2);
+        
+        this.speed = 2;
+		if(level == 1){
+			this.movingRight = true;
+		}
+		else if(level == 2){
+			this.theta = Math.random() * 2 * Math.PI;
+			this.centerX = PosX;
+			this.centerY = PosY;
+			this.radius = 100;
+		}
 
         // Chọn ngẫu nhiên một phần của body
         this.bodySprite = SPRITE_BODY[random.nextInt(SPRITE_BODY.length)];
@@ -101,8 +118,8 @@ public class Enemy {
         	int[] wingOffset = wingOffsets[currentFrame];
         	int offsetX = wingOffset[0];
         	int offsetY = wingOffset[1];
-        	int centerX = posX + bodySprite[2] / 2;
-        	int centerY = posY + bodySprite[3] / 2;
+        	int centerX = PosX + bodySprite[2] / 2;
+        	int centerY = PosY + bodySprite[3] / 2;
 
         	// Vẽ cánh với offset
         	g.drawImage(spriteWingsSheet, 
@@ -119,25 +136,25 @@ public class Enemy {
 //        	g.setColor(Color.RED);
 //        	g.fillOval(centerX + offsetX - 2, centerY + offsetY - 2, 4, 4);
       
-            g.drawImage(spriteHeadSheet, posX + 15, posY - 50, posX + headSprite[2] + 15, posY + headSprite[3] - 50,
+            g.drawImage(spriteHeadSheet, PosX + 15, PosY - 50, PosX + headSprite[2] + 15, PosY + headSprite[3] - 50,
                     headSprite[0], headSprite[1], headSprite[0] + headSprite[2], headSprite[1] + headSprite[3], null);
             
             // Vẽ body
-            g.drawImage(spriteBodySheet, posX - 5, posY - 10, posX + bodySprite[2] - 5, posY + bodySprite[3] - 10,
+            g.drawImage(spriteBodySheet, PosX - 5, PosY - 10, PosX + bodySprite[2] - 5, PosY + bodySprite[3] - 10,
                     bodySprite[0], bodySprite[1], bodySprite[0] + bodySprite[2], bodySprite[1] + bodySprite[3], null);
-//           g.drawImage(spriteBodySheet, posX, posY, posX, posY,
+//           g.drawImage(spriteBodySheet, PosX, PosY, PosX, PosY,
 //                    bodySprite[0], bodySprite[1], bodySprite[0] + bodySprite[2], bodySprite[1] + bodySprite[3], null);
 //            g.setColor(Color.RED);
-//        	g.drawRect(posX, posY, bodySprite[2], bodySprite[3]);
+//        	g.drawRect(PosX, PosY, bodySprite[2], bodySprite[3]);
             if(frameCount < 20) {
-            	g.drawImage(blinkAnimation, posX + 23, posY - 40, 50, 40, null);
+            	g.drawImage(blinkAnimation, PosX + 23, PosY - 40, 50, 40, null);
             }
             frameCount++;
             if(frameCount > 120) frameCount = 0;
             
         } else {
             g.setColor(Color.RED);
-            g.fillRect(posX, posY, MODEL_WIDTH, MODEL_HEIGHT);
+            g.fillRect(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
         }
     }
 
@@ -164,7 +181,7 @@ public class Enemy {
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(posX, posY, MODEL_WIDTH, MODEL_HEIGHT);
+        return new Rectangle(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
     }
 
     public int getHp() {
@@ -172,14 +189,38 @@ public class Enemy {
     }
 
     public int getPosX() {
-        return posX;
+        return PosX;
     }
 
     public int getPosY() {
-        return posY;
+        return PosY;
     }
     
     public int getCurrentFrame() {
     	return currentFrame;
     }
+    
+    public void update(int level) {
+		if(level == 1){
+			if (movingRight) {
+				PosX += speed;
+				if (PosX >= MAP_WIDTH - MODEL_WIDTH) {
+					movingRight = false;
+				}
+			}
+			else {
+				PosX -= speed;
+				if (PosX <= 0) {
+					movingRight = true;
+				}
+			}
+
+		}
+		else if(level == 2){
+			theta += 0.05;
+			PosX = centerX + (int) (radius * Math.cos(theta));
+			PosY = centerY + (int) (radius * Math.sin(theta));
+		}
+
+	}
 }

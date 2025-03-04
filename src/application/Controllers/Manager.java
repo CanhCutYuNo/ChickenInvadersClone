@@ -16,6 +16,7 @@ public class Manager {
     private CardLayout cardLayout;
 	private JPanel mainPanel;
 	private int frameDelay = 0;
+	private int level = 1;
 	//private int frameCount = 0;
 
     public Manager(CardLayout _cardLayout, JPanel _mainPanel) {
@@ -32,7 +33,8 @@ public class Manager {
         player.update(); 
         if(frameDelay == 1) {
         	for(Enemy enemy : enemies) {
-            	enemy.nextFrame();;
+            	enemy.nextFrame();
+            	enemy.update(level);
             }
         	 //frameCount++; // Tăng số đếm frame khi enemy đổi frame
         	frameDelay = 0;
@@ -42,6 +44,13 @@ public class Manager {
         checkCollisions();
         checkBulletEnemyCollisions();
         checkPlayerCollisions();
+        
+        if(enemies.isEmpty()){
+            level++;
+            System.out.println("New level !!");
+            spawnEnemies();
+
+        }
     }
     
     private void updateBullets() {
@@ -101,9 +110,35 @@ public class Manager {
         Image wingsImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-wings.png")).getImage();
         Image headImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-face.png")).getImage();
         Image blinkImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/chickenBlink.png")).getImage();
-        for(int i = 0; i < 5; i++) {
-            enemies.add(new Enemy(100, bodyImage, wingsImage, headImage, blinkImage));
+        
+        if(level == 1){
+            enemies = new ArrayList<>();
+            int nums = 1;
+            int spacing = 120;
+            int startX = 100;
+            int posY = 50;
+            for(int i = 0; i < 4; i++){
+                for(int j = 0; j < nums; j++){
+                    int posX = startX + j * spacing;
+                    enemies.add(new Enemy(100, posX, posY, 1, bodyImage, wingsImage, headImage, blinkImage));
+                }
+                posY+=100;
+            }
         }
+        else if(level == 2){
+            enemies = new ArrayList<>();
+            int nums = 10;
+            int centerX = 1560 / 2;
+            int centerY = 1080 / 4;
+            for(int i = 0; i < nums; i++){
+                double angle = 2 * Math.PI * i / nums;
+                int posX = centerX + (int) (100 * Math.cos(angle));
+                int posY = centerY + (int) (100 * Math.sin(angle));
+                enemies.add(new Enemy(100, posX, posY, 2, bodyImage, wingsImage, headImage, blinkImage));
+            }
+        }
+
+
     }
 
     public void render(Graphics g) {
