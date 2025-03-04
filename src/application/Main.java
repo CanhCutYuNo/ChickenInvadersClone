@@ -35,10 +35,12 @@ public class Main {
                     () -> {
                         cardLayout.show(mainPanel, "Menu");
                     });
+            
+            GameContainerPanel gameContainerPanel = new GameContainerPanel(gamePanel);
 
             mainPanel.add(menuPanel, "Menu");
             mainPanel.add(settingPanel, "Setting");
-            mainPanel.add(gamePanel, "Game");
+            mainPanel.add(gameContainerPanel, "Game");
 
             frame.add(mainPanel);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
