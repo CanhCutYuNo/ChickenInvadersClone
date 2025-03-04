@@ -4,6 +4,7 @@ import application.Models.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.awt.*;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -112,12 +113,14 @@ public class Manager {
         Image blinkImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/chickenBlink.png")).getImage();
         
         if(level == 1){
+            Random random = new Random();
             enemies = new ArrayList<>();
-            int nums = 1;
+
             int spacing = 120;
             int startX = 100;
-            int posY = 50;
+            int posY = 100;
             for(int i = 0; i < 4; i++){
+                int nums = random.nextInt(1,5) ;
                 for(int j = 0; j < nums; j++){
                     int posX = startX + j * spacing;
                     enemies.add(new Enemy(100, posX, posY, 1, bodyImage, wingsImage, headImage, blinkImage));
