@@ -99,7 +99,7 @@ public class SettingPanel extends JPanel {
         });
 
         button2.setFont(new java.awt.Font("SansSerif", 0, 30)); // NOI18N
-        button2.setText("Credit");
+        button2.setText("Audio Settings");
         button2.setPreferredSize(new java.awt.Dimension(300, 50));
         buttonPanel2.add(button2, new java.awt.GridBagConstraints());
 
