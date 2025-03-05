@@ -17,6 +17,10 @@ public class Enemy {
     private int[] headSprite;
     private int[] bodySprite; // Lưu tọa độ body
     private List<int[]> wingSprites = new ArrayList<>();
+
+    //Egg
+    private ArrayList<Egg> eggs;
+
     private int hp;
     private int PosX;
     private int PosY;
@@ -63,10 +67,13 @@ public class Enemy {
         this.blinkAnimation = blinkAnimation;
 
         Random random = new Random();
-        this.PosX = random.nextInt(MAP_WIDTH);
-        this.PosY = random.nextInt(MAP_HEIGHT / 2);
+        this.PosX = PosX;
+        this.PosY = PosY;
         
         this.speed = 2;
+
+        this.eggs = new ArrayList<>();
+
 		if(level == 1){
 			this.movingRight = true;
 		}
@@ -201,6 +208,20 @@ public class Enemy {
     }
     
     public void update(int level) {
+
+        //egg
+        Random rand = new Random();
+        //Random tha trung
+        if(rand.nextInt(100)<2){
+            eggs.add(new Egg(PosX + 10, PosY + 20));
+        }
+
+        //Cap nhat danh sach trung
+        eggs.removeIf(egg -> !egg.isActive());
+        for(Egg egg:eggs){
+            egg.update();
+        }
+
 		if(level == 1){
 			if (movingRight) {
 				PosX += speed;
@@ -223,4 +244,8 @@ public class Enemy {
 		}
 
 	}
+
+    public ArrayList<Egg> getEggs() {
+        return eggs;
+    }
 }
