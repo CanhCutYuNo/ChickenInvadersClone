@@ -29,14 +29,22 @@ import javax.swing.plaf.basic.BasicArrowButton;
  */
 public class SettingPanel extends JPanel {
 
-    public SettingPanel(Runnable onStart) {
-        initComponents(onStart);
+    public SettingPanel() {
+        initComponents();
     }
 
-    private void initComponents(Runnable onStart) {
+    public void setBackgroundPanel(JPanel backgroundPanel) {
+        if (this.backgroundPanel != null) {
+            jLayeredPane.remove(this.backgroundPanel);
+        }
+        this.backgroundPanel = backgroundPanel;
+        jLayeredPane.setLayer(this.backgroundPanel, 0);
+        jLayeredPane.add(this.backgroundPanel);
+    }
+
+    private void initComponents() {
         jLayeredPane = new javax.swing.JLayeredPane();
         containerPanel = new javax.swing.JPanel();
-        backgroundPanel = new BackgroundPanel();
         labelPanel = new javax.swing.JPanel();
         label = new javax.swing.JLabel();
         buttonPanel1 = new javax.swing.JPanel();
@@ -51,9 +59,6 @@ public class SettingPanel extends JPanel {
         setLayout(new java.awt.GridLayout(1, 1));
 
         jLayeredPane.setLayout(new javax.swing.OverlayLayout(jLayeredPane));
-
-        jLayeredPane.setLayer(backgroundPanel, 0);
-        jLayeredPane.add(backgroundPanel);
 
         containerPanel.setBackground(new java.awt.Color(255, 0, 0));
         containerPanel.setOpaque(false);
@@ -78,6 +83,7 @@ public class SettingPanel extends JPanel {
         button1.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
                 incrementDifficulty();
+                throw new UnsupportedOperationException("Chua them tinh nang luu trang thai do kho");      
             }
         });
 
@@ -130,7 +136,7 @@ public class SettingPanel extends JPanel {
         //Button 4 On Clicked Event        
         button4.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-                onStart.run();
+                Main.switchToMenuPanel();
             }
         });
 
@@ -173,7 +179,7 @@ public class SettingPanel extends JPanel {
         difficulty = (difficulty + 1) % Difficulty.values().length;
         button1.setText("Difficulty: " + getDifficultyString());
     }
-    
+
     private int difficulty;
     private javax.swing.JPanel backgroundPanel;
     private Button button1;
