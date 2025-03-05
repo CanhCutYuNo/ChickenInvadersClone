@@ -5,6 +5,7 @@ import application.Models.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.awt.*;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -14,6 +15,7 @@ public class Manager {
     private Player player;
     private ArrayList<Bullet> bullets;
     private ArrayList<Enemy> enemies;
+//    private ArrayList<Egg> eggs;
     private CardLayout cardLayout;
 	private JPanel mainPanel;
 	private int frameDelay = 0;
@@ -24,6 +26,7 @@ public class Manager {
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
         player = new Player(100, 10, 1.0, 950, 540);
+//        eggs = new ArrayList<>();
         this.cardLayout = _cardLayout;
 		this.mainPanel = _mainPanel;
     }
@@ -45,13 +48,15 @@ public class Manager {
         checkCollisions();
         checkBulletEnemyCollisions();
         checkPlayerCollisions();
-        
+
+        //Kiem tra len level
         if(enemies.isEmpty()){
             level++;
             System.out.println("New level !!");
             spawnEnemies();
 
         }
+
     }
     
     private void updateBullets() {
@@ -113,23 +118,25 @@ public class Manager {
         Image blinkImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/chickenBlink.png")).getImage();
         
         if(level == 1){
+//          Random random = new Random();
             enemies = new ArrayList<>();
-            int nums = 1;
-            int spacing = 120;
+            int nums = 8;
+            int spacing = 200;
             int startX = 100;
-            int posY = 50;
-            for(int i = 0; i < 4; i++){
+            int posY = 100;
+            for(int i = 0; i < 3; i++){
+
                 for(int j = 0; j < nums; j++){
                     int posX = startX + j * spacing;
                     enemies.add(new Enemy(100, posX, posY, 1, bodyImage, wingsImage, headImage, blinkImage));
                 }
-                posY+=100;
+                posY+=200;
             }
         }
         else if(level == 2){
             enemies = new ArrayList<>();
             int nums = 10;
-            int centerX = 1560 / 2;
+            int centerX = 1900 / 2;
             int centerY = 1080 / 4;
             for(int i = 0; i < nums; i++){
                 double angle = 2 * Math.PI * i / nums;

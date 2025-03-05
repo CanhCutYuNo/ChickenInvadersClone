@@ -17,10 +17,15 @@ public class Enemy {
     private int[] headSprite;
     private int[] bodySprite; // Lưu tọa độ body
     private List<int[]> wingSprites = new ArrayList<>();
+
+    //Egg
+    private ArrayList<Egg> eggs;
+
     private int hp;
     private int PosX;
     private int PosY;
     private int speed;
+//    private boolean alive; //Ktra ga die chua
 //	private int level = 1;
 	private int centerX, centerY;
 	private int radius;
@@ -61,12 +66,16 @@ public class Enemy {
         this.spriteWingsSheet = wingsSheet;
         this.spriteHeadSheet = headSheet;
         this.blinkAnimation = blinkAnimation;
-
+//        this.alive = true;
         Random random = new Random();
-        this.PosX = random.nextInt(MAP_WIDTH);
-        this.PosY = random.nextInt(MAP_HEIGHT / 2);
+        this.PosX = PosX;
+        this.PosY = PosY;
         
         this.speed = 2;
+
+//      Eggs
+        this.eggs = new ArrayList<>();
+
 		if(level == 1){
 			this.movingRight = true;
 		}
@@ -156,6 +165,10 @@ public class Enemy {
             g.setColor(Color.RED);
             g.fillRect(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
         }
+        // Them trung cho ga
+        for(Egg egg:eggs){
+            egg.drawEgg(g);
+        }
     }
 
     public void nextFrame() {
@@ -199,8 +212,24 @@ public class Enemy {
     public int getCurrentFrame() {
     	return currentFrame;
     }
-    
+
+
+
     public void update(int level) {
+
+        Random rand = new Random();
+        //Egg
+        if(rand.nextInt(1000)<1){
+            eggs.add(new Egg(PosX+15,PosY+30));
+        }
+        // Cập nhật danh sách trứng
+        eggs.removeIf(egg -> !egg.isActive());
+        for (Egg egg : eggs) {
+            egg.update();
+        }
+
+
+
 		if(level == 1){
 			if (movingRight) {
 				PosX += speed;
@@ -223,4 +252,6 @@ public class Enemy {
 		}
 
 	}
+
+
 }
