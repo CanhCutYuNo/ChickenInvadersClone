@@ -1,53 +1,55 @@
 package application.Models;
 
-import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.File;
 
 public class Egg {
-    private int x, y;
-    private int speed;
+    private Image imgEgg;
     private boolean isActive;
-    private BufferedImage eggImage;
+    private int PosX;
+    private int PosY;
+    private int speed;
+    private static final int EGG_WIDTH = 5;
+    private static final int EGG_HEIGHT = 5;
 
-    public Egg(int x, int y){
-        this.x = x;
-        this.y = y;
-        this.speed = 3;
+    public Egg(int PosX, int PosY){
+        this.PosX = PosX;
+        this.PosY = PosY;
         this.isActive = true;
+        this.speed = 5;
+        this.imgEgg = new ImageIcon("D:/TaiLieu/Nam2/HocKy2/CongngheJava/BTLJava/src/asset/resources/gfx/introEgg.png").getImage();
+    }
 
-        try {
-            eggImage = ImageIO.read(new File("D:/TaiLieu/Nam2/HocKy2/CongngheJava/BTLJava/src/asset/resources/gfx/introEgg.png")); // Đọc ảnh
-        } catch (IOException e) {
-            System.out.println("Error!!!");
-            e.printStackTrace();
+    public Rectangle getBounds(){
+        return new Rectangle(PosX,PosY,EGG_WIDTH,EGG_HEIGHT);
+    }
+
+    public void drawEgg(Graphics g){
+        if(isActive){
+            int newWidth = imgEgg.getWidth(null) / 8;  // Giảm kích thước xuống 50%
+            int newHeight = imgEgg.getHeight(null) / 8;
+            g.drawImage(imgEgg,PosX,PosY,newWidth,newHeight,null);
         }
     }
 
-    //Roi
     public void update(){
-        y+=speed;
+        PosY += speed;
 
-        if(y>800){
+        if(PosY>=1080){
             isActive = false;
         }
-    }
 
-    public void draw(Graphics g){
-        if(eggImage != null){
-            g.drawImage(eggImage,x,y,25,30,null);
+        if (imgEgg == null) {
+            System.out.println("Lỗi: Ảnh trứng chưa được load!");
         }
+
     }
 
     public boolean isActive(){
         return isActive;
     }
 
-    public Rectangle getBounds(){
-        return new Rectangle(x,y,25,30);
-    }
+
 
 
 }

@@ -1,6 +1,8 @@
 package application.Views;
 
 import application.Controllers.*;
+import application.Models.Egg;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -35,6 +37,7 @@ public class GamePanel extends BasePanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         gameManager.render(g);
+
     }
 
     private void hideCursor() {

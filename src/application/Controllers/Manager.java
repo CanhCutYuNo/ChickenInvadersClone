@@ -14,7 +14,7 @@ public class Manager {
     private Player player;
     private ArrayList<Bullet> bullets;
     private ArrayList<Enemy> enemies;
-    private ArrayList<Egg> eggs;
+//    private ArrayList<Egg> eggs;
     private CardLayout cardLayout;
 	private JPanel mainPanel;
 	private int frameDelay = 0;
@@ -25,7 +25,7 @@ public class Manager {
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
         player = new Player(100, 10, 1.0, 950, 540);
-        eggs = new ArrayList<>();
+//        eggs = new ArrayList<>();
         this.cardLayout = _cardLayout;
 		this.mainPanel = _mainPanel;
     }
@@ -55,26 +55,6 @@ public class Manager {
             spawnEnemies();
 
         }
-
-        // Cập nhật trứng từ kẻ địch
-        eggs.clear();
-        for (Enemy enemy : enemies) {
-            eggs.addAll(enemy.getEggs());
-        }
-
-        // Cập nhật trứng rơi
-        Iterator<Egg> eggIterator = eggs.iterator();
-        while (eggIterator.hasNext()) {
-            Egg egg = eggIterator.next();
-            egg.update();
-            if (!egg.isActive()) {
-                eggIterator.remove();
-            }
-        }
-
-
-
-
 
     }
     
@@ -137,7 +117,7 @@ public class Manager {
         Image blinkImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/chickenBlink.png")).getImage();
         
         if(level == 1){
-//            Random random = new Random();
+//          Random random = new Random();
             enemies = new ArrayList<>();
             int nums = 8;
             int spacing = 200;
