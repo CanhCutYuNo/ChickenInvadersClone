@@ -1,5 +1,6 @@
 package application.Controllers;
 
+import application.Main;
 import application.Models.*;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -98,7 +99,7 @@ public class Manager {
                 	 player.setPosY(950);
                 	 bullets.clear();
                 	 spawnEnemies();
-                	 cardLayout.show(mainPanel, "Menu");
+                         Main.switchToMenuPanel();
                      break;
                  }
              }
