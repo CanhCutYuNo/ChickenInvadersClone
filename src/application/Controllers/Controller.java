@@ -1,5 +1,6 @@
 package application.Controllers;
 
+import application.Main;
 import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
@@ -30,7 +31,7 @@ public class Controller extends KeyAdapter {
 	                );
 	                
 	                if(res == JOptionPane.YES_OPTION) {
-	                	cardLayout.show(mainPanel, "Menu");
+                            Main.switchToMenuPanel();
 	                }
 	        }
 	    }

@@ -4,27 +4,27 @@
  */
 package application.Views;
 
+import application.Controllers.SoundController;
 import application.Main;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JPanel;
 
-
-/**
- *
- * @author hp
- */
-public class MenuPanel extends javax.swing.JPanel {
-
-    public MenuPanel(Runnable onStart1, Runnable onStart2){
-        initComponents(onStart1, onStart2);
+public class MenuPanel extends JPanel {
+    public void setBackgroundPanel(JPanel backgroundPanel) {
+        if (this.backgroundPanel != null) {
+            jLayeredPane.remove(this.backgroundPanel);
+        }
+        this.backgroundPanel = backgroundPanel;
+        jLayeredPane.setLayer(this.backgroundPanel, 0);
+        jLayeredPane.add(this.backgroundPanel);
     }
-    
-    private void initComponents(Runnable onStart1, Runnable onStart2) {
+
+    private void initComponents() {
         lineBorder1 = (javax.swing.border.LineBorder) javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0));
         jLayeredPane = new javax.swing.JLayeredPane();
         containerPanel = new javax.swing.JPanel();
-        backgroundPanel = new BackgroundPanel();
         symbolPanel = new javax.swing.JPanel();
         icon = new javax.swing.JLabel();
         buttonPanel = new javax.swing.JPanel();
@@ -38,9 +38,6 @@ public class MenuPanel extends javax.swing.JPanel {
         setLayout(new java.awt.GridLayout(1, 1));
 
         jLayeredPane.setLayout(new javax.swing.OverlayLayout(jLayeredPane));
-
-        jLayeredPane.setLayer(backgroundPanel, 0);
-        jLayeredPane.add(backgroundPanel);
 
         containerPanel.setBackground(new java.awt.Color(255, 0, 0));
         containerPanel.setOpaque(false);
@@ -69,7 +66,7 @@ public class MenuPanel extends javax.swing.JPanel {
         //Button 1 On Clicked Event
         button1.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-                onStart1.run();                
+                Main.switchToGameContainerPanel();
             }
         });
 
@@ -86,7 +83,7 @@ public class MenuPanel extends javax.swing.JPanel {
         //Button 2 On Clicked Event
         button2.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-                onStart2.run();
+                Main.switchToSettingPanel();
             }
         });
 
@@ -119,6 +116,10 @@ public class MenuPanel extends javax.swing.JPanel {
         jLayeredPane.add(containerPanel);
 
         add(jLayeredPane);
+
+        // add Sound
+//        backgroundMenuMusic = new SoundController(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
+//        backgroundMenuMusic.loop();        
     }// </editor-fold>                        
 
     private javax.swing.JPanel backgroundPanel;

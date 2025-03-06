@@ -1,5 +1,6 @@
 package application.Controllers;
 
+import application.Main;
 import application.Models.*;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -98,14 +99,15 @@ public class Manager {
              Enemy enemy = enemyIterator.next();
 
              if(isColliding2(player, enemy)) {
-            	 JOptionPane.showMessageDialog(null, "Game Over! You lost.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
-            	 enemies.clear();
-            	 player.setPosX(800);
-            	 player.setPosY(950);
-            	 bullets.clear();
-            	 spawnEnemies();
-            	 cardLayout.show(mainPanel, "Menu");
-                 break;
+                	 JOptionPane.showMessageDialog(null, "Game Over! You lost.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+                	 enemies.clear();
+                	 player.setPosX(800);
+                	 player.setPosY(950);
+                	 bullets.clear();
+                	 spawnEnemies();
+                         Main.switchToMenuPanel();
+                     break;
+                 
              }
          }
     }

@@ -28,7 +28,6 @@ public class Button extends javax.swing.JButton {
         setCursor(new Cursor(Cursor.HAND_CURSOR));
         setForeground(Color.white);
         setFont(new Font(Font.SANS_SERIF, Font.TRUETYPE_FONT, 24));
-        setText("HELLO");
         setPreferredSize(new java.awt.Dimension(width, height));
         repaint();
         
@@ -64,7 +63,7 @@ public class Button extends javax.swing.JButton {
         g2D.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
         g2D.drawRect(1, 1, getWidth() - 3, getHeight() - 3);
         
-        super.paint(g);
+        super.paint(g2D);
     }
     
     
