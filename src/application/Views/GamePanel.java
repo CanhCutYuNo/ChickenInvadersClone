@@ -5,13 +5,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class GamePanel extends BasePanel {
+public class GamePanel extends JPanel {
     private final Manager gameManager;
     private final GameLoop gameLoop;
     private final MouseController mouseController;
 
     public GamePanel(Manager gameManager) {
-        super("/asset/resources/gfx/background.png");
         this.gameManager = gameManager;
 
         hideCursor();
@@ -19,6 +18,7 @@ public class GamePanel extends BasePanel {
         setLayout(null);
         setFocusable(true);
         setDoubleBuffered(true);
+        setOpaque(false);
         requestFocusInWindow();
 
         // Khởi tạo và gán controller

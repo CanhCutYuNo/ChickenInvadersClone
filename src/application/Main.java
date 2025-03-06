@@ -10,35 +10,48 @@ import application.Views.*;
 import java.awt.*;
 
 public class Main {
+
     public static void main(String[] args) {
-    	SwingUtilities.invokeLater(() -> {
-    	    JFrame frame = new JFrame("Chicken Invaders");
-    	    frame.setUndecorated(true);
-    	    frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-    	    
-    	    CardLayout cardLayout = new CardLayout();
-    	    JPanel mainPanel = new JPanel(cardLayout);
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Chicken Invaders");
+            frame.setUndecorated(true);
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-    	    Manager gameManager = new Manager(cardLayout, mainPanel);
-    	    GamePanel gamePanel = new GamePanel(gameManager);
+            CardLayout cardLayout = new CardLayout();
+            JPanel mainPanel = new JPanel(cardLayout);
 
-    	    MenuPanel menuPanel = new MenuPanel(() -> {
-    	        cardLayout.show(mainPanel, "Game");
-    	    }, frame::dispose);
+            Manager gameManager = new Manager(cardLayout, mainPanel);
+            GamePanel gamePanel = new GamePanel(gameManager);
 
-    	    mainPanel.add(menuPanel, "Menu");
-    	    mainPanel.add(gamePanel, "Game");
+            MenuPanel menuPanel = new MenuPanel(
+                    () -> {
+                        cardLayout.show(mainPanel, "Game");
+                    },
+                    () -> {
+                        cardLayout.show(mainPanel, "Setting");
+                    });
 
-    	    frame.add(mainPanel);
-    	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    	    frame.setVisible(true);
-    	    
-    	    frame.addKeyListener(new Controller(frame, cardLayout, mainPanel));
+            SettingPanel settingPanel = new SettingPanel(
+                    () -> {
+                        cardLayout.show(mainPanel, "Menu");
+                    });
+            
+            GameContainerPanel gameContainerPanel = new GameContainerPanel(gamePanel);
+
+            mainPanel.add(menuPanel, "Menu");
+            mainPanel.add(settingPanel, "Setting");
+            mainPanel.add(gameContainerPanel, "Game");
+
+            frame.add(mainPanel);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setVisible(true);
+
+            frame.addKeyListener(new Controller(frame, cardLayout, mainPanel));
             frame.setFocusable(true);
             frame.requestFocus();
-    	    
-    	    GameLoop gameLoop = new GameLoop(gamePanel);
-        	gameLoop.start();
-    	});
+
+            GameLoop gameLoop = new GameLoop(gamePanel);
+            gameLoop.start();
+        });
     }
 }

@@ -30,16 +30,17 @@ public class Manager {
     public void update() {
     	updateBullets();
         bullets.removeIf(bullet ->  bullet.isOffScreen(1080));
-        player.update(); 
-        if(frameDelay == 1) {
-        	for(Enemy enemy : enemies) {
-            	enemy.nextFrame();
-            	enemy.update(level);
-            }
-        	 //frameCount++; // Tăng số đếm frame khi enemy đổi frame
+        if(frameDelay == 4) {
+        	player.update(); 
         	frameDelay = 0;
         }
         frameDelay++;
+        
+        for(Enemy enemy : enemies) {
+        	enemy.nextFrame();
+        	enemy.update(level);
+        }
+        
         // Cập nhật va chạm
         checkCollisions();
         checkBulletEnemyCollisions();
@@ -92,16 +93,16 @@ public class Manager {
              Enemy enemy = enemyIterator.next();
 
              if(isColliding2(player, enemy)) {
-                	 JOptionPane.showMessageDialog(null, "Game Over! You lost.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
-                	 enemies.clear();
-                	 player.setPosX(800);
-                	 player.setPosY(950);
-                	 bullets.clear();
-                	 spawnEnemies();
-                	 cardLayout.show(mainPanel, "Menu");
-                     break;
-                 }
+            	 JOptionPane.showMessageDialog(null, "Game Over! You lost.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+            	 enemies.clear();
+            	 player.setPosX(800);
+            	 player.setPosY(950);
+            	 bullets.clear();
+            	 spawnEnemies();
+            	 cardLayout.show(mainPanel, "Menu");
+                 break;
              }
+         }
     }
     
     public void spawnEnemies() {
@@ -146,7 +147,7 @@ public class Manager {
         player.render(g);
         for(Enemy enemy : enemies) enemy.render(g);
         
-        int currentPlayerFrame = player.getCurFrame(); // Lấy frame của enemy đầu tiên
+        int currentPlayerFrame = player.getExFrame(); // Lấy frame của enemy đầu tiên
 
         // Vẽ giá trị currentFrame màu đỏ trên màn hình
         g.setColor(Color.RED);
@@ -155,13 +156,14 @@ public class Manager {
     }
 
     public void movePlayer(int x, int y) {
-    	player.setPosX(x - 32);
+    	player.setPosX(x - 35);
         player.setPosY(y - 32);
         player.updateDirection(x);
+        player.setLastMoveTime((System.currentTimeMillis()));
     }
 
     public void shoot() {
-        bullets.add(new Bullet(player.getPosX() + 27, player.getPosY(), 50, 5.0, 1.0));
+        bullets.add(new Bullet(player.getPosX() + 28, player.getPosY(), 50, 1.0, 0.4));
     }
 
     private void checkCollisions() {

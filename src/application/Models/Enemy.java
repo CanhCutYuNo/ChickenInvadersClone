@@ -217,7 +217,7 @@ public class Enemy {
 
 		}
 		else if(level == 2){
-			theta += 0.05;
+			theta += 0.01;
 			PosX = centerX + (int) (radius * Math.cos(theta));
 			PosY = centerY + (int) (radius * Math.sin(theta));
 		}

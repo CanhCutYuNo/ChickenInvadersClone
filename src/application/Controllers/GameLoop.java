@@ -7,7 +7,7 @@ public class GameLoop {
     private final Timer gameTimer;
 
     public GameLoop(GamePanel gamePanel) {
-        gameTimer = new Timer(8, e -> {
+        gameTimer = new Timer(4, e -> {
             gamePanel.getGameManager().update(); // Cập nhật logic game
             gamePanel.repaint(); // Vẽ lại màn hình
         });
