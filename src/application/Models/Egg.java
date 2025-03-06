@@ -17,7 +17,7 @@ public class Egg {
         this.PosY = PosY;
         this.isActive = true;
         this.speed = 5;
-        this.imgEgg = new ImageIcon("D:/TaiLieu/Nam2/HocKy2/CongngheJava/BTLJava/src/asset/resources/gfx/introEgg.png").getImage();
+        this.imgEgg = new ImageIcon(getClass().getResource("/asset/resources/gfx/introEgg.png")).getImage();
     }
 
     public Rectangle getBounds(){
