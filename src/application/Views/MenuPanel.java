@@ -12,6 +12,11 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 
 public class MenuPanel extends JPanel {
+	
+	public MenuPanel() {
+        initComponents();
+    }
+	
     public void setBackgroundPanel(JPanel backgroundPanel) {
         if (this.backgroundPanel != null) {
             jLayeredPane.remove(this.backgroundPanel);
