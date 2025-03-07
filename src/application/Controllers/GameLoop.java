@@ -9,7 +9,7 @@ public class GameLoop {
     private int fps = 0;
 
     public GameLoop(GamePanel gamePanel) {
-        gameTimer = new Timer(4, e -> {
+        gameTimer = new Timer(16, e -> {
             gamePanel.getGameManager().update();
             gamePanel.repaint();
             frameCount++;

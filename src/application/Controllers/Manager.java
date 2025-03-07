@@ -72,7 +72,7 @@ public class Manager {
 
         updateBullets();
         bullets.removeIf(bullet -> bullet.isOffScreen(1080));
-        if(frameDelay == 5) {
+        if(frameDelay == 10) {
             updateEggs();
             frameDelay = 0;
         }
@@ -85,7 +85,6 @@ public class Manager {
             enemy.nextFrame();
             enemy.update(level);
         }
-        
         
         checkRemoveEggs();
         checkCollisions();
@@ -105,6 +104,7 @@ public class Manager {
         playerController.setPosX(800);
         playerController.setPosY(950);
         bullets.clear();
+        eggs.clear();
         spawnEnemies();
         cardLayout.show(mainPanel, "Menu");        
         menuPanel.setBackgroundPanel(backgroundPanel);
