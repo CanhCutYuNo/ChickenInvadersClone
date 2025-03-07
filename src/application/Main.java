@@ -20,6 +20,7 @@ public class Main {
     private static GameContainerPanel gameContainerPanel;
     private static GameLoop gameLoop;
     private static ViewController viewController;
+    private static SoundController soundController; // Thêm SoundController
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -35,9 +36,14 @@ public class Main {
             backgroundPanel = new BackgroundPanel();
             gameManager.setBackgroundPanel(backgroundPanel);
 
+            // Khởi tạo SoundController với nhạc nền mặc định (menu)
+            soundController = new SoundController(Main.class.getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
+
+            soundController.play(); // Phát nhạc menu khi khởi động game
+
             viewController = new ViewController(cardLayout, mainPanel,
                     null, null, null,
-                    backgroundPanel, null);
+                    backgroundPanel, null, soundController); // Truyền SoundController vào ViewController
 
             menuPanel = new MenuPanel(viewController);
             gameManager.setMenuPanel(menuPanel);
@@ -65,7 +71,6 @@ public class Main {
             frame.addKeyListener(new Controller(frame, cardLayout, mainPanel, viewController));
             frame.setFocusable(true);
             frame.requestFocus();
-
         });
     }
 }

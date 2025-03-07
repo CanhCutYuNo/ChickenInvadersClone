@@ -73,10 +73,11 @@ public class Manager {
         updateBullets();
         bullets.removeIf(bullet -> bullet.isOffScreen(1080));
         if(frameDelay == 1) {
-            updateEggs();
             frameDelay = 0;
         }
         frameDelay++;
+        
+        updateEggs();
         eggs.removeIf(egg -> egg.isOffScreen(1080));
         
         playerController.update();
@@ -125,19 +126,20 @@ public class Manager {
     
     
     private void updateEggs() {
-    	for(Enemy enemy : enemies) {
-    		Random rand = new Random();
-            //Egg
-            if(rand.nextInt(1000)<1){
-                eggs.add(new EnemyProjectiles(enemy.getPosX()+15,enemy.getPosY()+30));
+        Random rand = new Random();
+     
+        for(Enemy enemy : enemies) {
+            if(rand.nextInt(1000) < 1) {
+                eggs.add(new EnemyProjectiles(enemy.getPosX() + 15, enemy.getPosY() + 30));
             }
-            
-            eggs.removeIf(egg -> !egg.isActive());
-            for (EnemyProjectiles egg : eggs) {
-                egg.update();
-            }
-    	}
+        }
+
+        eggs.removeIf(egg -> !egg.isActive());
+        for(EnemyProjectiles egg : eggs) {
+            egg.update();
+        }
     }
+
     
     private void checkRemoveEggs() {
     	ArrayList<EnemyProjectiles> eggsToRemove = new ArrayList<>();
