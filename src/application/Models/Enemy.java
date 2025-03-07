@@ -18,7 +18,7 @@ public class Enemy {
     private List<int[]> wingSprites = new ArrayList<>();
 
     //Egg
-    private ArrayList<Egg> eggs;
+    private ArrayList<EnemyProjectiles> eggs;
 
     private int hp;
     private int PosX;
@@ -164,10 +164,6 @@ public class Enemy {
             g.setColor(Color.RED);
             g.fillRect(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
         }
-        // Them trung cho ga
-        for(Egg egg:eggs){
-            egg.drawEgg(g);
-        }
     }
 
     public void nextFrame() {
@@ -215,20 +211,6 @@ public class Enemy {
 
 
     public void update(int level) {
-
-        Random rand = new Random();
-        //Egg
-        if(rand.nextInt(1000)<1){
-            eggs.add(new Egg(PosX+15,PosY+30));
-        }
-        // Cập nhật danh sách trứng
-        eggs.removeIf(egg -> !egg.isActive());
-        for (Egg egg : eggs) {
-            egg.update();
-        }
-
-
-
 		if(level == 1){
 			if (movingRight) {
 				PosX += speed;

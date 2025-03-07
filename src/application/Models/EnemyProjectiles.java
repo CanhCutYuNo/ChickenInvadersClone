@@ -3,20 +3,20 @@ package application.Models;
 import javax.swing.*;
 import java.awt.*;
 
-public class Egg {
+public class EnemyProjectiles {
     private Image imgEgg;
     private boolean isActive;
     private int PosX;
     private int PosY;
-    private int speed;
+    private double speed;
     private static final int EGG_WIDTH = 5;
     private static final int EGG_HEIGHT = 5;
 
-    public Egg(int PosX, int PosY){
+    public EnemyProjectiles(int PosX, int PosY){
         this.PosX = PosX;
         this.PosY = PosY;
         this.isActive = true;
-        this.speed = 5;
+        this.speed = 1;
         this.imgEgg = new ImageIcon(getClass().getResource("/asset/resources/gfx/introEgg.png")).getImage();
     }
 
@@ -42,7 +42,6 @@ public class Egg {
         if (imgEgg == null) {
             System.out.println("Lỗi: Ảnh trứng chưa được load!");
         }
-
     }
 
     public boolean isActive(){
@@ -53,5 +52,6 @@ public class Egg {
         return PosY > 1080;
     }
 
-
+    public int getPosX() { return PosX; }
+    public int getPosY() { return PosY; }
 }
