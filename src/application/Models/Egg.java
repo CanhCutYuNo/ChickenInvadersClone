@@ -49,7 +49,9 @@ public class Egg {
         return isActive;
     }
 
-
+    public boolean isOffScreen(int screenHeight) {
+        return PosY > 1080;
+    }
 
 
 }

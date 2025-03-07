@@ -4,28 +4,20 @@
  */
 package application.Views;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 
 /**
  *
  * @author hp
  */
 public class BackgroundPanel extends javax.swing.JPanel{
-    private final Thread drawThread;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final Thread drawThread;
     private Image backgroundImage;
     private int y1;
     private int y2;

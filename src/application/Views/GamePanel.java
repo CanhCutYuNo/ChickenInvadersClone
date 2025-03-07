@@ -1,14 +1,17 @@
 package application.Views;
 
 import application.Controllers.*;
-import application.Models.Egg;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class GamePanel extends JPanel {
-    private final Manager gameManager;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final Manager gameManager;
     private final GameLoop gameLoop;
     private final MouseController mouseController;
 

@@ -4,33 +4,26 @@
  */
 package application.Views;
 
-import application.Main;
-import java.awt.*;
+import application.Controllers.ViewController;
+
 import java.awt.event.*;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.RoundRectangle2D;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.io.File;
-import java.io.IOError;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Map;
-import javax.imageio.ImageIO;
-import java.util.Timer;
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.plaf.basic.BasicArrowButton;
 
 /**
  *
  * @author hp
  */
 public class SettingPanel extends JPanel {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private ViewController viewController;
 
-    public SettingPanel() {
-        initComponents();
+    public SettingPanel(ViewController viewController) {
+    	this.viewController = viewController;
+    	initComponents();
     }
 
     public void setBackgroundPanel(JPanel backgroundPanel) {
@@ -136,7 +129,7 @@ public class SettingPanel extends JPanel {
         //Button 4 On Clicked Event        
         button4.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-                Main.switchToMenuPanel();
+            	viewController.switchToMenuPanel();
             }
         });
 

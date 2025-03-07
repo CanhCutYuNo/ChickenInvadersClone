@@ -5,21 +5,17 @@
 
 package application.Views;
 import java.awt.*;
-import java.awt.font.FontRenderContext;
-import java.awt.font.TextLayout;
-import java.awt.geom.AffineTransform;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.plaf.ColorUIResource;
 
 /**
  *
  * @author hp
  */
 public class Button extends javax.swing.JButton {
-    private boolean isEntered = false;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private boolean isEntered = false;
     public Button(int width, int height) {
         //Xóa Button UI
         setContentAreaFilled(false);

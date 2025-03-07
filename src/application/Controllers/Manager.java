@@ -1,64 +1,109 @@
 package application.Controllers;
 
-import application.Main;
 import application.Models.*;
+import application.Views.*;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.awt.*;
-import java.util.Random;
 
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class Manager {
-    private Player player;
+//	private PlayerModel playerModel;
+	private PlayerView playerView;
+	private PlayerController playerController;
     private ArrayList<Bullet> bullets;
     private ArrayList<Enemy> enemies;
 //    private ArrayList<Egg> eggs;
+    private static BackgroundPanel backgroundPanel;
+    private static MenuPanel menuPanel;
     private CardLayout cardLayout;
 	private JPanel mainPanel;
+	private GameLoop gameLoop;
 	private int frameDelay = 0;
 	private int level = 1;
-	//private int frameCount = 0;
+	private boolean playerExploded = false;
 
-    public Manager(CardLayout _cardLayout, JPanel _mainPanel) {
+    public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop) {
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
-        player = new Player(100, 10, 1.0, 950, 540);
+//      playerModel = new PlayerModel(100, 10, 1.0, 950, 540);
+        playerController = new PlayerController(1.0, 950, 540, null);
+        playerView = new PlayerView(playerController);
+        playerController.setPlayerView(playerView);
+
 //        eggs = new ArrayList<>();
         this.cardLayout = _cardLayout;
 		this.mainPanel = _mainPanel;
+		Manager.backgroundPanel = _backgroundPanel;
+		Manager.menuPanel = _menuPanel;
+		this.gameLoop = _gameLoop;
     }
 
+    public void setBackgroundPanel(BackgroundPanel _backgroundPanel) {
+        Manager.backgroundPanel = _backgroundPanel;
+    }
+    
+    public void setMenuPanel(MenuPanel _menuPanel) {
+        Manager.menuPanel = _menuPanel;
+    }
+    
+    public void setGameLoop(GameLoop gameLoop) {
+        this.gameLoop = gameLoop;
+    }
+    
+    public Point getPlayerPosition() {
+        return playerController.getPosition();
+    }
+
+    
     public void update() {
-    	updateBullets();
-        bullets.removeIf(bullet ->  bullet.isOffScreen(1080));
-        if(frameDelay == 4) {
-        	player.update(); 
-        	frameDelay = 0;
+        if(playerView.isExploding()) {
+            playerView.updateExplosion();
+            
+            if(52 < playerView.getExFrame()) { 
+                restartGame();
+            }
+            return;
+        }
+
+        updateBullets();
+        bullets.removeIf(bullet -> bullet.isOffScreen(1080));
+        if(frameDelay == 2) {
+            playerController.update();
+            frameDelay = 0;
         }
         frameDelay++;
-        
+
         for(Enemy enemy : enemies) {
-        	enemy.nextFrame();
-        	enemy.update(level);
+            enemy.nextFrame();
+            enemy.update(level);
         }
-        
-        // Cập nhật va chạm
+
         checkCollisions();
         checkBulletEnemyCollisions();
         checkPlayerCollisions();
 
-        //Kiem tra len level
-        if(enemies.isEmpty()){
+        if(enemies.isEmpty()) {
             level++;
             System.out.println("New level !!");
             spawnEnemies();
-
         }
-
     }
+
+    private void restartGame() {
+        enemies.clear();
+        playerController.setPosX(800);
+        playerController.setPosY(950);
+        bullets.clear();
+        spawnEnemies();
+        cardLayout.show(mainPanel, "Menu");        
+        menuPanel.setBackgroundPanel(backgroundPanel);
+        playerExploded = false;
+    }
+
     
     private void updateBullets() {
         ArrayList<Bullet> bulletsToRemove = new ArrayList<>();
@@ -98,16 +143,12 @@ public class Manager {
     	 while(enemyIterator.hasNext()) {
              Enemy enemy = enemyIterator.next();
 
-             if(isColliding2(player, enemy)) {
-                	 JOptionPane.showMessageDialog(null, "Game Over! You lost.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
-                	 enemies.clear();
-                	 player.setPosX(800);
-                	 player.setPosY(950);
-                	 bullets.clear();
-                	 spawnEnemies();
-                         Main.switchToMenuPanel();
-                     break;
-                 
+             if(isColliding2(playerController, enemy)) {
+            	 if(!playerExploded) {
+                     playerController.getPlayerView().startExplosion();
+                     playerExploded = true;
+                     
+                 }
              }
          }
     }
@@ -142,8 +183,8 @@ public class Manager {
             int centerY = 1080 / 4;
             for(int i = 0; i < nums; i++){
                 double angle = 2 * Math.PI * i / nums;
-                int posX = centerX + (int) (100 * Math.cos(angle));
-                int posY = centerY + (int) (100 * Math.sin(angle));
+                int posX = centerX +(int)(100 * Math.cos(angle));
+                int posY = centerY +(int)(100 * Math.sin(angle));
                 enemies.add(new Enemy(100, posX, posY, 2, bodyImage, wingsImage, headImage, blinkImage));
             }
         }
@@ -153,34 +194,38 @@ public class Manager {
 
     public void render(Graphics g) {
         for(Bullet bullet : bullets) bullet.render(g);
-        player.render(g);
         for(Enemy enemy : enemies) enemy.render(g);
+        if(playerView.isExploding()) {
+            playerView.explosionRender(g); // Vẽ hiệu ứng nổ
+        } else {
+            playerView.render(g); // Vẽ player nếu không đang nổ
+        }
         
-        int currentPlayerFrame = player.getExFrame(); // Lấy frame của enemy đầu tiên
+        int fps = gameLoop.getFPS(); // Lấy frame của enemy đầu tiên
 
         // Vẽ giá trị currentFrame màu đỏ trên màn hình
-        g.setColor(Color.RED);
+        g.setColor(Color.GREEN);
         g.setFont(new Font("Arial", Font.BOLD, 20));
-        g.drawString("Current Frame: " + currentPlayerFrame, 50, 50);
+        g.drawString("FPS: " + fps, 50, 50);
     }
 
     public void movePlayer(int x, int y) {
-    	player.setPosX(x - 35);
-        player.setPosY(y - 32);
-        player.updateDirection(x);
-        player.setLastMoveTime((System.currentTimeMillis()));
+    	playerController.setPosX(x - 35);
+        playerController.setPosY(y - 32);
+        playerController.updateDirection(x);
+        playerController.setLastMoveTime((System.currentTimeMillis()));
     }
 
     public void shoot() {
-        bullets.add(new Bullet(player.getPosX() + 28, player.getPosY(), 50, 1.0, 0.4));
+        bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 50, 1.0, 0.4));
     }
 
     private void checkCollisions() {
         bullets.removeIf(bullet -> {
-            for (Enemy enemy : enemies) {
-                if (isColliding(bullet, enemy)) {
+            for(Enemy enemy : enemies) {
+                if(isColliding(bullet, enemy)) {
                     enemy.takeDamage(bullet.getDamage());
-                    if (enemy.getHp() <= 0) enemies.remove(enemy);
+                    if(enemy.getHp() <= 0) enemies.remove(enemy);
                     return true;
                 }
             }
@@ -194,7 +239,7 @@ public class Manager {
         return bulletBounds.intersects(enemyBounds);
     }
     
-    private boolean isColliding2(Player player, Enemy enemy) {
+    private boolean isColliding2(PlayerController player, Enemy enemy) {
         Rectangle playerBounds = new Rectangle(player.getPosX(), player.getPosY(), 54, 50);
         Rectangle enemyBounds = new Rectangle(enemy.getPosX(), enemy.getPosY(), 54, 50);
         return playerBounds.intersects(enemyBounds);

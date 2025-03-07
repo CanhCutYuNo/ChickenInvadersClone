@@ -1,10 +1,8 @@
 package application;
 
-import java.util.*;
 import javax.swing.*;
 
 import application.Controllers.*;
-import application.Models.*;
 import application.Views.*;
 
 import java.awt.*;
@@ -21,58 +19,52 @@ public class Main {
     private static SettingPanel settingPanel;
     private static GameContainerPanel gameContainerPanel;
     private static GameLoop gameLoop;
-    
+    private static ViewController viewController;
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             frame = new JFrame("Chicken Invaders");
             frame.setUndecorated(true);
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            
+
             cardLayout = new CardLayout();
             mainPanel = new JPanel(cardLayout);
-            
-            gameManager = new Manager(cardLayout, mainPanel);
-            gamePanel = new GamePanel(gameManager);
+
+            gameManager = new Manager(cardLayout, mainPanel, null, null, null);
             
             backgroundPanel = new BackgroundPanel();
+            gameManager.setBackgroundPanel(backgroundPanel);
+
+            viewController = new ViewController(cardLayout, mainPanel, 
+                                                null, null, null, 
+                                                backgroundPanel, null);
             
-            menuPanel = new MenuPanel();
+            menuPanel = new MenuPanel(viewController);
+            gameManager.setMenuPanel(menuPanel);
             
-            settingPanel = new SettingPanel();
-            
+            gamePanel = new GamePanel(gameManager);
+            gameLoop = new GameLoop(gamePanel);
+            gameManager.setGameLoop(gameLoop); 
+           
+            settingPanel = new SettingPanel(viewController);
             gameContainerPanel = new GameContainerPanel(gamePanel);
-            
+
             mainPanel.add(menuPanel, "Menu");
             mainPanel.add(settingPanel, "Setting");
             mainPanel.add(gameContainerPanel, "Game");
-            
-            switchToMenuPanel();
-            
+
+            viewController.setPanels(menuPanel, settingPanel, gameContainerPanel, gamePanel);
+
+            viewController.switchToMenuPanel();
+            gameLoop.start();
+
             frame.add(mainPanel);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
-            
-            frame.addKeyListener(new Controller(frame, cardLayout, mainPanel));
+
+            frame.addKeyListener(new Controller(frame, cardLayout, mainPanel, viewController));
             frame.setFocusable(true);
             frame.requestFocus();
-            
-            gameLoop = new GameLoop(gamePanel);
-            gameLoop.start();
         });
-    }
-    
-    public static void switchToMenuPanel() {
-        cardLayout.show(mainPanel, "Menu");        
-        menuPanel.setBackgroundPanel(backgroundPanel);
-    }
-    
-    public static void switchToSettingPanel() {
-        cardLayout.show(mainPanel, "Setting");
-        settingPanel.setBackgroundPanel(backgroundPanel);
-    }
-    
-    public static void switchToGameContainerPanel() {
-        cardLayout.show(mainPanel, "Game");
-        gameContainerPanel.setBackgroundPanel(backgroundPanel);
     }
 }

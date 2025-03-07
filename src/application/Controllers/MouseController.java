@@ -1,59 +1,46 @@
 package application.Controllers;
 
 import java.awt.event.*;
-
-import javax.swing.SwingUtilities;
-
+import javax.swing.*;
 import application.Views.GamePanel;
 
 public class MouseController implements MouseListener, MouseMotionListener {
     private final GamePanel gamePanel;
-    private long lastShotTime = 0;
-    private static final long SHOOT_DELAY = 200;
-    private boolean isShooting = false;
+    private Timer shootTimer;
+    private static final int SHOOT_DELAY = 200; // Đổi sang int vì Timer sử dụng ms
 
     public MouseController(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
+        
+        // Tạo Timer, nhưng không chạy ngay
+        shootTimer = new Timer(SHOOT_DELAY, e -> gamePanel.getGameManager().shoot());
+        shootTimer.setRepeats(true);
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
         gamePanel.getGameManager().movePlayer(e.getX(), e.getY());
-
-        if (isShooting) {
-            shootIfReady();
-        }
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
         gamePanel.getGameManager().movePlayer(e.getX(), e.getY());
-
-        if(isShooting) {
-            shootIfReady();
-        }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if(SwingUtilities.isLeftMouseButton(e)) {
-            isShooting = true;
-            shootIfReady();
+        if (SwingUtilities.isLeftMouseButton(e)) {
+            if (!shootTimer.isRunning()) {
+                gamePanel.getGameManager().shoot(); 
+                shootTimer.start();
+            }
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if(SwingUtilities.isLeftMouseButton(e)) {
-            isShooting = false;
-        }
-    }
-
-    private void shootIfReady() {
-        long currentTime = System.currentTimeMillis();
-        if(currentTime - lastShotTime >= SHOOT_DELAY) {
-            gamePanel.getGameManager().shoot();
-            lastShotTime = currentTime;
+        if (SwingUtilities.isLeftMouseButton(e)) {
+            shootTimer.stop();
         }
     }
 

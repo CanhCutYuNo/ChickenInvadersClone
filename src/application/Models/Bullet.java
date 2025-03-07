@@ -6,7 +6,6 @@ import java.awt.*;
 public class Bullet {
     private int x, y;
     private int dame;
-    private boolean isActive = true;
     private double speedY;
     private double acceleration;
     private Image image;
@@ -45,7 +44,7 @@ public class Bullet {
         return y < -30;
     }
     
-    public void deactivate() {isActive = false;} 
+    public void deactivate() {} 
 
     public int getX() {
         return x;

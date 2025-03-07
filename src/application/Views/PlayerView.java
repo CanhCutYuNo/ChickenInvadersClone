@@ -1,21 +1,15 @@
-package application.Models;
+package application.Views;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class Player {
+import application.Controllers.*;
+
+public class PlayerView {
     private Image spriteSheet;
     private Image exhaustImage;
     private Image explosionSheet;
-    private int hp;
-    private int damage;
-    private double shootSpeed;
-    private int PosX;
-    private int PosY;
-    private static final int MODEL_WIDTH = 64;
-    private static final int MODEL_HEIGHT = 64;
-    private long lastMoveTime = 0;
-    private static final long MOVE_TIMEOUT = 200;
+    private PlayerController playerController;
     
     private int[][] spriteData = {
         {1, 1135, 104, 114}, {1, 1019, 104, 114}, {1, 903, 104, 114},
@@ -45,19 +39,12 @@ public class Player {
 
     private int curFrame = 16; 
     private int exFrame = 0;
-    private int initialPosX;
     private boolean exploding = false;
-    private boolean moving = false;
 
     // Constructor
-    public Player(int hp, int damage, double shootSpeed, int PosX, int PosY) {
-        this.hp = hp;
-        this.damage = damage;
-        this.shootSpeed = shootSpeed;
-        this.PosX = PosX;
-        this.PosY = PosY;
-        this.initialPosX = PosX;
-
+    public PlayerView(PlayerController _playerController) {
+    	this.playerController = _playerController;
+    	
         try {
             spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/spaceship.png")).getImage();
             exhaustImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/exhaust4.png")).getImage();
@@ -69,65 +56,11 @@ public class Player {
     }
 
     // Getter & Setter
-    public int getHp() { return hp; }
-    public void setHp(int hp) { this.hp = hp; }
-    public boolean isDead() { return hp <= 0; }
-
-    public int getDamage() { return damage; }
-    public void setDamage(int damage) { this.damage = damage; }
-
-    public double getShootSpeed() { return shootSpeed; }
-    public void setShootSpeed(double shootSpeed) { this.shootSpeed = shootSpeed; }
-
-    public int getPosX() { return PosX; }
-    public void setPosX(int PosX) { this.PosX = PosX; }
-
-    public int getPosY() { return PosY; }
-    public void setPosY(int PosY) { this.PosY = PosY; }
-    
     public int getCurFrame() { return curFrame; }
     public int getExFrame() { return exFrame; }
-    public boolean getMoving() { return moving; } 
     
-    public void setLastMoveTime(long LMT) { this.lastMoveTime = LMT; }
-
-    
-    public void updateDirection(int newX) {
-        if(newX < initialPosX) {
-            curFrame = Math.max(0, curFrame - 1); 
-            moving = true;
-        } else if(newX > initialPosX) {
-            curFrame = Math.min(31, curFrame + 1); 
-            moving = true;
-        } else {
-            moving = false; 
-        }
-        initialPosX = newX;
-        lastMoveTime = System.currentTimeMillis(); 
-    }
-
-    public void update() {
-        if(System.currentTimeMillis() - lastMoveTime > MOVE_TIMEOUT) {
-            moving = false;
-        }
-        else moving = true;
-
-        if(!moving && curFrame != 16) {
-            if(curFrame < 16) {
-                curFrame++;
-            } else {
-                curFrame--;
-            }
-        }
-//        if(curFrame >= 15 && curFrame < 32) {
-//        	curFrame++;
-//        }
-        if(exFrame < 52) {
-    		exFrame++;
-    	} else {
-    		exFrame = 0;
-    	}
-    }
+    public int setCurFrame(int _curFrame) { return curFrame = _curFrame; }
+    public int setExFrame(int _exFrame) { return exFrame = _exFrame; }
 
     public void render(Graphics g) {
         if(spriteSheet != null) {
@@ -150,7 +83,7 @@ public class Player {
             int offsetY = Offsets[curFrame][1];
 
             // Vẽ tàu vũ trụ(có offset)
-            g.drawImage(spriteSheet, PosX + offsetX, PosY + offsetY, PosX + offsetX + 80, PosY + offsetY + 80, 
+            g.drawImage(spriteSheet, playerController.getPosX() + offsetX, playerController.getPosY() + offsetY, playerController.getPosX() + offsetX + 100, playerController.getPosY() + offsetY + 100, 
                         sx, sy, sx + sw, sy + sh, null);
 
             // Hiệu ứng lửa 
@@ -175,8 +108,8 @@ public class Player {
 
                 // Vẽ lửa
                 g2d.drawImage(exhaustImage, 
-                              PosX + 12 + jitterX, PosY + 55 + jitterY, 
-                              PosX + 12 + scaledWidth / 2 + jitterX, PosY + 55 + scaledHeight / 2 + jitterY,
+                		playerController.getPosX() + 22 + jitterX, playerController.getPosY() + 70 + jitterY, 
+                		playerController.getPosX() + 22 + scaledWidth / 2 + jitterX, playerController.getPosY() + 70 + scaledHeight / 2 + jitterY,
                               ex_sx, ex_sy, ex_sx + ex_sw, ex_sy + ex_sh, null);
 
                 // Reset độ trong suốt
@@ -186,7 +119,7 @@ public class Player {
                         
         } else {
             g.setColor(Color.RED);
-            g.fillRect(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
+            g.fillRect(playerController.getPosX(), playerController.getPosY(), 64, 64);
         }
     }
     
@@ -202,7 +135,7 @@ public class Player {
     public void updateExplosion() {
         if(exploding) {
             exFrame++;
-            if(exFrame >= explosionData.length) {
+            if(exFrame >= 53) {
                 exploding = false;
             }
         }
@@ -236,9 +169,9 @@ public class Player {
 
                 double scale = 8.0; // Hệ số phóng to
 
-                g.drawImage(explosionSheet, 
-                            (int)(PosX + eOffsetX), (int)(PosY + eOffsetY), 
-                            (int)(PosX + eOffsetX + (ew * scale) / 2), (int)(PosY + eOffsetY + (eh * scale) / 2), 
+                g2d.drawImage(explosionSheet, 
+                            (int)(playerController.getPosX() + eOffsetX), (int)(playerController.getPosY() + eOffsetY), 
+                            (int)(playerController.getPosX() + eOffsetX + (ew * scale) / 2), (int)(playerController.getPosY() + eOffsetY + (eh * scale) / 2), 
                             ex, ey, ex + ew, ey + eh, 
                             null);
         }

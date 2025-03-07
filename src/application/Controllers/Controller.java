@@ -1,23 +1,19 @@
 package application.Controllers;
 
-import application.Main;
 import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 public class Controller extends KeyAdapter {
 	private JFrame main;
-	private CardLayout cardLayout;
-	private JPanel mainPanel;
+	private ViewController viewController;
 	
-	public Controller(JFrame _main, CardLayout _cardLayout, JPanel _mainPanel) {
+	public Controller(JFrame _main, CardLayout _cardLayout, JPanel _mainPanel, ViewController _viewController) {
 		this.main = _main;
-		this.cardLayout = _cardLayout;
-		this.mainPanel = _mainPanel;
+		this.viewController = _viewController;
 	}
 	
 	 @Override
@@ -31,7 +27,7 @@ public class Controller extends KeyAdapter {
 	                );
 	                
 	                if(res == JOptionPane.YES_OPTION) {
-                            Main.switchToMenuPanel();
+	                	viewController.switchToMenuPanel();
 	                }
 	        }
 	    }

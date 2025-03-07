@@ -1,6 +1,5 @@
 package application.Models;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class Enemy {
     private static final int MODEL_WIDTH = 64;
     private static final int MODEL_HEIGHT = 64;
     private static final int MAP_WIDTH = 1900;
-    private static final int MAP_HEIGHT = 1080;
+    //private static final int MAP_HEIGHT = 1080;
 
     private static final int[][] SPRITE_HEAD = { {195, 93, 30, 45} };
     private static final int[][] SPRITE_BODY = {
