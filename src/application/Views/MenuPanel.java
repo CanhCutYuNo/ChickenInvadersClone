@@ -126,6 +126,12 @@ public class MenuPanel extends JPanel {
         } catch (Exception e) {
             System.err.println("Lỗi khi tải file nhạc: " + e.getMessage());
         }
+     
+    }// </editor-fold>      
+    
+    @Override
+    public void paint(Graphics g) {
+        paintChildren(g);
     }
 
     private Button button1, button2, button3;

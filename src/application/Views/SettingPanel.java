@@ -5,6 +5,7 @@
 package application.Views;
 
 import application.Controllers.ViewController;
+import java.awt.Graphics;
 
 import java.awt.event.*;
 import javax.swing.*;
@@ -145,7 +146,12 @@ public class SettingPanel extends JPanel {
 
         add(jLayeredPane);
 
-    }// </editor-fold>                        
+    }// </editor-fold>     
+    
+    @Override
+    public void paint(Graphics g) {
+        paintChildren(g);
+    }
 
     public enum Difficulty {
         PEACEFUL, EASY, NORMAL, HARD, EXTREME;
