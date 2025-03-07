@@ -12,7 +12,6 @@ public class GamePanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private final Manager gameManager;
-    private final GameLoop gameLoop;
     private final MouseController mouseController;
 
     public GamePanel(Manager gameManager) {
@@ -30,10 +29,6 @@ public class GamePanel extends JPanel {
         mouseController = new MouseController(this);
         addMouseListener(mouseController);
         addMouseMotionListener(mouseController);
-
-        // Khởi động GameLoop
-        gameLoop = new GameLoop(this);
-        gameLoop.start();
     }
 
     @Override

@@ -60,7 +60,6 @@ public class BackgroundPanel extends javax.swing.JPanel{
                 currentTime = System.nanoTime();
             }
             update();
-            repaint();
             invokeTime = currentTime;
         }
     }

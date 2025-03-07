@@ -10,13 +10,12 @@ public class GameLoop {
     private long lastTime = System.nanoTime(); // Lưu thời gian frame trước
 
     public GameLoop(GamePanel gamePanel) {
-        gameTimer = new Timer(8, e -> {
+        gameTimer = new Timer(4, e -> {
             long currentTime = System.nanoTime();
             double deltaTime = (currentTime - lastTime) / 1_000_000_000.0; // Đổi sang giây
             lastTime = currentTime;
 
             gamePanel.getGameManager().update(deltaTime);
-            gamePanel.repaint();
             frameCount++;
         });
 
