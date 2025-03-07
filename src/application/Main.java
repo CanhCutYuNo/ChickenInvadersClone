@@ -43,7 +43,7 @@ public class Main {
             gameManager.setMenuPanel(menuPanel);
 
             gamePanel = new GamePanel(gameManager);
-            gameLoop = new GameLoop(gamePanel);
+            gameLoop = new GameLoop(gamePanel, frame);
             gameManager.setGameLoop(gameLoop);
 
             settingPanel = new SettingPanel(viewController);
@@ -65,26 +65,6 @@ public class Main {
             frame.addKeyListener(new Controller(frame, cardLayout, mainPanel, viewController));
             frame.setFocusable(true);
             frame.requestFocus();
-
-            int fps = 60;
-            // Draw Update
-            new Thread(() -> {
-                long currentTime;
-                long invokeTime;
-                invokeTime = currentTime = System.nanoTime();
-                while (true) {
-                    while (currentTime - invokeTime < 1000000000 / fps) {
-                        try {
-                            Thread.sleep(1);
-                        } catch (InterruptedException ex) {
-                            ex.printStackTrace();
-                        }
-                        currentTime = System.nanoTime();
-                    }
-                    frame.repaint();
-                    invokeTime = currentTime;
-                }
-            }).start();
 
         });
     }
