@@ -60,7 +60,7 @@ public class Manager {
     }
 
     
-    public void update() {
+    public void update(double deltaTime) {
         if(playerView.isExploding()) {
             playerView.updateExplosion();
             
@@ -72,12 +72,12 @@ public class Manager {
 
         updateBullets();
         bullets.removeIf(bullet -> bullet.isOffScreen(1080));
-        if(frameDelay == 5) {
+        if(frameDelay == 1) {
             updateEggs();
             frameDelay = 0;
         }
         frameDelay++;
-        eggs.removeIf(egg -> egg.isOffScreen(1900));
+        eggs.removeIf(egg -> egg.isOffScreen(1080));
         
         playerController.update();
         
@@ -85,8 +85,7 @@ public class Manager {
             enemy.nextFrame();
             enemy.update(level);
         }
-        
-        
+         
         checkRemoveEggs();
         checkCollisions();
         checkBulletEnemyCollisions();
@@ -105,6 +104,7 @@ public class Manager {
         playerController.setPosX(800);
         playerController.setPosY(950);
         bullets.clear();
+        eggs.clear();
         spawnEnemies();
         cardLayout.show(mainPanel, "Menu");        
         menuPanel.setBackgroundPanel(backgroundPanel);
@@ -142,7 +142,7 @@ public class Manager {
     private void checkRemoveEggs() {
     	ArrayList<EnemyProjectiles> eggsToRemove = new ArrayList<>();
     	for(EnemyProjectiles egg : eggs) {
-    		if(egg.isOffScreen(1900)) {
+    		if(egg.isOffScreen(1080)) {
     			eggsToRemove.add(egg);
     		}
     	}
@@ -236,8 +236,6 @@ public class Manager {
                 enemies.add(new Enemy(100, posX, posY, 2, bodyImage, wingsImage, headImage, blinkImage));
             }
         }
-
-
     }
 
     public void render(Graphics g) {
@@ -252,9 +250,8 @@ public class Manager {
             playerView.render(g); // Vẽ player nếu không đang nổ
         }
         
-        int fps = gameLoop.getFPS(); // Lấy frame của enemy đầu tiên
+        int fps = gameLoop.getFPS();
 
-        // Vẽ giá trị currentFrame màu đỏ trên màn hình
         g.setColor(Color.GREEN);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("FPS: " + fps, 50, 50);
@@ -298,7 +295,7 @@ public class Manager {
     
     private boolean isColliding3(PlayerController player, EnemyProjectiles egg) {
         Rectangle playerBounds = new Rectangle(player.getPosX(), player.getPosY(), 54, 50);
-        Rectangle eggBounds = new Rectangle(egg.getPosX(), egg.getPosY(), 54, 50);
+        Rectangle eggBounds = new Rectangle((int)egg.getPosX(), (int)egg.getPosY(), 5, 5);
         return playerBounds.intersects(eggBounds);
     }
 }
