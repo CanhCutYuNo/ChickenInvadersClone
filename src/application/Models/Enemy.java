@@ -17,9 +17,6 @@ public class Enemy {
     private int[] bodySprite; // Lưu tọa độ body
     private List<int[]> wingSprites = new ArrayList<>();
 
-    //Egg
-    private ArrayList<EnemyProjectiles> eggs;
-
     private int hp;
     private int PosX;
     private int PosY;
@@ -59,7 +56,8 @@ public class Enemy {
             {779, 307, 152, 73}, {933, 307, 152, 73}, {1087, 307, 153, 73},
         };
 
-    public Enemy(int hp, int PosX, int PosY, int level, Image bodySheet, Image wingsSheet, Image headSheet, Image blinkAnimation) {
+    public Enemy(int hp, int PosX, int PosY, int level, 
+    			 Image bodySheet, Image wingsSheet, Image headSheet, Image blinkAnimation) {
         this.hp = hp;
         this.spriteBodySheet = bodySheet;
         this.spriteWingsSheet = wingsSheet;
@@ -71,9 +69,6 @@ public class Enemy {
         this.PosY = PosY;
         
         this.speed = 2;
-
-//      Eggs
-        this.eggs = new ArrayList<>();
 
 		if(level == 1){
 			this.movingRight = true;
@@ -207,8 +202,6 @@ public class Enemy {
     public int getCurrentFrame() {
     	return currentFrame;
     }
-
-
 
     public void update(int level) {
 		if(level == 1){
