@@ -2,12 +2,7 @@ package application.models;
 
 import java.awt.*;
 
-<<<<<<< HEAD:src/application/Models/Player.java
 public class Player {
-=======
-public class PlayerModel {
-
->>>>>>> 459ef5f964927b520fee4b731a868d78bfdd6ccf:src/application/Models/PlayerModel.java
     private int hp;
     private int damage;
     private double shootSpeed;

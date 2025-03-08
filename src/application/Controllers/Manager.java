@@ -83,7 +83,7 @@ public class Manager {
         
         for(Enemy enemy : enemies) {
             enemy.nextFrame();
-            enemy.update(level);
+            enemy.update();
         }
       
         checkCollisions();

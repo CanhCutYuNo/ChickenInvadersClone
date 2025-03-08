@@ -2,13 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-<<<<<<< HEAD
 
 package application.views;
-=======
-package application.Views;
-
->>>>>>> 459ef5f964927b520fee4b731a868d78bfdd6ccf
 import java.awt.*;
 
 /**
