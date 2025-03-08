@@ -4,6 +4,7 @@
  */
 package application.Views;
 
+import java.awt.Graphics;
 import javax.swing.*;
 
 /**
@@ -46,5 +47,10 @@ public class GameContainerPanel extends JPanel {
         jLayeredPane.add(gamePanel);
 
         add(jLayeredPane);
+    }
+    
+    @Override
+    public void paint(Graphics g) {
+        paintChildren(g);
     }
 }
