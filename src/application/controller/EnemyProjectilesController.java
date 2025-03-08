@@ -41,7 +41,7 @@ public class EnemyProjectilesController {
     public void drawProjectiles(Graphics g) {
         for (EnemyProjectiles projectile : projectiles) {
             if(projectile.isExploding()) {
-                projectileView.drawEggBroken(g, projectile, projectile.getExplosionFrame());
+                projectileView.drawEggBroken(g, projectile, projectile.getAnimationFrame());
             } else {
                 projectileView.draw(g, projectile);
             }

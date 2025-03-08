@@ -3,7 +3,7 @@ package application.models;
 public class EnemyProjectiles {
     private double posX, posY;
     private boolean isExploding = false;
-    private int explosionFrame = 0;
+    private int animationFrame = 0;
     
     public EnemyProjectiles(double x, double y) {
         this.posX = x;
@@ -14,7 +14,7 @@ public class EnemyProjectiles {
         if (!isExploding) {
             posY += 5; // Di chuyển xuống
         } else {
-            explosionFrame++;
+            animationFrame++;
         }
     }
 
@@ -23,20 +23,20 @@ public class EnemyProjectiles {
     }
 
     public boolean removed() {
-        return isExploding && explosionFrame > 32; // Sau 32 frame thì xoá
+        return isExploding && animationFrame > 32; // Sau 32 frame thì xoá
     }
 
     public void explode() {
         isExploding = true;
-        explosionFrame = 0;
+        animationFrame = 0;
     }
 
     public boolean isExploding() {
         return isExploding;
     }
 
-    public int getExplosionFrame() {
-        return explosionFrame;
+    public int getAnimationFrame() {
+        return animationFrame;
     }
 
     public double getPosX() {
@@ -46,4 +46,5 @@ public class EnemyProjectiles {
     public double getPosY() {
         return posY;
     }
+
 }

@@ -22,7 +22,7 @@ public class EnemyLvl1 extends Enemy {
     @Override
     public void update() {
 
-        if (movingRight) {
+        if(movingRight) {
             PosX += speed;
             if (PosX >= MAP_WIDTH - MODEL_WIDTH) {
                 movingRight = false;
