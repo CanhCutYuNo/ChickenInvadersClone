@@ -22,6 +22,8 @@ public class Manager {
     private static BackgroundPanel backgroundPanel;
     private static MenuPanel menuPanel;
     private CardLayout cardLayout;
+    private SoundController soundController;
+
 
 
     private JPanel mainPanel;
@@ -31,7 +33,7 @@ public class Manager {
     private boolean playerExploded = false;
 
 
-    public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop) {
+    public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop,SoundController soundController) {
     
     
     	
@@ -49,6 +51,7 @@ public class Manager {
         Manager.backgroundPanel = _backgroundPanel;
         Manager.menuPanel = _menuPanel;
         this.gameLoop = _gameLoop;
+        this.soundController = soundController;
     }
 
     public void setBackgroundPanel(BackgroundPanel _backgroundPanel) {
@@ -73,6 +76,7 @@ public class Manager {
 
             if (52 < playerView.getExFrame()) {
                 restartGame();
+               
             }
             return;
         }
@@ -115,9 +119,11 @@ public class Manager {
         bullets.clear();
         eggs.clear();
         spawnEnemies();
+
         cardLayout.show(mainPanel, "Menu");
         menuPanel.setBackgroundPanel(backgroundPanel);
-       
+        soundController.switchTrack(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
+
        
         playerExploded = false;
        

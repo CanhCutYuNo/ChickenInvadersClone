@@ -68,8 +68,8 @@ public class ViewController {
         gameContainerPanel.setBackgroundPanel(backgroundPanel);
         centerMouseOnPlayer();
 
-        // Phát nhạc nền khi vào game
-        //soundController.switchTrack("assets/sounds/game_music.wav");
+//         Phát nhạc nền khi vào game
+        soundController.switchTrack(getClass().getResource("/asset/resources/sfx/CI4Ingame2.wav").getPath());
     }
 
     private void centerMouseOnPlayer() {

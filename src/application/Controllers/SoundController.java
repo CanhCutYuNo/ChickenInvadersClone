@@ -3,96 +3,62 @@ package application.Controllers;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 public class SoundController {
-
     private Clip clip;
-    private FloatControl volumeControl;
+    private String currentTrack;
 
-    public SoundController(String filePath) {
+    public SoundController(String initialTrackPath) {
+        preloadTrack(initialTrackPath);
+        play(initialTrackPath);
+    }
+
+    // Tải trước track vào bộ nhớ
+    private void preloadTrack(String trackPath) {
         try {
-            File soundFile = new File(filePath);
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
-            clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            File file = new File(trackPath);
+            if (file.exists()) {
+                AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+                clip = AudioSystem.getClip();
+                clip.open(audioStream);
+                currentTrack = trackPath;
+            } else {
+                System.out.println("Không tìm thấy file: " + trackPath);
+            }
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
     }
 
+    public void play(String trackPath) {
+        if (clip != null && clip.isRunning()) {
+            clip.stop();
+        }
 
-    // Phát nhạc nền
+        if (!trackPath.equals(currentTrack)) {
+            preloadTrack(trackPath);
+        }
 
-    public void play() {
         if (clip != null) {
             clip.setFramePosition(0);
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
             clip.start();
         }
     }
 
-
-    // Phát SFX (hiệu ứng âm thanh)
-
-
-    public static void playSFX(String filePath) {
-        try {
-            File soundFile = new File(filePath);
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
-            Clip sfxClip = AudioSystem.getClip();
-            sfxClip.open(audioStream);
-
-            sfxClip.start();
-
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    // Phát lặp lại
-
-    public void loop() {
-        if (clip != null) {
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-        }
-    }
-
-
     public void stop() {
         if (clip != null) {
             clip.stop();
-            clip.setFramePosition(0);
         }
     }
 
-    public void switchTrack(String newFilePath) {
+    public void switchTrack(String newTrackPath) {
+        if (newTrackPath.equals(currentTrack)) {
+            return; // Nếu bài nhạc đang phát đúng rồi thì không cần đổi
+        }
+
         stop();
-        try {
-            if (clip != null && clip.isOpen()) {
-                clip.stop();
-                clip.close();
-            }
-
-            File soundFile = new File(newFilePath);
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
-            clip.open(audioStream);
-            play();
-        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    // Điều chỉnh âm lượng (0.0f đến 1.0f)
-
-
-    public void setVolume(float volume) {
-        if (volumeControl != null) {
-            float min = volumeControl.getMinimum();
-            float max = volumeControl.getMaximum();
-            float newVolume = min + (max - min) * volume;
-            volumeControl.setValue(newVolume);
-        }
+        play(newTrackPath);
     }
 }
