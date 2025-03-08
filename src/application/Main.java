@@ -2,8 +2,8 @@ package application;
 
 import javax.swing.*;
 
-import application.Controllers.*;
-import application.Views.*;
+import application.controllers.*;
+import application.views.*;
 
 import java.awt.*;
 

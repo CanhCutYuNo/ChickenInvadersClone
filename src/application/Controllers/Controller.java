@@ -1,4 +1,4 @@
-package application.Controllers;
+package application.controllers;
 
 import java.awt.event.*;
 import java.awt.*;

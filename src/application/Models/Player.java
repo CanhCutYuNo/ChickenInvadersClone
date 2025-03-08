@@ -1,9 +1,8 @@
-package application.Models;
+package application.models;
 
 import java.awt.*;
 
-public class PlayerModel {
-
+public class Player {
     private int hp;
     private int damage;
     private double shootSpeed;
@@ -11,7 +10,7 @@ public class PlayerModel {
     private int PosY;
 
     // Constructor
-    public PlayerModel(int hp, int damage, double shootSpeed, int PosX, int PosY) {
+    public Player(int hp, int damage, double shootSpeed, int PosX, int PosY) {
         this.hp = hp;
         this.damage = damage;
         this.shootSpeed = shootSpeed;

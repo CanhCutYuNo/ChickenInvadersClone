@@ -1,8 +1,9 @@
-package application.Views;
-
-import application.Controllers.*;
+package application.views;
 
 import javax.swing.*;
+
+import application.controllers.*;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 

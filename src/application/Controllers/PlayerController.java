@@ -1,8 +1,8 @@
-package application.Controllers;
+package application.controllers;
 
 import java.awt.*;
 
-import application.Views.*;
+import application.views.*;
 
 public class PlayerController {
 
@@ -14,7 +14,7 @@ public class PlayerController {
 
     private int initialPosX;
     private boolean moving = false;
-
+    private int HP;
     private PlayerView playerView;
 
     // Constructor
@@ -24,6 +24,7 @@ public class PlayerController {
         this.PosY = PosY;
         this.initialPosX = PosX;
         this.playerView = playerView; // Gán giá trị
+        this.HP = 100;
     }
 
     // Getter & Setter
@@ -69,6 +70,18 @@ public class PlayerController {
 
     public PlayerView setPlayerView(PlayerView _playerView) {
         return playerView = _playerView;
+    }
+
+    public int getHP() {
+        return HP;
+    }
+
+    public void isDamaged(int damage){
+        this.HP-=damage;
+    }
+
+    public boolean isDead(){
+        return HP<=0;
     }
 
     public void updateDirection(int newX) {
