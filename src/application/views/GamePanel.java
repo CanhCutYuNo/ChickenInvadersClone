@@ -15,10 +15,11 @@ public class GamePanel extends JPanel {
     private static final long serialVersionUID = 1L;
     private final Manager gameManager;
     private final MouseController mouseController;
+   
 
     public GamePanel(Manager gameManager) {
         this.gameManager = gameManager;
-
+        
         hideCursor();
         gameManager.spawnEnemies();
         setLayout(null);
@@ -31,6 +32,8 @@ public class GamePanel extends JPanel {
         mouseController = new MouseController(this);
         addMouseListener(mouseController);
         addMouseMotionListener(mouseController);
+
+
     }
 
     @Override

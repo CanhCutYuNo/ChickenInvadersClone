@@ -21,13 +21,24 @@ public class Manager {
     private static BackgroundPanel backgroundPanel;
     private static MenuPanel menuPanel;
     private CardLayout cardLayout;
-	private JPanel mainPanel;
-	private GameLoop gameLoop;
-	private int frameDelay = 0;
-	private int level = 1;
-	private boolean playerExploded = false;
 
-    public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop) {
+    private SoundController soundController;
+
+
+
+    private JPanel mainPanel;
+    private GameLoop gameLoop;
+    private int frameDelay = 0;
+    private int level = 1;
+    private boolean playerExploded = false;
+
+
+
+    public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop,SoundController soundController) {
+    
+    
+    	
+        
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
 //      playerModel = new PlayerModel(100, 10, 1.0, 950, 540);
@@ -37,10 +48,13 @@ public class Manager {
 
         eggs = new EnemyProjectilesController("/asset/resources/gfx/introEgg.png");
         this.cardLayout = _cardLayout;
-		this.mainPanel = _mainPanel;
-		Manager.backgroundPanel = _backgroundPanel;
-		Manager.menuPanel = _menuPanel;
-		this.gameLoop = _gameLoop;
+
+        this.mainPanel = _mainPanel;
+        Manager.backgroundPanel = _backgroundPanel;
+        Manager.menuPanel = _menuPanel;
+        this.gameLoop = _gameLoop;
+        this.soundController = soundController;
+
     }
 
     public void setBackgroundPanel(BackgroundPanel _backgroundPanel) {
@@ -66,6 +80,7 @@ public class Manager {
             
             if(52 < playerView.getExFrame()) { 
                 restartGame();
+               
             }
             return;
         }
@@ -99,15 +114,22 @@ public class Manager {
     }
 
     private void restartGame() {
+    	
         enemies.clear();
         playerController.setPosX(800);
         playerController.setPosY(950);
         bullets.clear();
         eggs.clear();
         spawnEnemies();
+
         cardLayout.show(mainPanel, "Menu");        
+
         menuPanel.setBackgroundPanel(backgroundPanel);
+        soundController.switchTrack(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
+
+       
         playerExploded = false;
+       
     }
 
     

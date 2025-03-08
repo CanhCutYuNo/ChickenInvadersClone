@@ -16,13 +16,16 @@ public class ViewController {
     private GameContainerPanel gameContainerPanel;
     private BackgroundPanel backgroundPanel;
     private GamePanel gamePanel;
+
     private SoundController soundController;
+
 
     public ViewController(CardLayout cardLayout, JPanel mainPanel, 
                           MenuPanel menuPanel, SettingPanel settingPanel, 
                           GameContainerPanel gameContainerPanel, 
                           BackgroundPanel backgroundPanel,
                           GamePanel gamePanel, SoundController soundController) {
+
         this.cardLayout = cardLayout;
         this.mainPanel = mainPanel;
         this.menuPanel = menuPanel;
@@ -30,7 +33,9 @@ public class ViewController {
         this.gameContainerPanel = gameContainerPanel;
         this.backgroundPanel = backgroundPanel;
         this.gamePanel = gamePanel;
+
         this.soundController = soundController;
+
     }
 
     public void setPanels(MenuPanel menuPanel, SettingPanel settingPanel, 
@@ -42,10 +47,12 @@ public class ViewController {
     }
 
     public void switchToMenuPanel() {
+
         cardLayout.show(mainPanel, "Menu");        
         menuPanel.setBackgroundPanel(backgroundPanel);
    
         soundController.switchTrack(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
+
     }
 
     public void switchToSettingPanel() {
@@ -60,9 +67,15 @@ public class ViewController {
         cardLayout.show(mainPanel, "Game");
         gameContainerPanel.setBackgroundPanel(backgroundPanel);
         centerMouseOnPlayer();
+
+
+//         Phát nhạc nền khi vào game
+        soundController.switchTrack(getClass().getResource("/asset/resources/sfx/CI4Ingame2.wav").getPath());
+
         
         // Phát nhạc nền khi vào game
         //soundController.switchTrack("assets/sounds/game_music.wav");
+
     }
 
     private void centerMouseOnPlayer() {

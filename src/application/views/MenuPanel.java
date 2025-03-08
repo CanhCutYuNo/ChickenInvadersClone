@@ -10,6 +10,7 @@ import application.controllers.*;
 public class MenuPanel extends JPanel {
 
     /**
+
      *
      */
     private static final long serialVersionUID = 1L;
@@ -70,9 +71,12 @@ public class MenuPanel extends JPanel {
 
         button1.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
+
+
                 if (viewController != null) {
                     viewController.switchToGameContainerPanel();
                 }
+                
             }
         });
 
@@ -117,11 +121,13 @@ public class MenuPanel extends JPanel {
         jLayeredPane.add(containerPanel);
         add(jLayeredPane);
 
+
     }// </editor-fold>      
 
     @Override
     public void paint(Graphics g) {
         paintChildren(g);
+
     }
 
     private Button button1, button2, button3;
