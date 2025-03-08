@@ -14,10 +14,11 @@ public class GamePanel extends JPanel {
 	private final Manager gameManager;
     private final GameLoop gameLoop;
     private final MouseController mouseController;
+   
 
     public GamePanel(Manager gameManager) {
         this.gameManager = gameManager;
-
+        
         hideCursor();
         gameManager.spawnEnemies();
         setLayout(null);
@@ -34,6 +35,7 @@ public class GamePanel extends JPanel {
         // Khởi động GameLoop
         gameLoop = new GameLoop(this);
         gameLoop.start();
+		
     }
 
     @Override

@@ -20,7 +20,7 @@ public class Main {
     private static GameContainerPanel gameContainerPanel;
     private static GameLoop gameLoop;
     private static ViewController viewController;
-
+    private static SoundController Music;
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             frame = new JFrame("Chicken Invaders");
@@ -29,7 +29,7 @@ public class Main {
 
             cardLayout = new CardLayout();
             mainPanel = new JPanel(cardLayout);
-
+            Music = new SoundController("/asset/resources/sfx/CI4Theme.wav");
             gameManager = new Manager(cardLayout, mainPanel, null, null, null);
             
             backgroundPanel = new BackgroundPanel();
@@ -37,7 +37,7 @@ public class Main {
 
             viewController = new ViewController(cardLayout, mainPanel, 
                                                 null, null, null, 
-                                                backgroundPanel, null);
+                                                backgroundPanel, null,Music);
             
             menuPanel = new MenuPanel(viewController);
             gameManager.setMenuPanel(menuPanel);

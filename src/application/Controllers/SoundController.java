@@ -6,6 +6,7 @@ import java.io.IOException;
 
 public class SoundController {
     private Clip clip;
+    private FloatControl volumeControl;
 
     public SoundController(String filePath) {
         try {
@@ -13,30 +14,68 @@ public class SoundController {
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
             clip = AudioSystem.getClip();
             clip.open(audioStream);
+            volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
     }
 
-    // Phát âm thanh
+    // Phát nhạc nền
     public void play() {
         if (clip != null) {
-            clip.setFramePosition(0); // Reset về đầu
+            clip.setFramePosition(0);
             clip.start();
         }
     }
 
-    // Phát âm thanh lặp lại
+    // Phát SFX (hiệu ứng âm thanh)
+    public static void playSFX(String filePath) {
+        try {
+            File soundFile = new File(filePath);
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
+            Clip sfxClip = AudioSystem.getClip();
+            sfxClip.open(audioStream);
+            sfxClip.start();  // Phát ngay lập tức
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Phát lặp lại
     public void loop() {
         if (clip != null) {
             clip.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
 
-    // Dừng âm thanh
+    // Dừng nhạc
     public void stop() {
         if (clip != null) {
             clip.stop();
+            clip.setFramePosition(0); // Đưa về đầu
+        }
+    }
+
+    // Chuyển nhạc
+    public void switchTrack(String newFilePath) {
+        stop();
+        try {
+            File soundFile = new File(newFilePath);
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
+            clip.open(audioStream);
+            play();
+        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Điều chỉnh âm lượng (0.0f đến 1.0f)
+    public void setVolume(float volume) {
+        if (volumeControl != null) {
+            float min = volumeControl.getMinimum();
+            float max = volumeControl.getMaximum();
+            float newVolume = min + (max - min) * volume;
+            volumeControl.setValue(newVolume);
         }
     }
 }

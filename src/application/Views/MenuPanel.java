@@ -12,7 +12,7 @@ public class MenuPanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private SoundController backgroundMenuMusic;
+	private SoundController Music;
     private ViewController viewController;
     private JPanel backgroundPanel;
 
@@ -70,12 +70,11 @@ public class MenuPanel extends JPanel {
 
         button1.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-                if (backgroundMenuMusic != null) {
-                    backgroundMenuMusic.stop(); // Dừng nhạc nền
-                }
+                
                 if (viewController != null) {
                     viewController.switchToGameContainerPanel();
                 }
+                
             }
         });
 
@@ -120,12 +119,7 @@ public class MenuPanel extends JPanel {
         jLayeredPane.add(containerPanel);
         add(jLayeredPane);
 
-        try {
-            backgroundMenuMusic = new SoundController(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
-            backgroundMenuMusic.loop();
-        } catch (Exception e) {
-            System.err.println("Lỗi khi tải file nhạc: " + e.getMessage());
-        }
+        
     }
 
     private Button button1, button2, button3;

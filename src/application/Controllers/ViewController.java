@@ -15,12 +15,13 @@ public class ViewController {
     private GameContainerPanel gameContainerPanel;
     private BackgroundPanel backgroundPanel;
     private GamePanel gamePanel;
+    private SoundController Music;
 
     public ViewController(CardLayout cardLayout, JPanel mainPanel, 
                           MenuPanel menuPanel, SettingPanel settingPanel, 
                           GameContainerPanel gameContainerPanel, 
                           BackgroundPanel backgroundPanel,
-                          GamePanel gamePanel) {
+                          GamePanel gamePanel, SoundController Music) {
         this.cardLayout = cardLayout;
         this.mainPanel = mainPanel;
         this.menuPanel = menuPanel;
@@ -28,6 +29,7 @@ public class ViewController {
         this.gameContainerPanel = gameContainerPanel;
         this.backgroundPanel = backgroundPanel;
         this.gamePanel = gamePanel;
+        this.Music = Music;
     }
     
     public void setPanels(MenuPanel menuPanel, SettingPanel settingPanel, 
@@ -39,8 +41,10 @@ public class ViewController {
     }
 
     public void switchToMenuPanel() {
+    	Music.switchTrack("/asset/resources/sfx/CI4Theme.wav");
         cardLayout.show(mainPanel, "Menu");        
         menuPanel.setBackgroundPanel(backgroundPanel);
+        
     }
     
     public void switchToSettingPanel() {
