@@ -84,7 +84,7 @@ public class Manager {
 
         for (Enemy enemy : enemies) {
             enemy.nextFrame();
-            enemy.update(level);
+            enemy.update();
         }
 
         checkRemoveEggs();
@@ -218,7 +218,7 @@ public class Manager {
 
                 for (int j = 0; j < nums; j++) {
                     int posX = startX + j * spacing;
-                    enemies.add(new Enemy(100, posX, posY, 1, bodyImage, wingsImage, headImage, blinkImage));
+                    enemies.add(new EnemyLvl1(100, posX, posY, 1, bodyImage, wingsImage, headImage, blinkImage));
                 }
                 posY += 200;
             }
@@ -231,7 +231,7 @@ public class Manager {
                 double angle = 2 * Math.PI * i / nums;
                 int posX = centerX + (int) (100 * Math.cos(angle));
                 int posY = centerY + (int) (100 * Math.sin(angle));
-                enemies.add(new Enemy(100, posX, posY, 2, bodyImage, wingsImage, headImage, blinkImage));
+                enemies.add(new EnemyLvl2(100, posX, posY, 2, bodyImage, wingsImage, headImage, blinkImage));
             }
         }
     }

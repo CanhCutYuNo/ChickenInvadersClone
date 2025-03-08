@@ -7,38 +7,34 @@ import java.util.List;
 
 public class Enemy {
 
-    private Image spriteHeadSheet;
-    private Image spriteBodySheet;
-    private Image spriteWingsSheet;
-    private Image blinkAnimation;
-    private boolean movingRight;
-    private int currentFrame = (int) (Math.random() * 40);
-    private int frameCount = (int) (Math.random() * 120);
-    private int[] headSprite;
-    private int[] bodySprite; // Lưu tọa độ body
-    private List<int[]> wingSprites = new ArrayList<>();
+    protected Image spriteHeadSheet;
+    protected Image spriteBodySheet;
+    protected Image spriteWingsSheet;
+    protected Image blinkAnimation;
+    protected int currentFrame = (int) (Math.random() * 40);
+    protected int frameCount = (int) (Math.random() * 120);
+    protected int[] headSprite;
+    protected int[] bodySprite; // Lưu tọa độ body
+    protected List<int[]> wingSprites = new ArrayList<>();
 
-    private int hp;
-    private int PosX;
-    private int PosY;
-    private int speed;
-//    private boolean alive; //Ktra ga die chua
-//	private int level = 1;
-    private int centerX, centerY;
-    private int radius;
-    private double theta; // góc quay chuyển động tròn
-    private boolean isForward = true; // Biến để theo dõi hướng di chuyển của animation
-    private static final int MODEL_WIDTH = 64;
-    private static final int MODEL_HEIGHT = 64;
-    private static final int MAP_WIDTH = 1900;
-    //private static final int MAP_HEIGHT = 1080;
+    protected int hp;
+    protected int PosX;
+    protected int PosY;
+    protected int speed;
+//    protected boolean alive; //Ktra ga die chua
+//	protected int level = 1;
+    protected boolean isForward = true; // Biến để theo dõi hướng di chuyển của animation
+    protected static final int MODEL_WIDTH = 64;
+    protected static final int MODEL_HEIGHT = 64;
+    protected static final int MAP_WIDTH = 1900;
+    //protected static final int MAP_HEIGHT = 1080;
 
-    private static final int[][] SPRITE_HEAD = {{195, 93, 30, 45}};
-    private static final int[][] SPRITE_BODY = {
+    protected static final int[][] SPRITE_HEAD = {{195, 93, 30, 45}};
+    protected static final int[][] SPRITE_BODY = {
         {1, 1, 70, 53}, {217, 1, 70, 53}, {433, 1, 70, 53},
         {217, 169, 70, 53}
     };
-    private static final int[][] SPRITE_WINGS = {
+    protected static final int[][] SPRITE_WINGS = {
         {1, 1, 126, 112}, {129, 1, 126, 112}, {257, 1, 126, 112},
         {385, 1, 126, 112}, {513, 1, 126, 112}, {641, 1, 126, 111},
         {769, 1, 126, 111}, {897, 1, 126, 111}, {1025, 1, 126, 110},
@@ -69,15 +65,6 @@ public class Enemy {
         this.PosY = PosY;
 
         this.speed = 2;
-
-        if (level == 1) {
-            this.movingRight = true;
-        } else if (level == 2) {
-            this.theta = Math.random() * 2 * Math.PI;
-            this.centerX = PosX;
-            this.centerY = PosY;
-            this.radius = 100;
-        }
 
         // Chọn ngẫu nhiên một phần của body
         this.bodySprite = SPRITE_BODY[random.nextInt(SPRITE_BODY.length)];
@@ -202,26 +189,7 @@ public class Enemy {
         return currentFrame;
     }
 
-    public void update(int level) {
-        if (level == 1) {
-            if (movingRight) {
-                PosX += speed;
-                if (PosX >= MAP_WIDTH - MODEL_WIDTH) {
-                    movingRight = false;
-                }
-            } else {
-                PosX -= speed;
-                if (PosX <= 0) {
-                    movingRight = true;
-                }
-            }
-
-        } else if (level == 2) {
-            theta += 0.01;
-            PosX = centerX + (int) (radius * Math.cos(theta));
-            PosY = centerY + (int) (radius * Math.sin(theta));
-        }
-
+    public void update() {
     }
 
 }
