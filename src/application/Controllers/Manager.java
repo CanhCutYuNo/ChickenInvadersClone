@@ -18,7 +18,8 @@ public class Manager {
     private PlayerController playerController;
     private ArrayList<Bullet> bullets;
     private ArrayList<Enemy> enemies;
-    private ArrayList<EnemyProjectiles> eggs;
+    private ArrayList<Egg> eggs;
+    private ArrayList<EnemyProjectiles> feathers;
     private static BackgroundPanel backgroundPanel;
     private static MenuPanel menuPanel;
     private CardLayout cardLayout;
@@ -32,10 +33,11 @@ public class Manager {
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
 //      playerModel = new PlayerModel(100, 10, 1.0, 950, 540);
+        feathers = new ArrayList<>();
         playerController = new PlayerController(1.0, 950, 540, null);
         playerView = new PlayerView(playerController);
         playerController.setPlayerView(playerView);
-
+        feathers = new ArrayList<>();
         eggs = new ArrayList<>();
         this.cardLayout = _cardLayout;
         this.mainPanel = _mainPanel;
@@ -86,6 +88,7 @@ public class Manager {
             enemy.nextFrame();
             enemy.update();
         }
+        updateEnemies();
 
         checkRemoveEggs();
         checkCollisions();
@@ -98,7 +101,21 @@ public class Manager {
             System.out.println("New level !!");
             spawnEnemies();
         }
+
     }
+
+    private void updateEnemies() {
+        Iterator<Enemy> enemyIterator = enemies.iterator();
+        while (enemyIterator.hasNext()) {
+            Enemy enemy = enemyIterator.next();
+            enemy.update();
+            if (enemy.isDead()) {
+                enemy.spawnFeathers();  // Gọi phương thức tạo lông
+                enemyIterator.remove();
+            }
+        }
+    }
+
 
     private void restartGame() {
         enemies.clear();
@@ -111,6 +128,18 @@ public class Manager {
         menuPanel.setBackgroundPanel(backgroundPanel);
         playerExploded = false;
     }
+
+//    private void updateFeather(){
+//        // Cập nhật và xóa lông nếu ra khỏi màn hình
+//        Iterator<EnemyProjectiles> it = feathers.iterator();
+//        while (it.hasNext()) {
+//            EnemyProjectiles f = it.next();
+//            f.update();
+//            if (f.isOffScreen()) {
+//                it.remove();
+//            }
+//        }
+//    }
 
     private void updateBullets() {
         ArrayList<Bullet> bulletsToRemove = new ArrayList<>();
@@ -128,19 +157,21 @@ public class Manager {
 
         for (Enemy enemy : enemies) {
             if (rand.nextInt(1000) < 1) {
-                eggs.add(new EnemyProjectiles(enemy.getPosX() + 15, enemy.getPosY() + 30));
+                eggs.add(new Egg(enemy.getPosX() + 15, enemy.getPosY() + 30));
             }
         }
 
         eggs.removeIf(egg -> !egg.isActive());
-        for (EnemyProjectiles egg : eggs) {
+        for (Egg egg : eggs) {
             egg.update();
         }
     }
 
+
+
     private void checkRemoveEggs() {
-        ArrayList<EnemyProjectiles> eggsToRemove = new ArrayList<>();
-        for (EnemyProjectiles egg : eggs) {
+        ArrayList<Egg> eggsToRemove = new ArrayList<>();
+        for (Egg egg : eggs) {
             if (egg.isOffScreen(1080)) {
                 eggsToRemove.add(egg);
             }
@@ -186,16 +217,22 @@ public class Manager {
     }
 
     private void checkPlayerCollisionsWithEgg() {
-        Iterator<EnemyProjectiles> eggIterator = eggs.iterator();
+        Iterator<Egg> eggIterator = eggs.iterator();
         while (eggIterator.hasNext()) {
-            EnemyProjectiles egg = eggIterator.next();
+            Egg egg = eggIterator.next();
 
             if (isColliding3(playerController, egg)) {
-                if (!playerExploded) {
+                playerController.isDamaged(egg.getDamage());
+//                System.out.println(playerController.getHP());
+                if(playerController.isDead()){
                     playerController.getPlayerView().startExplosion();
-                    playerExploded = true;
-
                 }
+//                if (!playerController.isDead()) {
+//                    playerController.getPlayerView().startExplosion();
+//                    playerExploded = true;
+//
+//                }
+                eggIterator.remove();
             }
         }
     }
@@ -240,12 +277,17 @@ public class Manager {
         for (Bullet bullet : bullets) {
             bullet.render(g);
         }
-        for (EnemyProjectiles egg : eggs) {
+        for (Egg egg : eggs) {
             egg.drawEgg(g);
         }
         for (Enemy enemy : enemies) {
             enemy.render(g);
         }
+        //ve long ga
+        for(EnemyProjectiles f : feathers){
+            f.drawF(g);
+        }
+
         if (playerView.isExploding()) {
             playerView.explosionRender(g); // Vẽ hiệu ứng nổ
         } else {
@@ -297,7 +339,7 @@ public class Manager {
         return playerBounds.intersects(enemyBounds);
     }
 
-    private boolean isColliding3(PlayerController player, EnemyProjectiles egg) {
+    private boolean isColliding3(PlayerController player,Egg egg) {
         Rectangle playerBounds = new Rectangle(player.getPosX(), player.getPosY(), 54, 50);
         Rectangle eggBounds = new Rectangle((int) egg.getPosX(), (int) egg.getPosY(), 5, 5);
         return playerBounds.intersects(eggBounds);

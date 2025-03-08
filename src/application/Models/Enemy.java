@@ -17,6 +17,11 @@ public class Enemy {
     protected int[] bodySprite; // Lưu tọa độ body
     protected List<int[]> wingSprites = new ArrayList<>();
 
+    //Ob
+    private ArrayList<EnemyProjectiles> feathers;
+    //EGG
+    private ArrayList<Egg> eggs;
+
     protected int hp;
     protected int PosX;
     protected int PosY;
@@ -65,6 +70,12 @@ public class Enemy {
         this.PosY = PosY;
 
         this.speed = 2;
+
+        this.eggs = new ArrayList<>();
+
+        this.feathers = new ArrayList<>();
+
+
 
         // Chọn ngẫu nhiên một phần của body
         this.bodySprite = SPRITE_BODY[random.nextInt(SPRITE_BODY.length)];
@@ -145,6 +156,7 @@ public class Enemy {
             g.setColor(Color.RED);
             g.fillRect(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
         }
+
     }
 
     public void nextFrame() {
@@ -169,6 +181,10 @@ public class Enemy {
         return hp <= 0;
     }
 
+//    public void wasDead(){
+//        spawnFeathers();
+//    }
+
     public Rectangle getBounds() {
         return new Rectangle(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
     }
@@ -190,6 +206,18 @@ public class Enemy {
     }
 
     public void update() {
+//
+    }
+
+    public void spawnFeathers() {
+        int numFeathers = 5; // Số lượng lông rơi ra
+        for (int i = 0; i < numFeathers; i++) {
+            feathers.add(new EnemyProjectiles(PosX + (int) (Math.random() * 30), PosY));
+        }
+    }
+
+    public ArrayList<EnemyProjectiles> getFeathers() {
+        return feathers;
     }
 
 }
