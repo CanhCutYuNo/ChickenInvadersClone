@@ -1,7 +1,8 @@
-package application.Controllers;
+package application.controllers;
 
 import javax.swing.*;
-import application.Views.GamePanel;
+
+import application.views.GamePanel;
 
 public class GameLoop {
 

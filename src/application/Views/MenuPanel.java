@@ -1,10 +1,11 @@
-package application.Views;
+package application.views;
 
-import application.Controllers.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
+
+import application.controllers.*;
 
 public class MenuPanel extends JPanel {
 
