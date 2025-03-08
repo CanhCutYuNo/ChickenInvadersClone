@@ -24,11 +24,12 @@ import javax.swing.JComponent;
  *
  * @author hp
  */
-public class BackgroundPanel extends javax.swing.JPanel{
+public class BackgroundPanel extends javax.swing.JPanel {
+
     private final Thread updateThread;
     private Image backgroundImage;
     private int y;
-    private final int width = 1920;    
+    private final int width = 1920;
     private final int height = 1080;
     private final int fps = 20;
     private boolean isRunning = true;
@@ -45,7 +46,7 @@ public class BackgroundPanel extends javax.swing.JPanel{
     public void stop() {
         isRunning = false;
     }
-    
+
     private void updateLoop() {
         long currentTime;
         long invokeTime;

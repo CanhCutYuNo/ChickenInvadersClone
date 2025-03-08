@@ -16,16 +16,16 @@ import application.controllers.ViewController;
  * @author hp
  */
 public class SettingPanel extends JPanel {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private ViewController viewController;
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private ViewController viewController;
 
     public SettingPanel(ViewController viewController) {
-    	this.viewController = viewController;
-    	initComponents();
+        this.viewController = viewController;
+        initComponents();
     }
 
     public void setBackgroundPanel(JPanel backgroundPanel) {
@@ -78,7 +78,7 @@ public class SettingPanel extends JPanel {
         button1.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
                 incrementDifficulty();
-                throw new UnsupportedOperationException("Chua them tinh nang luu trang thai do kho");      
+                throw new UnsupportedOperationException("Chua them tinh nang luu trang thai do kho");
             }
         });
 
@@ -131,7 +131,7 @@ public class SettingPanel extends JPanel {
         //Button 4 On Clicked Event        
         button4.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-            	viewController.switchToMenuPanel();
+                viewController.switchToMenuPanel();
             }
         });
 
@@ -148,7 +148,7 @@ public class SettingPanel extends JPanel {
         add(jLayeredPane);
 
     }// </editor-fold>     
-    
+
     @Override
     public void paint(Graphics g) {
         paintChildren(g);

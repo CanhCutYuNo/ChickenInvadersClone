@@ -13,10 +13,10 @@ import javax.swing.*;
 public class GameContainerPanel extends JPanel {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private JLayeredPane jLayeredPane;
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private JLayeredPane jLayeredPane;
     private GamePanel gamePanel;
     private JPanel backgroundPanel;
 

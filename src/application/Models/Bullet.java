@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Bullet {
+
     private int x, y;
     private int dame;
     private double speedY;
@@ -31,11 +32,11 @@ public class Bullet {
 
     public void update() {
         speedY += acceleration;
-        y -= (int)speedY;
+        y -= (int) speedY;
     }
 
     public void render(Graphics g) {
-        if(image != null) {
+        if (image != null) {
             g.drawImage(image, x, y, null);
         }
     }
@@ -43,15 +44,16 @@ public class Bullet {
     public boolean isOffScreen(int screenHeight) {
         return y < -30;
     }
-    
-    public void deactivate() {} 
+
+    public void deactivate() {
+    }
 
     public int getX() {
         return x;
     }
-    
+
     public int getDamage() {
-    	return dame;
+        return dame;
     }
 
     public int getY() {
