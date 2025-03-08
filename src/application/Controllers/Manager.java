@@ -1,7 +1,7 @@
-package application.Controllers;
+package application.controllers;
 
-import application.Models.*;
-import application.Views.*;
+import application.models.*;
+import application.views.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,7 +17,7 @@ public class Manager {
 	private PlayerController playerController;
     private ArrayList<Bullet> bullets;
     private ArrayList<Enemy> enemies;
-    private ArrayList<EnemyProjectiles> eggs;
+    private EnemyProjectilesController eggs;
     private static BackgroundPanel backgroundPanel;
     private static MenuPanel menuPanel;
     private CardLayout cardLayout;
@@ -35,7 +35,7 @@ public class Manager {
         playerView = new PlayerView(playerController);
         playerController.setPlayerView(playerView);
 
-        eggs = new ArrayList<>();
+        eggs = new EnemyProjectilesController("/asset/resources/gfx/introEgg.png");
         this.cardLayout = _cardLayout;
 		this.mainPanel = _mainPanel;
 		Manager.backgroundPanel = _backgroundPanel;
@@ -78,7 +78,6 @@ public class Manager {
         frameDelay++;
         
         updateEggs();
-        eggs.removeIf(egg -> egg.isOffScreen(1080));
         
         playerController.update();
         
@@ -86,8 +85,7 @@ public class Manager {
             enemy.nextFrame();
             enemy.update(level);
         }
-         
-        checkRemoveEggs();
+      
         checkCollisions();
         checkBulletEnemyCollisions();
         checkPlayerCollisionsWithEnemies();
@@ -130,25 +128,11 @@ public class Manager {
      
         for(Enemy enemy : enemies) {
             if(rand.nextInt(1000) < 1) {
-                eggs.add(new EnemyProjectiles(enemy.getPosX() + 15, enemy.getPosY() + 30));
+                eggs.addProjectile(enemy.getPosX() + 15, enemy.getPosY() + 30);
             }
         }
 
-        eggs.removeIf(egg -> !egg.isActive());
-        for(EnemyProjectiles egg : eggs) {
-            egg.update();
-        }
-    }
-
-    
-    private void checkRemoveEggs() {
-    	ArrayList<EnemyProjectiles> eggsToRemove = new ArrayList<>();
-    	for(EnemyProjectiles egg : eggs) {
-    		if(egg.isOffScreen(1080)) {
-    			eggsToRemove.add(egg);
-    		}
-    	}
-    	eggs.removeAll(eggsToRemove);
+        eggs.updateProjectiles();
     }
     
     private void checkBulletEnemyCollisions() {
@@ -189,19 +173,21 @@ public class Manager {
     }
     
     private void checkPlayerCollisionsWithEgg() {
-    	Iterator<EnemyProjectiles> eggIterator = eggs.iterator();
-    	 while(eggIterator.hasNext()) {
-             EnemyProjectiles egg = eggIterator.next();
+        Iterator<EnemyProjectiles> eggIterator = eggs.getProjectiles().iterator();
+        while(eggIterator.hasNext()) {
+            EnemyProjectiles egg = eggIterator.next();
 
-             if(isColliding3(playerController, egg)) {
-            	 if(!playerExploded) {
-                     playerController.getPlayerView().startExplosion();
-                     playerExploded = true;
-                     
-                 }
-             }
-         }
+            if(isColliding3(playerController, egg)) {
+                if(!playerExploded) {
+                    playerController.getPlayerView().startExplosion();
+                    playerExploded = true;
+                }
+                // Xóa viên đạn sau khi va chạm
+                eggIterator.remove();
+            }
+        }
     }
+
     
     public void spawnEnemies() {
         enemies = new ArrayList<>();
@@ -242,9 +228,7 @@ public class Manager {
 
     public void render(Graphics g) {
         for(Bullet bullet : bullets) bullet.render(g);
-        for(EnemyProjectiles egg:eggs){
-            egg.drawEgg(g);
-        }
+        eggs.drawProjectiles(g);
         for(Enemy enemy : enemies) enemy.render(g);
         if(playerView.isExploding()) {
             playerView.explosionRender(g); // Vẽ hiệu ứng nổ
@@ -297,7 +281,7 @@ public class Manager {
     
     private boolean isColliding3(PlayerController player, EnemyProjectiles egg) {
         Rectangle playerBounds = new Rectangle(player.getPosX(), player.getPosY(), 54, 50);
-        Rectangle eggBounds = new Rectangle((int)egg.getPosX(), (int)egg.getPosY(), 5, 5);
+        Rectangle eggBounds = new Rectangle((int)egg.getPosX(),(int)egg.getPosY(), 5, 5);
         return playerBounds.intersects(eggBounds);
     }
 }

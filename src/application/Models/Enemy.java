@@ -1,4 +1,4 @@
-package application.Models;
+package application.models;
 
 import java.awt.*;
 import java.util.Random;

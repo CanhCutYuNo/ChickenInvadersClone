@@ -1,8 +1,8 @@
-package application.Controllers;
+package application.controllers;
 
 import java.awt.*;
 
-import application.Views.*;
+import application.views.*;
 
 public class PlayerController {
     private double shootSpeed;

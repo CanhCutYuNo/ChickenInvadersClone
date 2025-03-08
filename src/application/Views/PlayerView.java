@@ -1,9 +1,10 @@
-package application.Views;
+package application.views;
 
 import javax.swing.*;
-import java.awt.*;
 
-import application.Controllers.*;
+import application.controllers.*;
+
+import java.awt.*;
 
 public class PlayerView {
     private Image spriteSheet;

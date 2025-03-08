@@ -1,11 +1,12 @@
-package application.Controllers;
+package application.controllers;
 
 import java.awt.AWTException;
 import java.awt.CardLayout;
 import java.awt.Point;
 import java.awt.Robot;
 import javax.swing.JPanel;
-import application.Views.*;
+
+import application.views.*;
 
 public class ViewController {
     private CardLayout cardLayout;
@@ -43,8 +44,7 @@ public class ViewController {
     public void switchToMenuPanel() {
         cardLayout.show(mainPanel, "Menu");        
         menuPanel.setBackgroundPanel(backgroundPanel);
-        
-        // Phát nhạc nền menu
+   
         soundController.switchTrack(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
     }
 

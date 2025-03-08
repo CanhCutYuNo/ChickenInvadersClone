@@ -1,4 +1,4 @@
-package application.Controllers;
+package application.controllers;
 
 import javax.sound.sampled.*;
 import java.io.File;

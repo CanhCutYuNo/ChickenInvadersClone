@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-package application.Views;
+package application.views;
 import java.awt.*;
 
 /**
