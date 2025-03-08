@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import application.Views.*;
 
 public class ViewController {
+
     private CardLayout cardLayout;
     private JPanel mainPanel;
     private MenuPanel menuPanel;
@@ -17,11 +18,11 @@ public class ViewController {
     private GamePanel gamePanel;
     private SoundController soundController;
 
-    public ViewController(CardLayout cardLayout, JPanel mainPanel, 
-                          MenuPanel menuPanel, SettingPanel settingPanel, 
-                          GameContainerPanel gameContainerPanel, 
-                          BackgroundPanel backgroundPanel,
-                          GamePanel gamePanel, SoundController soundController) {
+    public ViewController(CardLayout cardLayout, JPanel mainPanel,
+            MenuPanel menuPanel, SettingPanel settingPanel,
+            GameContainerPanel gameContainerPanel,
+            BackgroundPanel backgroundPanel,
+            GamePanel gamePanel, SoundController soundController) {
         this.cardLayout = cardLayout;
         this.mainPanel = mainPanel;
         this.menuPanel = menuPanel;
@@ -32,8 +33,8 @@ public class ViewController {
         this.soundController = soundController;
     }
 
-    public void setPanels(MenuPanel menuPanel, SettingPanel settingPanel, 
-                          GameContainerPanel gameContainerPanel, GamePanel gamePanel) {
+    public void setPanels(MenuPanel menuPanel, SettingPanel settingPanel,
+            GameContainerPanel gameContainerPanel, GamePanel gamePanel) {
         this.menuPanel = menuPanel;
         this.settingPanel = settingPanel;
         this.gameContainerPanel = gameContainerPanel;
@@ -41,9 +42,9 @@ public class ViewController {
     }
 
     public void switchToMenuPanel() {
-        cardLayout.show(mainPanel, "Menu");        
+        cardLayout.show(mainPanel, "Menu");
         menuPanel.setBackgroundPanel(backgroundPanel);
-        
+
         // Phát nhạc nền menu
         soundController.switchTrack(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
     }
@@ -51,7 +52,7 @@ public class ViewController {
     public void switchToSettingPanel() {
         cardLayout.show(mainPanel, "Setting");
         settingPanel.setBackgroundPanel(backgroundPanel);
-        
+
         // Phát hiệu ứng chuyển đổi (SFX)
         //SoundController.playSFX("assets/sounds/click.wav");
     }
@@ -60,7 +61,7 @@ public class ViewController {
         cardLayout.show(mainPanel, "Game");
         gameContainerPanel.setBackgroundPanel(backgroundPanel);
         centerMouseOnPlayer();
-        
+
         // Phát nhạc nền khi vào game
         //soundController.switchTrack("assets/sounds/game_music.wav");
     }

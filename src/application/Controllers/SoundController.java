@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class SoundController {
+
     private Clip clip;
     private FloatControl volumeControl;
 
@@ -33,12 +34,12 @@ public class SoundController {
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
             Clip sfxClip = AudioSystem.getClip();
             sfxClip.open(audioStream);
-            sfxClip.start();  
+            sfxClip.start();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
     }
-    
+
     public void loop() {
         if (clip != null) {
             clip.loop(Clip.LOOP_CONTINUOUSLY);
@@ -55,7 +56,7 @@ public class SoundController {
     public void switchTrack(String newFilePath) {
         stop();
         try {
-        	if (clip != null && clip.isOpen()) {
+            if (clip != null && clip.isOpen()) {
                 clip.stop();
                 clip.close();
             }
@@ -77,4 +78,3 @@ public class SoundController {
         }
     }
 }
-

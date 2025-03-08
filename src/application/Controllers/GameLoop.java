@@ -4,6 +4,7 @@ import javax.swing.*;
 import application.Views.GamePanel;
 
 public class GameLoop {
+
     private final Timer gameTimer;
     private int frameCount = 0;
     private int fps = 0;

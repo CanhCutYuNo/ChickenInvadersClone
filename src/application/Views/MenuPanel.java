@@ -9,9 +9,9 @@ import javax.swing.*;
 public class MenuPanel extends JPanel {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+     *
+     */
+    private static final long serialVersionUID = 1L;
     private ViewController viewController;
     private JPanel backgroundPanel;
 
@@ -115,9 +115,9 @@ public class MenuPanel extends JPanel {
         jLayeredPane.setLayer(containerPanel, 1);
         jLayeredPane.add(containerPanel);
         add(jLayeredPane);
-     
+
     }// </editor-fold>      
-    
+
     @Override
     public void paint(Graphics g) {
         paintChildren(g);

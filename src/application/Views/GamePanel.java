@@ -7,11 +7,12 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class GamePanel extends JPanel {
+
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private final Manager gameManager;
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private final Manager gameManager;
     private final MouseController mouseController;
 
     public GamePanel(Manager gameManager) {
