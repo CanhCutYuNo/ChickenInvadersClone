@@ -9,10 +9,16 @@ import javax.swing.*;
 public class MenuPanel extends JPanel {
 
     /**
+<<<<<<< HEAD
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private SoundController Music;
+=======
+     *
+     */
+    private static final long serialVersionUID = 1L;
+>>>>>>> 459ef5f964927b520fee4b731a868d78bfdd6ccf
     private ViewController viewController;
     private JPanel backgroundPanel;
 
@@ -70,7 +76,8 @@ public class MenuPanel extends JPanel {
 
         button1.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-                
+
+
                 if (viewController != null) {
                     viewController.switchToGameContainerPanel();
                 }
@@ -119,7 +126,13 @@ public class MenuPanel extends JPanel {
         jLayeredPane.add(containerPanel);
         add(jLayeredPane);
 
-        
+
+    }// </editor-fold>      
+
+    @Override
+    public void paint(Graphics g) {
+        paintChildren(g);
+
     }
 
     private Button button1, button2, button3;

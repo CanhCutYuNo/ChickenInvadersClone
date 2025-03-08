@@ -8,7 +8,7 @@ import application.Views.*;
 import java.awt.*;
 
 public class Main {
-    
+
     private static JFrame frame;
     private static CardLayout cardLayout;
     private static JPanel mainPanel;
@@ -20,7 +20,9 @@ public class Main {
     private static GameContainerPanel gameContainerPanel;
     private static GameLoop gameLoop;
     private static ViewController viewController;
-    private static SoundController Music;
+
+    private static SoundController soundController; // Thêm SoundController
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             frame = new JFrame("Chicken Invaders");
@@ -29,23 +31,29 @@ public class Main {
 
             cardLayout = new CardLayout();
             mainPanel = new JPanel(cardLayout);
-            Music = new SoundController("/asset/resources/sfx/CI4Theme.wav");
+            soundController = new SoundController("/asset/resources/sfx/CI4Theme.wav");
             gameManager = new Manager(cardLayout, mainPanel, null, null, null);
-            
+
             backgroundPanel = new BackgroundPanel();
             gameManager.setBackgroundPanel(backgroundPanel);
 
-            viewController = new ViewController(cardLayout, mainPanel, 
-                                                null, null, null, 
-                                                backgroundPanel, null,Music);
-            
+
+            // Khởi tạo SoundController với nhạc nền mặc định (menu)
+            soundController = new SoundController(Main.class.getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
+
+            soundController.play(); // Phát nhạc menu khi khởi động game
+
+            viewController = new ViewController(cardLayout, mainPanel,
+                    null, null, null,
+                    backgroundPanel, null, soundController); // Truyền SoundController vào ViewController
+
             menuPanel = new MenuPanel(viewController);
             gameManager.setMenuPanel(menuPanel);
-            
+
             gamePanel = new GamePanel(gameManager);
-            gameLoop = new GameLoop(gamePanel);
-            gameManager.setGameLoop(gameLoop); 
-           
+            gameLoop = new GameLoop(gamePanel, frame);
+            gameManager.setGameLoop(gameLoop);
+
             settingPanel = new SettingPanel(viewController);
             gameContainerPanel = new GameContainerPanel(gamePanel);
 

@@ -4,20 +4,25 @@ import javax.swing.*;
 import application.Views.GamePanel;
 
 public class GameLoop {
+
     private final Timer gameTimer;
     private int frameCount = 0;
     private int fps = 0;
     private long lastTime = System.nanoTime(); // Lưu thời gian frame trước
 
-    public GameLoop(GamePanel gamePanel) {
-        gameTimer = new Timer(16, e -> {
+
+
+    public GameLoop(GamePanel gamePanel, JFrame frame) {
+        gameTimer = new Timer(8, e -> {
+
             long currentTime = System.nanoTime();
             double deltaTime = (currentTime - lastTime) / 1_000_000_000.0; // Đổi sang giây
             lastTime = currentTime;
 
             gamePanel.getGameManager().update(deltaTime);
 
-            gamePanel.repaint();
+            frame.repaint();
+
             frameCount++;
         });
 
