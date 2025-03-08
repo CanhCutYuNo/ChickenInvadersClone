@@ -24,7 +24,7 @@ public class Manager {
 	private JPanel mainPanel;
 	private GameLoop gameLoop;
 	private int frameDelay = 0;
-	private int level = 2;
+	private int level = 1;
 	private boolean playerExploded = false;
 
     public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop) {
