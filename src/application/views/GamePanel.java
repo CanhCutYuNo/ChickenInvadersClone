@@ -1,7 +1,6 @@
 package application.views;
 
 import javax.swing.*;
-
 import application.controllers.*;
 
 import java.awt.*;
@@ -9,17 +8,15 @@ import java.awt.image.BufferedImage;
 
 public class GamePanel extends JPanel {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private final Manager gameManager;
     private final MouseController mouseController;
-   
+    private final SoundController soundController; // Thêm SoundController
 
     public GamePanel(Manager gameManager) {
         this.gameManager = gameManager;
-        
+        this.soundController = new SoundController(); // Khởi tạo SoundController
+
         hideCursor();
         gameManager.spawnEnemies();
         setLayout(null);
@@ -28,19 +25,16 @@ public class GamePanel extends JPanel {
         setOpaque(false);
         requestFocusInWindow();
 
-        // Khởi tạo và gán controller
-        mouseController = new MouseController(this);
+        // Khởi tạo MouseController với SoundController
+        mouseController = new MouseController(this, soundController);
         addMouseListener(mouseController);
         addMouseMotionListener(mouseController);
-
-
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         gameManager.render(g);
-
     }
 
     private void hideCursor() {

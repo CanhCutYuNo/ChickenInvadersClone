@@ -10,10 +10,11 @@ public class MouseController implements MouseListener, MouseMotionListener {
     private final GamePanel gamePanel;
     private Timer shootTimer;
     private static final int SHOOT_DELAY = 200; // Đổi sang int vì Timer sử dụng ms
+    private SoundController soundController;
 
-    public MouseController(GamePanel gamePanel) {
+    public MouseController(GamePanel gamePanel, SoundController soundController) {
         this.gamePanel = gamePanel;
-
+        this.soundController = soundController;
         // Tạo Timer, nhưng không chạy ngay
         shootTimer = new Timer(SHOOT_DELAY, e -> gamePanel.getGameManager().shoot());
         shootTimer.setRepeats(true);
@@ -32,6 +33,7 @@ public class MouseController implements MouseListener, MouseMotionListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if (SwingUtilities.isLeftMouseButton(e)) {
+            soundController.playSound("/asset/resources/sfx/clickXP.wav"); // Thêm âm thanh click
             if (!shootTimer.isRunning()) {
                 gamePanel.getGameManager().shoot();
                 shootTimer.start();

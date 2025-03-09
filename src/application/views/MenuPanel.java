@@ -5,6 +5,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 
+import application.Main;
 import application.controllers.*;
 
 public class MenuPanel extends JPanel {
@@ -16,12 +17,18 @@ public class MenuPanel extends JPanel {
     private static final long serialVersionUID = 1L;
     private ViewController viewController;
     private JPanel backgroundPanel;
+    
+    private MouseController mouseController;
+   
 
-    public MenuPanel(ViewController viewController) {
+
+    public MenuPanel(ViewController viewController,MouseController mouseController) {
         this.viewController = viewController;
+        this.mouseController = mouseController;
         initComponents();
     }
 
+   
     public void setBackgroundPanel(JPanel backgroundPanel) {
         if (this.backgroundPanel != null) {
             jLayeredPane.remove(this.backgroundPanel);
@@ -71,6 +78,7 @@ public class MenuPanel extends JPanel {
 
         button1.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
+               
 
 
                 if (viewController != null) {
@@ -91,6 +99,7 @@ public class MenuPanel extends JPanel {
 
         button2.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
+            	
                 if (viewController != null) {
                     viewController.switchToSettingPanel();
                 }
@@ -107,7 +116,8 @@ public class MenuPanel extends JPanel {
 
         button3.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-                System.exit(0);
+            
+            	System.exit(0);
             }
         });
 

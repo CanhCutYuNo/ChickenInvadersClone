@@ -125,7 +125,7 @@ public class Manager {
         cardLayout.show(mainPanel, "Menu");        
 
         menuPanel.setBackgroundPanel(backgroundPanel);
-        soundController.switchTrack(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
+        soundController.switchBackground(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
 
        
         playerExploded = false;
