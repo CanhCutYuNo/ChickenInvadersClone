@@ -201,7 +201,9 @@ public class Manager {
             EnemyProjectiles egg = eggIterator.next();
 
             if(isColliding3(playerController, egg)) {
-                if(!playerExploded) {
+                playerController.isDamaged(egg.getDamage());
+                if(playerController.getHP()<=0) {
+
                     playerController.getPlayerView().startExplosion();
                     playerExploded = true;
                 }
@@ -237,14 +239,32 @@ public class Manager {
         }
         else if(level == 2){
             enemies = new ArrayList<>();
-            int nums = 10;
+            int nums = 15;
             int centerX = 1900 / 2;
             int centerY = 1080 / 4;
             for(int i = 0; i < nums; i++){
                 double angle = 2 * Math.PI * i / nums;
                 int posX = centerX +(int)(100 * Math.cos(angle));
                 int posY = centerY +(int)(100 * Math.sin(angle));
-                enemies.add(new EnemyLevel2(100, posX, posY, bodyImage, wingsImage, headImage, blinkImage));
+                int circleIndex = i%5;
+                enemies.add(new EnemyLevel2(100, posX, posY,circleIndex, bodyImage, wingsImage, headImage, blinkImage));
+            }
+        }
+        else if(level ==3){
+            enemies = new ArrayList<>();
+            int nums = 20;
+            int startY = 100; // Vị trí dòng đầu tiên
+            int spacing = 100; // Khoảng cách giữa mỗi gà
+
+            for (int i = 0; i < nums; i++) {
+                int startX = (i % 2 == 0) ? -50 : 850; // Gà bên trái (-50) hoặc bên phải (850)
+                int direction = (i % 2 == 0) ? 1 : -1; // Hướng bay vào trung tâm
+
+                enemies.add(new EnemyLevel3(100, startX, startY, direction, bodyImage, wingsImage, headImage, blinkImage));
+
+                if (i % (nums / 2) == 0) {
+                    startY += spacing; // Tạo hàng mới
+                }
             }
         }
     }
