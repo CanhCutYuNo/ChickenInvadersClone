@@ -1,6 +1,7 @@
 package application.controllers;
 
-import application.models.level.*;
+import application.models.levels.EnemyLevel1;
+import application.models.levels.EnemyLevel2;
 import application.models.*;
 import application.views.*;
 
