@@ -52,7 +52,7 @@ public class Enemy {
         {313, 307, 154, 73}, {469, 307, 153, 73}, {625, 307, 152, 73},
         {779, 307, 152, 73}, {933, 307, 152, 73}, {1087, 307, 153, 73},};
 
-    public Enemy(int hp, int PosX, int PosY, int level,
+    public Enemy(int hp, int PosX, int PosY,
             Image bodySheet, Image wingsSheet, Image headSheet, Image blinkAnimation) {
         this.hp = hp;
         this.spriteBodySheet = bodySheet;

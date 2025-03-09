@@ -1,5 +1,6 @@
 package application.controllers;
 
+import application.models.level.*;
 import application.models.*;
 import application.views.*;
 
@@ -229,7 +230,7 @@ public class Manager {
 
                 for(int j = 0; j < nums; j++){
                     int posX = startX + j * spacing;
-                    enemies.add(new Enemy(100, posX, posY, 1, bodyImage, wingsImage, headImage, blinkImage));
+                    enemies.add(new EnemyLevel1(100, posX, posY, bodyImage, wingsImage, headImage, blinkImage));
                 }
                 posY+=200;
             }
@@ -243,7 +244,7 @@ public class Manager {
                 double angle = 2 * Math.PI * i / nums;
                 int posX = centerX +(int)(100 * Math.cos(angle));
                 int posY = centerY +(int)(100 * Math.sin(angle));
-                enemies.add(new Enemy(100, posX, posY, 2, bodyImage, wingsImage, headImage, blinkImage));
+                enemies.add(new EnemyLevel2(100, posX, posY, bodyImage, wingsImage, headImage, blinkImage));
             }
         }
     }
