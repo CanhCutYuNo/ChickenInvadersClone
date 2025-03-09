@@ -35,7 +35,7 @@ public class BackgroundPanel extends javax.swing.JPanel {
     private boolean isRunning = true;
 
     public BackgroundPanel() {
-        backgroundImage = new ImageIcon(getClass().getResource("/asset/resources/backgrounds/4.png")).getImage();
+        backgroundImage = new ImageIcon(getClass().getResource("/asset/resources/backgrounds/starfield4-cyan.png")).getImage();
         y = 0;
         updateThread = new Thread(() -> {
             updateLoop();
