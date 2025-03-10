@@ -201,7 +201,9 @@ public class Manager {
             EnemyProjectiles egg = eggIterator.next();
 
             if(isColliding3(playerController, egg)) {
-                if(!playerExploded) {
+                playerController.isDamaged(egg.getDamage());
+                if(playerController.getHP()<=0) {
+
                     playerController.getPlayerView().startExplosion();
                     playerExploded = true;
                 }
@@ -214,7 +216,6 @@ public class Manager {
     
     public void spawnEnemies() {
         enemies = new ArrayList<>();
-
         if(level == 1){
 //          Random random = new Random();
             enemies = new Level1Manager().getEnemies();
@@ -222,6 +223,23 @@ public class Manager {
         else if(level == 2){
             enemies = new Level2Manager().getEnemies();
         }
+//        else if(level ==3){
+//            enemies = new ArrayList<>();
+//            int nums = 20;
+//            int startY = 100; // Vị trí dòng đầu tiên
+//            int spacing = 100; // Khoảng cách giữa mỗi gà
+//
+//            for (int i = 0; i < nums; i++) {
+//                int startX = (i % 2 == 0) ? -50 : 850; // Gà bên trái (-50) hoặc bên phải (850)
+//                int direction = (i % 2 == 0) ? 1 : -1; // Hướng bay vào trung tâm
+//
+//                enemies.add(new EnemyLevel3(100, startX, startY, direction, bodyImage, wingsImage, headImage, blinkImage));
+//
+//                if (i % (nums / 2) == 0) {
+//                    startY += spacing; // Tạo hàng mới
+//                }
+//            }
+//        }
     }
 
     public void render(Graphics g) {
