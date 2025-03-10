@@ -30,7 +30,7 @@ public class Manager {
     private JPanel mainPanel;
     private GameLoop gameLoop;
     private int frameDelay = 0;
-    private int level = 1;
+    private int level = 3;
     private boolean playerExploded = false;
 
 
@@ -224,21 +224,8 @@ public class Manager {
             enemies = new Level2Manager().getEnemies();
         }
         else if(level ==3){
-            enemies = new Level3Manager().getEnemise();
-//            int nums = 20;
-//            int startY = 100; // Vị trí dòng đầu tiên
-//            int spacing = 100; // Khoảng cách giữa mỗi gà
+            enemies = new Level3Manager().getEnemies();
 //
-//            for (int i = 0; i < nums; i++) {
-//                int startX = (i % 2 == 0) ? -50 : 850; // Gà bên trái (-50) hoặc bên phải (850)
-//                int direction = (i % 2 == 0) ? 1 : -1; // Hướng bay vào trung tâm
-//
-//                enemies.add(new EnemyLevel3(100, startX, startY, direction, bodyImage, wingsImage, headImage, blinkImage));
-//
-//                if (i % (nums / 2) == 0) {
-//                    startY += spacing; // Tạo hàng mới
-//                }
-//            }
         }
     }
 
