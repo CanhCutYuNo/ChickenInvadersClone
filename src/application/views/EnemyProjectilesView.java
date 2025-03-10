@@ -8,7 +8,6 @@ import java.awt.RenderingHints;
 import javax.swing.ImageIcon;
 
 import application.models.EnemyProjectiles;
-import application.controllers.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +16,7 @@ public class EnemyProjectilesView {
     private Image ProjectilesImage;
     private Image eggSheet;
     
-    private EnemyProjectilesController Epc;
-    
     private List<int[]> EggSprites = new ArrayList<>();
-    
-    private int eFrame = 0;
     
     private static final int[][] EggBrokenSprite = {
             {1, 1, 31, 20}, {35, 1, 32, 21}, {69, 1, 34, 22},

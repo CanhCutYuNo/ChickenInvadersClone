@@ -3,62 +3,76 @@ package application.controllers;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SoundController {
     private Clip clip;
-    private String currentTrack;
+    private String curTrack;
+    private final ExecutorService ex = Executors.newCachedThreadPool(); // Chỉ chạy 1 track 1 lúc
 
-    public SoundController(String initialTrackPath) {
-        preloadTrack(initialTrackPath);
-        play(initialTrackPath);
+    public SoundController(String initialPath) {
+        play(initialPath);
     }
 
-    // Tải trước track vào bộ nhớ
-    private void preloadTrack(String trackPath) {
+    public void play(String path) {
+        ex.submit(() -> {
+            try {
+                if(clip != null && clip.isRunning()) {
+                    clip.stop();
+                }
+
+                if(!path.equals(curTrack)) {
+                    preloadTrack(path);
+                }
+
+                if(clip != null) {
+                    clip.setFramePosition(0);
+                    //clip.loop(Clip.LOOP_CONTINUOUSLY);
+                    clip.start();
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void preloadTrack(String path) {
         try {
-            File file = new File(trackPath);
-            if (file.exists()) {
+            File file = new File(path);
+            if(file.exists()) {
                 AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
                 clip = AudioSystem.getClip();
                 clip.open(audioStream);
-                currentTrack = trackPath;
+                curTrack = path;
             } else {
-                System.out.println("Không tìm thấy file: " + trackPath);
+                System.out.println("Không tìm thấy file: " + path);
             }
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+        } catch(UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
     }
 
-    public void play(String trackPath) {
-        if (clip != null && clip.isRunning()) {
-            clip.stop();
-        }
-
-        if (!trackPath.equals(currentTrack)) {
-            preloadTrack(trackPath);
-        }
-
-        if (clip != null) {
-            clip.setFramePosition(0);
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-            clip.start();
-        }
-    }
-
+    // Dừng nhạc
     public void stop() {
-        if (clip != null) {
-            clip.stop();
-        }
+        ex.submit(() -> {
+            if(clip != null) {
+                clip.stop();
+            }
+        });
     }
 
-    public void switchTrack(String newTrackPath) {
-        if (newTrackPath.equals(currentTrack)) {
+    // Đổi bài hát(dùng thread)
+    public void switchTrack(String newPath) {
+        if(newPath.equals(curTrack)) {
             return; // Nếu bài nhạc đang phát đúng rồi thì không cần đổi
         }
-
         stop();
-        play(newTrackPath);
+        play(newPath);
+    }
+
+    // Dọn dẹp tài nguyên khi đóng ứng dụng
+    public void shutdown() {
+        ex.shutdown();
     }
 }

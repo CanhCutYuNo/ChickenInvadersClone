@@ -5,6 +5,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 
+import application.Main;
 import application.controllers.*;
 
 public class MenuPanel extends JPanel {
@@ -16,10 +17,19 @@ public class MenuPanel extends JPanel {
     private static final long serialVersionUID = 1L;
     private ViewController viewController;
     private JPanel backgroundPanel;
+    private SoundController sound;
 
     public MenuPanel(ViewController viewController) {
         this.viewController = viewController;
+        this.sound = new SoundController(Main.class.getResource("/asset/resources/sfx/clickXP.wav").getPath());
         initComponents();
+
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                sound.play(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+            }
+        });
     }
 
     public void setBackgroundPanel(JPanel backgroundPanel) {
@@ -65,18 +75,14 @@ public class MenuPanel extends JPanel {
         buttonPanel.setOpaque(false);
         buttonPanel.setLayout(new GridLayout(3, 1));
 
-        // Button 1 (Play)
         buttonPanel1.setOpaque(false);
         buttonPanel1.setLayout(new GridBagLayout());
 
         button1.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-
-
                 if (viewController != null) {
                     viewController.switchToGameContainerPanel();
                 }
-                
             }
         });
 
