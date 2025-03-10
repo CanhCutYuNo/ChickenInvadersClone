@@ -223,8 +223,8 @@ public class Manager {
         else if(level == 2){
             enemies = new Level2Manager().getEnemies();
         }
-//        else if(level ==3){
-//            enemies = new ArrayList<>();
+        else if(level ==3){
+            enemies = new Level3Manager().getEnemise();
 //            int nums = 20;
 //            int startY = 100; // Vị trí dòng đầu tiên
 //            int spacing = 100; // Khoảng cách giữa mỗi gà
@@ -239,7 +239,7 @@ public class Manager {
 //                    startY += spacing; // Tạo hàng mới
 //                }
 //            }
-//        }
+        }
     }
 
     public void render(Graphics g) {
