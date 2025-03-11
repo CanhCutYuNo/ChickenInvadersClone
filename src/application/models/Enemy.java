@@ -13,7 +13,6 @@ public abstract class Enemy {
     protected int hp;
     protected int PosX;
     protected int PosY;
-    protected int speed;
 //    protected boolean alive; //Ktra ga die chua
 //	protected int level = 1;
     protected boolean isForward = true; // Biến để theo dõi hướng di chuyển của animation
@@ -22,11 +21,10 @@ public abstract class Enemy {
     protected static final int MAP_WIDTH = 1900;
     //protected static final int MAP_HEIGHT = 1080;
     
-    public Enemy(int hp, int PosX, int PosY, int speed) {
+    public Enemy(int hp, int PosX, int PosY) {
         this.hp = hp;       
         this.PosX = PosX;
         this.PosY = PosY;
-        this.speed = speed;
 //        this.alive = true;
     }
 

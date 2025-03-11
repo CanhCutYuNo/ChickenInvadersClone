@@ -18,7 +18,7 @@ public abstract class ChickEnemy extends Enemy {
     protected Image spriteSheet;
     
     public ChickEnemy(int PosX, int PosY) {
-        super(50, PosX, PosY, 2);
+        super(50, PosX, PosY);
         
         frameCount = 50;
         spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/chick.png")).getImage();

@@ -52,7 +52,7 @@ public abstract class ChickenEnemy extends Enemy {
         {779, 307, 152, 73}, {933, 307, 152, 73}, {1087, 307, 153, 73},};
 
     public ChickenEnemy(int PosX, int PosY) {
-        super(100, PosX, PosY, 2);
+        super(100, PosX, PosY);
         spriteBodySheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-body-stripes.png")).getImage();
         spriteWingsSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-wings.png")).getImage();
         spriteHeadSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-face.png")).getImage();

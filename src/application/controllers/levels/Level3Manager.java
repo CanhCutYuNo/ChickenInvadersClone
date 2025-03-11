@@ -32,11 +32,12 @@ public class Level3Manager extends LevelManager{
 
     private class ChickenEnemyLvl3 extends ChickenEnemy{
         private int direction;
+        private int speed;
 
         public ChickenEnemyLvl3(int PosX, int PosY, int direction){
             super(PosX,PosY);
             this.direction = direction;
-
+            speed = 2;
         }
 
         @Override
