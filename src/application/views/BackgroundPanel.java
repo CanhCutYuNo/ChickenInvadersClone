@@ -35,7 +35,7 @@ public class BackgroundPanel extends javax.swing.JPanel {
     private boolean isRunning = true;
 
     public BackgroundPanel() {
-        backgroundImage = new ImageIcon(getClass().getResource("/asset/resources/backgrounds/starfield4-cyan.png")).getImage();
+        backgroundImage = new ImageIcon(getClass().getResource("/asset/resources/backgrounds/starfield5-ci5.png")).getImage();
         y = 0;
         updateThread = new Thread(() -> {
             updateLoop();
@@ -66,15 +66,17 @@ public class BackgroundPanel extends javax.swing.JPanel {
     }
 
     private void update() {
-        if (y == -height) {
+        if(y >= height) {
             y = 0;
         }
-        y--;
+        y++;
     }
 
     @Override
     public void paint(Graphics g) {
+        super.paint(g);
         g.drawImage(backgroundImage, 0, y, width, height, null);
-        g.drawImage(backgroundImage, 0, y + height, width, height, null);
+        g.drawImage(backgroundImage, 0, y - height, width, height, null);
     }
+
 }

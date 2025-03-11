@@ -14,6 +14,9 @@ public class SoundController {
     public SoundController(String initialPath) {
         play(initialPath);
     }
+    
+    public SoundController() {
+    }
 
     public void play(String path) {
         ex.submit(() -> {

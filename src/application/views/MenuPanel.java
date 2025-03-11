@@ -21,7 +21,7 @@ public class MenuPanel extends JPanel {
 
     public MenuPanel(ViewController viewController) {
         this.viewController = viewController;
-        this.sound = new SoundController(Main.class.getResource("/asset/resources/sfx/clickXP.wav").getPath());
+        this.sound = new SoundController();
         initComponents();
 
         this.addMouseListener(new MouseAdapter() {
@@ -65,11 +65,20 @@ public class MenuPanel extends JPanel {
         symbolPanel.setOpaque(false);
         symbolPanel.setLayout(new GridBagLayout());
 
+        ImageIcon gameIcon = new ImageIcon(getClass().getResource("/asset/resources/gfx/logo5.png")); 
+        icon.setIcon(gameIcon);
+        //icon.setText("GAME");
         icon.setFont(new Font("Segoe UI", Font.PLAIN, 48));
         icon.setForeground(Color.WHITE);
-        icon.setText("GAME");
         icon.setHorizontalTextPosition(SwingConstants.CENTER);
-        symbolPanel.add(icon, new GridBagConstraints());
+        icon.setVerticalTextPosition(SwingConstants.BOTTOM);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;  // Cột 0
+        gbc.gridy = 0;  // Hàng 0
+        gbc.insets = new Insets(20, 155, 20, 0); // Thêm khoảng cách trên dưới
+        gbc.anchor = GridBagConstraints.CENTER; // Căn giữa
+        symbolPanel.add(icon, gbc);
+
 
         containerPanel.add(symbolPanel);
         buttonPanel.setOpaque(false);
@@ -81,6 +90,7 @@ public class MenuPanel extends JPanel {
         button1.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
                 if (viewController != null) {
+                	sound.play(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
                     viewController.switchToGameContainerPanel();
                 }
             }
@@ -97,6 +107,7 @@ public class MenuPanel extends JPanel {
 
         button2.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
+            	sound.play(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
                 if (viewController != null) {
                     viewController.switchToSettingPanel();
                 }
@@ -113,6 +124,7 @@ public class MenuPanel extends JPanel {
 
         button3.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
+            	sound.play(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
                 System.exit(0);
             }
         });
