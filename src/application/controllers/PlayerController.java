@@ -77,7 +77,7 @@ public class PlayerController {
     }
 
     public void isDamaged(int damage){
-        this.HP-=damage;
+        this.HP+=damage;
     }
 
     public boolean isDead(){

@@ -4,10 +4,12 @@ public class EnemyProjectiles {
     private double posX, posY;
     private boolean isExploding = false;
     private int animationFrame = 0;
+    private int damage;
     
-    public EnemyProjectiles(double x, double y) {
+    public EnemyProjectiles(double x, double y, int damage) {
         this.posX = x;
         this.posY = y;
+        this.damage = damage;
     }
 
     public void update() {
@@ -16,6 +18,7 @@ public class EnemyProjectiles {
         } else {
             animationFrame++;
         }
+
     }
 
     public boolean isOffScreen() {
@@ -47,4 +50,7 @@ public class EnemyProjectiles {
         return posY;
     }
 
+    public int getDamage() {
+        return damage;
+    }
 }
