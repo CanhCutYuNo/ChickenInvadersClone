@@ -16,6 +16,7 @@ public class SoundController {
     }
 
     public void play(String path) {
+//        path = path.replace("%20", " ");
         ex.submit(() -> {
             try {
                 if(clip != null && clip.isRunning()) {
@@ -38,6 +39,7 @@ public class SoundController {
     }
 
     private void preloadTrack(String path) {
+        path = path.replace("%20", " ");
         try {
             File file = new File(path);
             if(file.exists()) {
@@ -64,6 +66,7 @@ public class SoundController {
 
     // Đổi bài hát(dùng thread)
     public void switchTrack(String newPath) {
+        newPath = newPath.replace("%20", " ");
         if(newPath.equals(curTrack)) {
             return; // Nếu bài nhạc đang phát đúng rồi thì không cần đổi
         }
