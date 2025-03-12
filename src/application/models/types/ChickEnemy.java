@@ -48,7 +48,9 @@ public abstract class ChickEnemy extends Enemy {
         g.drawImage(spriteSheet, PosX, PosY, PosX + SPRITE[frameCount][2], PosY + SPRITE[frameCount][3], SPRITE[frameCount][0], SPRITE[frameCount][1], SPRITE[frameCount][0] + SPRITE[frameCount][2], SPRITE[frameCount][1] + SPRITE[frameCount][3], null);
         frameCount++;
     }
-    
+
     @Override
-    public abstract void update();
+    public void update() {
+
+    }
 }
