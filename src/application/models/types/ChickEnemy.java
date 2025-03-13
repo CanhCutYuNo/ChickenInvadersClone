@@ -69,5 +69,7 @@ public abstract class ChickEnemy extends Enemy {
     }
 
     @Override
-    public abstract void update();
+    public void update() {
+
+    }
 }
