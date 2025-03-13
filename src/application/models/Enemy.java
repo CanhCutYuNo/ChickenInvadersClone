@@ -10,19 +10,21 @@ public abstract class Enemy {
     protected int currentFrame = (int) (Math.random() * 40);
     protected int frameCount = (int) (Math.random() * 120);
 
-    protected int hp;
+    private int hp;
     protected int PosX;
     protected int PosY;
 //    protected boolean alive; //Ktra ga die chua
 //	protected int level = 1;
     protected boolean isForward = true; // Biến để theo dõi hướng di chuyển của animation
-    protected static final int MODEL_WIDTH = 64;
-    protected static final int MODEL_HEIGHT = 64;
+    protected final int MODEL_WIDTH;
+    protected final int MODEL_HEIGHT;
     protected static final int MAP_WIDTH = 1900;
     //protected static final int MAP_HEIGHT = 1080;
     
-    public Enemy(int hp, int PosX, int PosY) {
+    public Enemy(int hp, int MODEL_WIDTH, int MODEL_HEIGHT , int PosX, int PosY) {
         this.hp = hp;       
+        this.MODEL_WIDTH = MODEL_WIDTH;
+        this.MODEL_HEIGHT = MODEL_HEIGHT;
         this.PosX = PosX;
         this.PosY = PosY;
 //        this.alive = true;
