@@ -85,16 +85,16 @@ public class EnemyProjectilesView {
                 ex, ey, ex + ew, ey + eh, 
                 null);
 
-            // Tọa độ trung tâm của hình ảnh đã scale
-            int centerX = (int)(projectile.getPosX() + offsetX + 15 + (ew * scale) / 4);
-            int centerY = (int)(projectile.getPosY() + offsetY + (eh * scale) / 4);
-
-            // Vẽ chấm đỏ ở trung tâm frame
-            g2d.setColor(Color.RED);
-            g2d.fillOval(centerX - 2, centerY - 2, 4, 4); // Vẽ chấm có kích thước 4x4 pixel
-
-            // In tọa độ x, y ra console
-            System.out.println("x = " +  projectile.getPosX() + ", y = " + projectile.getPosY() + ", f = " + eFrame);
+//            // Tọa độ trung tâm của hình ảnh đã scale
+//            int centerX = (int)(projectile.getPosX() + offsetX + 15 + (ew * scale) / 4);
+//            int centerY = (int)(projectile.getPosY() + offsetY + (eh * scale) / 4);
+//
+//            // Vẽ chấm đỏ ở trung tâm frame
+//            g2d.setColor(Color.RED);
+//            g2d.fillOval(centerX - 2, centerY - 2, 4, 4); // Vẽ chấm có kích thước 4x4 pixel
+//
+//            // In tọa độ x, y ra console
+//            System.out.println("x = " +  projectile.getPosX() + ", y = " + projectile.getPosY() + ", f = " + eFrame);
     	}
     }
 }

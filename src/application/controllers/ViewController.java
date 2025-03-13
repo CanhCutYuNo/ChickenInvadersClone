@@ -47,11 +47,11 @@ public class ViewController {
     }
 
     public void switchToMenuPanel() {
-
+    	
         cardLayout.show(mainPanel, "Menu");        
         menuPanel.setBackgroundPanel(backgroundPanel);
-   
-        soundController.switchTrack(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
+        soundController.stopBackgroundMusic();;
+        soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
 
     }
 
@@ -59,8 +59,7 @@ public class ViewController {
         cardLayout.show(mainPanel, "Setting");
         settingPanel.setBackgroundPanel(backgroundPanel);
         
-        // Phát hiệu ứng chuyển đổi (SFX)
-        //SoundController.playSFX("assets/sounds/click.wav");
+
     }
 
     public void switchToGameContainerPanel() {
@@ -68,9 +67,9 @@ public class ViewController {
         gameContainerPanel.setBackgroundPanel(backgroundPanel);
         centerMouseOnPlayer();
 
-
+        soundController.stopBackgroundMusic();
 //         Phát nhạc nền khi vào game
-        soundController.switchTrack(getClass().getResource("/asset/resources/sfx/CI4Ingame2.wav").getPath());
+        soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4Ingame2.wav").getPath());
 
         
         // Phát nhạc nền khi vào game

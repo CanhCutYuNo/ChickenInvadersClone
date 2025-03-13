@@ -1,13 +1,18 @@
 package application.controllers.levels;
 
 import application.controllers.LevelManager;
+import application.controllers.SoundController;
 import application.models.types.ChickenEnemy;
 import java.awt.Image;
 
 public class Level2Manager extends LevelManager {
 
-    public Level2Manager() {
+	SoundController sound;
+	
+    public Level2Manager(SoundController sound) {
         super();
+        this.sound = sound;
+        initEnemies();
     }
 
     @Override
@@ -34,7 +39,7 @@ public class Level2Manager extends LevelManager {
         private int circleIndex;
 
         public ChickenEnemyLevel2(int PosX, int PosY, int circleIndex) {
-            super(PosX, PosY);
+            super(PosX, PosY, sound);
             this.theta = Math.random() * 2 * Math.PI;
             this.centerX = PosX;
             this.centerY = PosY;

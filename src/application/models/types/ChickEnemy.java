@@ -4,6 +4,7 @@
  */
 package application.models.types;
 
+import application.controllers.SoundController;
 import application.models.Enemy;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -17,8 +18,8 @@ public abstract class ChickEnemy extends Enemy {
 
     protected Image spriteSheet;
     
-    public ChickEnemy(int PosX, int PosY) {
-        super(50, PosX, PosY, 2);
+    public ChickEnemy(int PosX, int PosY, SoundController sound) {
+        super(50, PosX, PosY, 2, sound);
         
         frameCount = 50;
         spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/chick.png")).getImage();

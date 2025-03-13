@@ -123,7 +123,7 @@ public class Manager {
         cardLayout.show(mainPanel, "Menu");        
 
         menuPanel.setBackgroundPanel(backgroundPanel);
-        soundController.switchTrack(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
+        soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
 
        
         playerExploded = false;
@@ -216,13 +216,13 @@ public class Manager {
         if(level == 1){
 //          Random random = new Random()
         	//TransitionManager.applyFadeTransition(gamePanel, "/asset/resources/gfx/lv1.png", 2000);
-            enemies = new Level1Manager().getEnemies();
+            enemies = new Level1Manager(soundController).getEnemies();
         }
         else if(level == 2){
-            enemies = new Level2Manager().getEnemies();
+            enemies = new Level2Manager(soundController).getEnemies();
         }
         else if(level ==3){
-            enemies = new Level3Manager().getEnemies();
+            enemies = new Level3Manager(soundController).getEnemies();
 //
         }
     }

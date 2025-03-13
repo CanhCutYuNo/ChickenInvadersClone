@@ -20,8 +20,10 @@ public class Main {
     private static GameContainerPanel gameContainerPanel;
     private static GameLoop gameLoop;
     private static ViewController viewController;
-    private static SoundController soundController; 
-  
+    private static MouseController mouseController;
+
+    private static SoundController soundController; // Thêm SoundController
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             frame = new JFrame("Chicken Invaders");
@@ -30,19 +32,19 @@ public class Main {
 
             cardLayout = new CardLayout();
             mainPanel = new JPanel(cardLayout);
-            
+//          Khởi tạo SoundController với nhạc nền mặc định (menu)
             soundController = new SoundController();
-
             gameManager = new Manager(cardLayout, mainPanel, null, null, null, null, soundController);
 
             backgroundPanel = new BackgroundPanel();
             gameManager.setBackgroundPanel(backgroundPanel);
-         
+
             viewController = new ViewController(cardLayout, mainPanel,
                     null, null, null,
                     backgroundPanel, null, soundController);
 
-            menuPanel = new MenuPanel(viewController);
+            mouseController = new MouseController(gamePanel, soundController);
+            menuPanel = new MenuPanel(viewController, mouseController);
             gameManager.setMenuPanel(menuPanel);
 
             gamePanel = new GamePanel(gameManager);

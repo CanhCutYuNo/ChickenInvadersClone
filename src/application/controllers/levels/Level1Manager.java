@@ -1,6 +1,7 @@
 package application.controllers.levels;
 
 import application.controllers.LevelManager;
+import application.controllers.SoundController;
 import application.models.Enemy;
 import application.models.types.ChickenEnemy;
 import java.awt.Image;
@@ -9,8 +10,12 @@ import javax.swing.ImageIcon;
 
 public class Level1Manager extends LevelManager {
 
-    public Level1Manager() {
+	SoundController sound;
+	
+    public Level1Manager(SoundController sound) {
         super();
+        this.sound = sound;
+        initEnemies();
     }
 
     @Override
@@ -23,7 +28,7 @@ public class Level1Manager extends LevelManager {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < nums; j++) {
                 int posX = startX + j * spacing;
-                enemies.add(new ChickenEnemyLvl1(posX, posY));
+                enemies.add(new ChickenEnemyLvl1(posX, posY, sound));
             }
             posY += 200;
         }
@@ -33,8 +38,8 @@ public class Level1Manager extends LevelManager {
 
         private boolean movingRight;
 
-        public ChickenEnemyLvl1(int PosX, int PosY) {
-            super(PosX, PosY);
+        public ChickenEnemyLvl1(int PosX, int PosY, SoundController sound) {
+            super(PosX, PosY, sound);
             movingRight = true;
         }
 
