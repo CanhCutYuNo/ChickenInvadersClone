@@ -14,7 +14,7 @@ public class GameLoop {
 
 
     public GameLoop(GamePanel gamePanel, JFrame frame) {
-        gameTimer = new Timer(8, e -> {
+        gameTimer = new Timer(16, e -> {
 
             long currentTime = System.nanoTime();
             double deltaTime = (currentTime - lastTime) / 1_000_000_000.0; // Đổi sang giây

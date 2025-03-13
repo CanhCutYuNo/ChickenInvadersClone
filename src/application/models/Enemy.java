@@ -34,7 +34,7 @@ public abstract class Enemy {
 
     // ?
     public void nextFrame() {
-        if (isForward) {
+        if(isForward) {
             currentFrame++;
             if (currentFrame >= 48) {
                 isForward = false; // Đổi hướng khi đến cuối mảng

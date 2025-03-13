@@ -20,26 +20,19 @@ public class Manager {
     private ArrayList<Enemy> enemies;
     private EnemyProjectilesController eggs;
     private static BackgroundPanel backgroundPanel;
-    private static MenuPanel menuPanel;
+    private static MenuPanel menuPanel; 
+    private static GamePanel gamePanel; 
     private CardLayout cardLayout;
-
     private SoundController soundController;
-
-
-
     private JPanel mainPanel;
     private GameLoop gameLoop;
     private int frameDelay = 0;
-    private int level = 3;
+    private int level = 1;
     private boolean playerExploded = false;
 
 
 
-    public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop,SoundController soundController) {
-    
-    
-    	
-        
+    public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GamePanel _gamePanel, GameLoop _gameLoop, SoundController _soundController) {
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
 //      playerModel = new PlayerModel(100, 10, 1.0, 950, 540);
@@ -53,9 +46,9 @@ public class Manager {
         this.mainPanel = _mainPanel;
         Manager.backgroundPanel = _backgroundPanel;
         Manager.menuPanel = _menuPanel;
+        Manager.gamePanel = _gamePanel;
         this.gameLoop = _gameLoop;
-        this.soundController = soundController;
-
+        this.soundController = _soundController;
     }
 
     public void setBackgroundPanel(BackgroundPanel _backgroundPanel) {
@@ -64,6 +57,10 @@ public class Manager {
     
     public void setMenuPanel(MenuPanel _menuPanel) {
         Manager.menuPanel = _menuPanel;
+    }
+    
+    public void setGamePanel(GamePanel _gamePanel) {
+        Manager.gamePanel = _gamePanel;
     }
     
     public void setGameLoop(GameLoop gameLoop) {
@@ -217,7 +214,8 @@ public class Manager {
     public void spawnEnemies() {
         enemies = new ArrayList<>();
         if(level == 1){
-//          Random random = new Random();
+//          Random random = new Random()
+        	//TransitionManager.applyFadeTransition(gamePanel, "/asset/resources/gfx/lv1.png", 2000);
             enemies = new Level1Manager().getEnemies();
         }
         else if(level == 2){

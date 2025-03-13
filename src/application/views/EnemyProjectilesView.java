@@ -1,5 +1,6 @@
 package application.views;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -77,12 +78,23 @@ public class EnemyProjectilesView {
 
             double scale = 2.0;
 
+         // Vẽ hình ảnh projectile từ sprite sheet
             g2d.drawImage(eggSheet, 
-                        (int)(projectile.getPosX() + offsetX + 15), (int)(projectile.getPosY() + offsetY), 
-                        (int)(projectile.getPosX() + offsetX + 15 + (ew * scale) / 2), (int)(projectile.getPosY() + offsetY + (eh * scale) / 2), 
-                        ex, ey, ex + ew, ey + eh, 
-                        null);
-            //System.out.println("x = " +  projectile.getPosX() + ", y = " + projectile.getPosY() + ", f = " + eFrame);
+                (int)(projectile.getPosX() + offsetX + 15), (int)(projectile.getPosY() + offsetY), 
+                (int)(projectile.getPosX() + offsetX + 15 + (ew * scale) / 2), (int)(projectile.getPosY() + offsetY + (eh * scale) / 2), 
+                ex, ey, ex + ew, ey + eh, 
+                null);
+
+            // Tọa độ trung tâm của hình ảnh đã scale
+            int centerX = (int)(projectile.getPosX() + offsetX + 15 + (ew * scale) / 4);
+            int centerY = (int)(projectile.getPosY() + offsetY + (eh * scale) / 4);
+
+            // Vẽ chấm đỏ ở trung tâm frame
+            g2d.setColor(Color.RED);
+            g2d.fillOval(centerX - 2, centerY - 2, 4, 4); // Vẽ chấm có kích thước 4x4 pixel
+
+            // In tọa độ x, y ra console
+            System.out.println("x = " +  projectile.getPosX() + ", y = " + projectile.getPosY() + ", f = " + eFrame);
     	}
     }
 }
