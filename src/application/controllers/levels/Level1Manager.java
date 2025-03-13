@@ -35,12 +35,13 @@ public class Level1Manager extends LevelManager {
     }
 
     private class ChickenEnemyLvl1 extends ChickenEnemy {
-
         private boolean movingRight;
+        private int speed;
 
         public ChickenEnemyLvl1(int PosX, int PosY, SoundController sound) {
             super(PosX, PosY, sound);
             movingRight = true;
+            speed = 2;
         }
 
         @Override

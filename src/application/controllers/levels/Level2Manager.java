@@ -27,7 +27,7 @@ public class Level2Manager extends LevelManager {
             int posX = centerX + (int) (100 * Math.cos(angle));
             int posY = centerY + (int) (100 * Math.sin(angle));
             int circleIndex = i % 5;
-            enemies.add(new ChickenEnemyLevel2(posX, posY, circleIndex));
+            enemies.add(new ChickenEnemyLevel2(posX, posY, circleIndex, sound));
         }
     }
 
@@ -38,7 +38,7 @@ public class Level2Manager extends LevelManager {
         private double theta; // góc quay chuyển động tròn
         private int circleIndex;
 
-        public ChickenEnemyLevel2(int PosX, int PosY, int circleIndex) {
+        public ChickenEnemyLevel2(int PosX, int PosY, int circleIndex, SoundController sound) {
             super(PosX, PosY, sound);
             this.theta = Math.random() * 2 * Math.PI;
             this.centerX = PosX;

@@ -18,7 +18,7 @@ public abstract class LevelManager {
 
     public LevelManager() {
         enemies = new ArrayList<>();
-        initEnemies();
+        //initEnemies();
     }
 
     public ArrayList<Enemy> getEnemies() {

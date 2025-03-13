@@ -13,8 +13,8 @@ public class SoundController {
     private final List<Clip> clips = new ArrayList<>(); // Lưu danh sách Clip cho hiệu ứng âm thanh
     private Clip backgroundClip; // Clip riêng cho nhạc nền
 
-    // 🎵 Phát âm thanh nền (có dừng nhạc nền cũ)
     public void playBackgroundMusic(String path) {
+
         ex.submit(() -> {
             try {
                 stopBackgroundMusic(); // Dừng nhạc nền cũ trước khi phát bài mới
