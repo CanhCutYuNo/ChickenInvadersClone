@@ -9,29 +9,29 @@ public class GameLoop {
     private final Timer gameTimer;
     private int frameCount = 0;
     private int fps = 0;
-    private long lastTime = System.nanoTime(); // Lưu thời gian frame trước
+    private long lastTime = System.nanoTime();
     private final GamePanel gamePanel;
     private final Manager gameManager;
 
     public GameLoop(GamePanel gamePanel, JFrame frame) {
         this.gamePanel = gamePanel;
-        this.gameManager = gamePanel.getGameManager(); // Lấy gameManager từ GamePanel
+        this.gameManager = gamePanel.getGameManager();
 
         gameTimer = new Timer(16, e -> {
             long currentTime = System.nanoTime();
-            double deltaTime = (currentTime - lastTime) / 1_000_000_000.0; // Đổi sang giây
+            double deltaTime = (currentTime - lastTime) / 1_000_000_000.0;
             lastTime = currentTime;
 
-            // Cập nhật game logic
+            gamePanel.update(deltaTime);
             gameManager.update(deltaTime);
 
-            // Kiểm tra nếu hết kẻ thù để chuyển level
             if (gameManager.getEnemies().isEmpty() && !gamePanel.isTransitionActive()) {
                 gameManager.setLevel(gameManager.getLevel() + 1);
-                gamePanel.updateLevel(); // Cập nhật level và chạy fade
+                gamePanel.updateLevel();
             }
 
             frame.repaint();
+         //   System.out.println("Đã gọi repaint, deltaTime: " + deltaTime); // Debug
 
             frameCount++;
         });
@@ -54,7 +54,4 @@ public class GameLoop {
     public int getFPS() {
         return fps;
     }
-
-    // Giả định GamePanel có phương thức isTransitionActive() để kiểm tra trạng thái fade
-    // Nếu không có, bạn cần thêm nó vào GamePanel (xem bước 2)
 }

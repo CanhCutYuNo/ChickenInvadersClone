@@ -96,7 +96,6 @@ public class MenuPanel extends JPanel {
 
         button1.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-
                 if (viewController != null) {
                 	sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
                     viewController.switchToGameContainerPanel();

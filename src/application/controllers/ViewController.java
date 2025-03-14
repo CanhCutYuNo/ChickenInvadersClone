@@ -84,6 +84,7 @@ public class ViewController {
             Point screenPos = gamePanel.getLocationOnScreen();
             int mouseX = screenPos.x + playerPos.x;
             int mouseY = screenPos.y + playerPos.y;
+            System.out.println(screenPos.x + " " + screenPos.y + " " + playerPos.x + " " + playerPos.y);
             robot.mouseMove(mouseX, mouseY);
         } catch (AWTException e) {
             e.printStackTrace();

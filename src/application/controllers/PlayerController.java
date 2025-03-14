@@ -18,10 +18,10 @@ public class PlayerController {
     private PlayerView playerView;
 
     // Constructor
-    public PlayerController(double shootSpeed, int PosX, int PosY, PlayerView playerView) {
+    public PlayerController(double shootSpeed, PlayerView playerView) {
         this.shootSpeed = shootSpeed;
-        this.PosX = PosX;
-        this.PosY = PosY;
+        this.PosX = 800;
+        this.PosY = 950;
         this.initialPosX = PosX;
         this.playerView = playerView; // Gán giá trị
         this.HP = 100;
