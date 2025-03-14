@@ -1,6 +1,6 @@
 package application.controllers;
 
-import application.models.level.*;
+import application.controllers.levels.*;
 import application.models.*;
 import application.views.*;
 
@@ -13,49 +13,35 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class Manager {
-//	private PlayerModel playerModel;
-	private PlayerView playerView;
-	private PlayerController playerController;
+    private PlayerView playerView;
+    private PlayerController playerController;
     private ArrayList<Bullet> bullets;
     private ArrayList<Enemy> enemies;
     private EnemyProjectilesController eggs;
     private static BackgroundPanel backgroundPanel;
-    private static MenuPanel menuPanel;
+    private static MenuPanel menuPanel; 
     private CardLayout cardLayout;
-
     private SoundController soundController;
-
-
-
     private JPanel mainPanel;
     private GameLoop gameLoop;
     private int frameDelay = 0;
-    private int level = 1;
+    private int level = 1; // Khai báo level
     private boolean playerExploded = false;
 
-
-
-    public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop,SoundController soundController) {
-    
-    
-    	
-        
+    public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController) {
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
-//      playerModel = new PlayerModel(100, 10, 1.0, 950, 540);
         playerController = new PlayerController(1.0, 950, 540, null);
         playerView = new PlayerView(playerController, soundController);
         playerController.setPlayerView(playerView);
 
         eggs = new EnemyProjectilesController("/asset/resources/gfx/introEgg.png");
         this.cardLayout = _cardLayout;
-
         this.mainPanel = _mainPanel;
         Manager.backgroundPanel = _backgroundPanel;
         Manager.menuPanel = _menuPanel;
         this.gameLoop = _gameLoop;
-        this.soundController = soundController;
-
+        this.soundController = _soundController;
     }
 
     public void setBackgroundPanel(BackgroundPanel _backgroundPanel) {
@@ -74,14 +60,24 @@ public class Manager {
         return playerController.getPosition();
     }
 
+    // Thêm phương thức getLevel()
+    public int getLevel() {
+        return level;
+    }
     
+    public void setLevel(int lv) {
+		level = lv;
+	}
+    
+    public ArrayList<Enemy> getEnemies() {
+        return enemies;
+    }
+
     public void update(double deltaTime) {
         if(playerView.isExploding()) {
             playerView.updateExplosion();
-            
             if(52 < playerView.getExFrame()) { 
                 restartGame();
-               
             }
             return;
         }
@@ -107,34 +103,27 @@ public class Manager {
         checkPlayerCollisionsWithEnemies();
         checkPlayerCollisionsWithEgg();
 
-        if(enemies.isEmpty()) {
-            level++;
-            System.out.println("New level !!");
-            spawnEnemies();
-        }
+//        if(enemies.isEmpty()) {
+//            level++;
+//            System.out.println("New level !!");
+//            //spawnEnemiesAfterFade();
+//        }
     }
 
     private void restartGame() {
-    	
         enemies.clear();
         playerController.setPosX(800);
         playerController.setPosY(950);
         bullets.clear();
         eggs.clear();
-        spawnEnemies();
+        // Không cần gọi spawnEnemies, để GamePanel xử lý khi khởi tạo lại
 
         cardLayout.show(mainPanel, "Menu");        
-
         menuPanel.setBackgroundPanel(backgroundPanel);
-        soundController.switchTrack(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
-        
-
-       
+        soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
         playerExploded = false;
-       
     }
 
-    
     private void updateBullets() {
         ArrayList<Bullet> bulletsToRemove = new ArrayList<>();
         for(Bullet bullet : bullets) {
@@ -146,7 +135,6 @@ public class Manager {
         bullets.removeAll(bulletsToRemove);
     }
     
-    
     private void updateEggs() {
         Random rand = new Random();
      
@@ -155,7 +143,6 @@ public class Manager {
                 eggs.addProjectile(enemy.getPosX() + 15, enemy.getPosY() + 30);
             }
         }
-
         eggs.updateProjectiles();
     }
     
@@ -182,18 +169,17 @@ public class Manager {
     }
     
     private void checkPlayerCollisionsWithEnemies() {
-    	Iterator<Enemy> enemyIterator = enemies.iterator();
-    	 while(enemyIterator.hasNext()) {
-             Enemy enemy = enemyIterator.next();
+        Iterator<Enemy> enemyIterator = enemies.iterator();
+        while(enemyIterator.hasNext()) {
+            Enemy enemy = enemyIterator.next();
 
-             if(isColliding2(playerController, enemy)) {
-            	 if(!playerExploded) {
-                     playerController.getPlayerView().startExplosion();
-                     playerExploded = true;
-                     
-                 }
-             }
-         }
+            if(isColliding2(playerController, enemy)) {
+                if(!playerExploded) {
+                    playerController.getPlayerView().startExplosion();
+                    playerExploded = true;
+                }
+            }
+        }
     }
     
     private void checkPlayerCollisionsWithEgg() {
@@ -202,51 +188,28 @@ public class Manager {
             EnemyProjectiles egg = eggIterator.next();
 
             if(isColliding3(playerController, egg)) {
-                if(!playerExploded) {
+                playerController.isDamaged(egg.getDamage());
+                if(playerController.getHP() <= 0) {
                     playerController.getPlayerView().startExplosion();
                     playerExploded = true;
                 }
-                // Xóa viên đạn sau khi va chạm
                 eggIterator.remove();
             }
         }
     }
 
-    
-    public void spawnEnemies() {
+    // Loại bỏ tham chiếu gamePanel, chỉ giữ spawnEnemiesAfterFade
+    public void spawnEnemiesAfterFade() {
         enemies = new ArrayList<>();
-        Image bodyImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-body-stripes.png")).getImage();
-        Image wingsImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-wings.png")).getImage();
-        Image headImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-face.png")).getImage();
-        Image blinkImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/chickenBlink.png")).getImage();
-        
-        if(level == 1){
-//          Random random = new Random();
-            enemies = new ArrayList<>();
-            int nums = 8;
-            int spacing = 200;
-            int startX = 100;
-            int posY = 100;
-            for(int i = 0; i < 3; i++){
-
-                for(int j = 0; j < nums; j++){
-                    int posX = startX + j * spacing;
-                    enemies.add(new EnemyLevel1(100, posX, posY, bodyImage, wingsImage, headImage, blinkImage, soundController));
-                }
-                posY+=200;
-            }
-        }
-        else if(level == 2){
-            enemies = new ArrayList<>();
-            int nums = 10;
-            int centerX = 1900 / 2;
-            int centerY = 1080 / 4;
-            for(int i = 0; i < nums; i++){
-                double angle = 2 * Math.PI * i / nums;
-                int posX = centerX +(int)(100 * Math.cos(angle));
-                int posY = centerY +(int)(100 * Math.sin(angle));
-                enemies.add(new EnemyLevel2(100, posX, posY, bodyImage, wingsImage, headImage, blinkImage, soundController));
-            }
+        System.out.println("Spawn enemies for level: " + level);
+        if (level == 1) {
+            enemies = new Level1Manager(soundController).getEnemies();
+        } else if (level == 2) {
+            enemies = new Level2Manager(soundController).getEnemies();
+        } else if (level == 3) {
+            enemies = new Level3Manager(soundController).getEnemies();
+        } else {
+            System.err.println("Level " + level + " không được hỗ trợ!");
         }
     }
 
@@ -261,17 +224,16 @@ public class Manager {
         }
         
         int fps = gameLoop.getFPS();
-
         g.setColor(Color.GREEN);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("FPS: " + fps, 50, 50);
     }
 
     public void movePlayer(int x, int y) {
-    	playerController.setPosX(x - 35);
+        playerController.setPosX(x - 35);
         playerController.setPosY(y - 32);
         playerController.updateDirection(x);
-        playerController.setLastMoveTime((System.currentTimeMillis()));
+        playerController.setLastMoveTime(System.currentTimeMillis());
     }
 
     public void shoot() {
@@ -305,7 +267,8 @@ public class Manager {
     
     private boolean isColliding3(PlayerController player, EnemyProjectiles egg) {
         Rectangle playerBounds = new Rectangle(player.getPosX(), player.getPosY(), 54, 50);
-        Rectangle eggBounds = new Rectangle((int)egg.getPosX(),(int)egg.getPosY(), 5, 5);
+        Rectangle eggBounds = new Rectangle((int)egg.getPosX(), (int)egg.getPosY(), 5, 5);
         return playerBounds.intersects(eggBounds);
     }
+
 }

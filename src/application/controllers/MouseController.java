@@ -33,6 +33,7 @@ public class MouseController implements MouseListener, MouseMotionListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if (SwingUtilities.isLeftMouseButton(e)) {
+            soundController.playSoundEffect("/asset/resources/sfx/clickXP.wav"); // Thêm âm thanh click
             if (!shootTimer.isRunning()) {
                 gamePanel.getGameManager().shoot();
                 shootTimer.start();
