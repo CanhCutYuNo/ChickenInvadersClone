@@ -228,16 +228,20 @@ public class Manager {
         for (Enemy enemy : enemies) {
             if (enemy != null) enemy.render(g); // Kiểm tra null để tránh lỗi
         }
-        if (playerView.isExploding()) {
-            playerView.explosionRender(g);
-        } else {
-            playerView.render(g);
-        }
+       
         int fps = gameLoop.getFPS();
         g.setColor(Color.GREEN);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("FPS: " + fps, 50, 50);
       //  System.out.println("Render time: " + (System.nanoTime() - startTime) / 1_000_000.0 + " ms");
+    }
+    
+    public void renderPlayer(Graphics g) {
+    	if (playerView.isExploding()) {
+            playerView.explosionRender(g);
+        } else {
+            playerView.render(g);
+        }
     }
 
     public void movePlayer(int x, int y) {

@@ -10,35 +10,57 @@ import application.controllers.*;
 
 public class MenuPanel extends JPanel {
 
-    /**
-
-     *
-     */
     private static final long serialVersionUID = 1L;
     private ViewController viewController;
     private JPanel backgroundPanel;
-    private SoundController sound;    
+    private SoundController sound;
     private MouseController mouseController;
-   
+    private GamePanel gamePanel; // Tham chiếu đến GamePanel để lấy tọa độ màn hình
 
-
-    public MenuPanel(ViewController viewController,MouseController mouseController) {
+    public MenuPanel(ViewController viewController, MouseController mouseController, GamePanel gamePanel) {
         this.viewController = viewController;
-
         this.sound = new SoundController();
-
         this.mouseController = mouseController;
+        this.gamePanel = gamePanel; // Lưu tham chiếu
         initComponents();
 
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());;
+                sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
             }
         });
     }
 
-   
+    // Phương thức sử dụng Robot để gán con trỏ chuột vào vị trí player
+    private void snapMouseToPlayer() {
+        if (gamePanel == null) {
+            System.err.println("gamePanel là null, không thể gán con trỏ chuột!");
+            return;
+        }
+
+        try {
+            Robot robot = new Robot();
+            // Tọa độ logic của player (cố định như bạn đã chỉ định)
+            int playerX = 800 + 35; // 835
+            int playerY = 950 + 32; // 982
+
+            // Chuyển đổi tọa độ logic thành tọa độ màn hình
+            Point panelLocation = gamePanel.getLocationOnScreen();
+            System.out.println("Panel Location: (" + panelLocation.x + ", " + panelLocation.y + ")");
+            int screenX = panelLocation.x + playerX;
+            int screenY = panelLocation.y + playerY;
+            System.out.println("Tọa độ trước khi gán: (" + screenX + ", " + screenY + ")");
+
+            // Đặt con trỏ chuột vào vị trí của player
+            robot.mouseMove(screenX, screenY);
+            System.out.println("Đã gán con trỏ chuột vào player tại: (" + screenX + ", " + screenY + ")");
+        } catch (AWTException e) {
+            System.err.println("Lỗi khi sử dụng Robot: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public void setBackgroundPanel(JPanel backgroundPanel) {
         if (this.backgroundPanel != null) {
             jLayeredPane.remove(this.backgroundPanel);
@@ -49,7 +71,6 @@ public class MenuPanel extends JPanel {
     }
 
     private void initComponents() {
-        //lineBorder1 = new javax.swing.border.LineBorder(new Color(0, 0, 0));
         jLayeredPane = new JLayeredPane();
         containerPanel = new JPanel();
         symbolPanel = new JPanel();
@@ -72,20 +93,18 @@ public class MenuPanel extends JPanel {
         symbolPanel.setOpaque(false);
         symbolPanel.setLayout(new GridBagLayout());
 
-        ImageIcon gameIcon = new ImageIcon(getClass().getResource("/asset/resources/gfx/logo5.png")); 
+        ImageIcon gameIcon = new ImageIcon(getClass().getResource("/asset/resources/gfx/logo5.png"));
         icon.setIcon(gameIcon);
-        //icon.setText("GAME");
         icon.setFont(new Font("Segoe UI", Font.PLAIN, 48));
         icon.setForeground(Color.WHITE);
         icon.setHorizontalTextPosition(SwingConstants.CENTER);
         icon.setVerticalTextPosition(SwingConstants.BOTTOM);
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;  // Cột 0
-        gbc.gridy = 0;  // Hàng 0
-        gbc.insets = new Insets(20, 155, 20, 0); // Thêm khoảng cách trên dưới
-        gbc.anchor = GridBagConstraints.CENTER; // Căn giữa
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(20, 155, 20, 0);
+        gbc.anchor = GridBagConstraints.CENTER;
         symbolPanel.add(icon, gbc);
-
 
         containerPanel.add(symbolPanel);
         buttonPanel.setOpaque(false);
@@ -97,8 +116,18 @@ public class MenuPanel extends JPanel {
         button1.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
                 if (viewController != null) {
-                	sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+                    sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
                     viewController.switchToGameContainerPanel();
+
+                    // Kích hoạt transition khi chuyển sang GamePanel
+                    if (gamePanel != null) {
+                        gamePanel.triggerTransition();
+
+                        // Sử dụng invokeLater để đảm bảo GamePanel đã hiển thị
+                        SwingUtilities.invokeLater(() -> {
+                            snapMouseToPlayer();
+                        });
+                    }
                 }
             }
         });
@@ -108,15 +137,12 @@ public class MenuPanel extends JPanel {
         buttonPanel1.add(button1, new GridBagConstraints());
         buttonPanel.add(buttonPanel1);
 
-        // Button 2 (Options)
         buttonPanel2.setOpaque(false);
         buttonPanel2.setLayout(new GridBagLayout());
 
         button2.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-
-            	sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
-
+                sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
                 if (viewController != null) {
                     viewController.switchToSettingPanel();
                 }
@@ -133,7 +159,7 @@ public class MenuPanel extends JPanel {
 
         button3.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-            	sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+                sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
                 System.exit(0);
             }
         });
@@ -147,19 +173,15 @@ public class MenuPanel extends JPanel {
         jLayeredPane.setLayer(containerPanel, 1);
         jLayeredPane.add(containerPanel);
         add(jLayeredPane);
-
-
-    }// </editor-fold>      
+    }
 
     @Override
     public void paint(Graphics g) {
         paintChildren(g);
-
     }
 
     private Button button1, button2, button3;
     private JPanel buttonPanel, buttonPanel1, buttonPanel2, buttonPanel3, containerPanel, symbolPanel;
     private JLabel icon;
     private JLayeredPane jLayeredPane;
-    //private javax.swing.border.LineBorder lineBorder1;
 }
