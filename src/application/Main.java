@@ -8,7 +8,6 @@ import application.views.*;
 import java.awt.*;
 
 public class Main {
-
     private static JFrame frame;
     private static CardLayout cardLayout;
     private static JPanel mainPanel;
@@ -21,9 +20,8 @@ public class Main {
     private static GameLoop gameLoop;
     private static ViewController viewController;
     private static MouseController mouseController;
-
-    private static SoundController soundController; // Thêm SoundController
-
+    private static SoundController soundController; 
+    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             frame = new JFrame("Chicken Invaders");
@@ -32,9 +30,9 @@ public class Main {
 
             cardLayout = new CardLayout();
             mainPanel = new JPanel(cardLayout);
-//          Khởi tạo SoundController với nhạc nền mặc định (menu)
+
             soundController = new SoundController();
-            gameManager = new Manager(cardLayout, mainPanel, null, null, null, null, soundController);
+            gameManager = new Manager(cardLayout, mainPanel, null, null, null, soundController);
 
             backgroundPanel = new BackgroundPanel();
             gameManager.setBackgroundPanel(backgroundPanel);
@@ -50,7 +48,6 @@ public class Main {
             gamePanel = new GamePanel(gameManager);
             gameLoop = new GameLoop(gamePanel, frame);
             gameManager.setGameLoop(gameLoop);
-            gameManager.setGamePanel(gamePanel);
 
             settingPanel = new SettingPanel(viewController);
             gameContainerPanel = new GameContainerPanel(gamePanel);

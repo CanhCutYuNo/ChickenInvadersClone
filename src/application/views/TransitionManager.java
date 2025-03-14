@@ -1,108 +1,82 @@
-//package application.views;
-//
-//import javax.swing.*;
-//import java.awt.*;
-//import java.awt.event.ActionEvent;
-//import java.io.File;
-//
-//public class TransitionManager {
-//
-//    public static void applyFadeTransition(String imagePath, int duration, JComponent component) {
-//        if (component == null) {
-//            System.err.println("Error: Component is null.");
-//            return;
-//        }
-//
-//        File imageFile = new File(imagePath);
-//        if (!imageFile.exists()) {
-//            System.err.println("Error: Image not found - " + imagePath);
-//            return;
-//        }
-//
-//        ImageIcon imageIcon = new ImageIcon(imageFile.getAbsolutePath());
-//        Image image = imageIcon.getImage();
-//        if (image.getWidth(null) <= 0 || image.getHeight(null) <= 0) {
-//            System.err.println("Error: Invalid image file - " + imagePath);
-//            return;
-//        }
-//
-//        if (component.getWidth() <= 0 || component.getHeight() <= 0) {
-//            System.err.println("Error: Component has invalid size.");
-//            return;
-//        }
-//
-//        // Định nghĩa class nội tại với phương thức setAlpha
-//        class FadePanel extends JPanel {
-//            private float alpha = 0.0f;
-//
-//            @Override
-//            protected void paintComponent(Graphics g) {
-//                super.paintComponent(g);
-//                Graphics2D g2d = (Graphics2D) g.create();
-//                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-//                g2d.drawImage(image, 0, 0, getWidth(), getHeight(), this);
-//                g2d.dispose();
-//            }
-//
-//            public void setAlpha(float value) {
-//                alpha = value;
-//                repaint();
-//            }
-//        }
-//
-//        // Tạo instance của FadePanel
-//        final FadePanel backgroundPanel = new FadePanel();
-//        backgroundPanel.setBounds(0, 0, component.getWidth(), component.getHeight());
-//        backgroundPanel.setOpaque(false);
-//        component.add(backgroundPanel);
-//        component.setComponentZOrder(backgroundPanel, 0);
-//
-//        // Khai báo fadeOutTimer trước
-//        final Timer fadeOutTimer = new Timer(20, new AbstractAction() {
-//            private float alpha = 1.0f;
-//
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                alpha -= 0.05f;
-//                if (alpha <= 0.0f) {
-//                    alpha = 0.0f;
-//                    fadeOutTimer.stop();
-//                    component.remove(backgroundPanel);
-//                    component.repaint();
-//                }
-//                backgroundPanel.setAlpha(alpha); // Gọi trên FadePanel
-//            }
-//        });
-//
-//        // Khai báo fadeInTimer
-//        final Timer fadeInTimer = new Timer(20, new AbstractAction() {
-//            private float alpha = 0.0f;
-//
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                alpha += 0.05f;
-//                if (alpha >= 1.0f) {
-//                    alpha = 1.0f;
-//                    fadeInTimer.stop();
-//                    Timer delayTimer = new Timer(duration, e1 -> fadeOutTimer.start());
-//                    delayTimer.setRepeats(false);
-//                    delayTimer.start();
-//                }
-//                backgroundPanel.setAlpha(alpha); // Gọi trên FadePanel
-//            }
-//        });
-//
-//        fadeInTimer.start();
-//    }
-//
-//    // Để test code
-//    public static void main(String[] args) {
-//        JFrame frame = new JFrame("Fade Transition Test");
-//        frame.setSize(800, 600);
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        JPanel panel = new JPanel();
-//        frame.add(panel);
-//        frame.setVisible(true);
-//        applyFadeTransition("path/to/your/image.jpg", 2000, panel); // Thay bằng đường dẫn ảnh thực tế
-//    }
-//}
+package application.views;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
+public class TransitionManager extends JPanel {
+    private float alpha = 0f; // Độ trong suốt (0.0f đến 1.0f)
+    private Timer timer;
+    private boolean fadeIn = true;
+    private BufferedImage levelImage;
+    private Runnable onComplete; // Callback khi hiệu ứng hoàn tất
+
+    public TransitionManager(String imagePath, Runnable onComplete) {
+        this.onComplete = onComplete;
+        setOpaque(false); // Làm trong suốt nền
+        setLayout(new BorderLayout());
+
+        // Tải ảnh PNG từ đường dẫn
+        try {
+            levelImage = ImageIO.read(getClass().getResource(imagePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Không thể tải ảnh: " + imagePath);
+            levelImage = new BufferedImage(400, 200, BufferedImage.TYPE_INT_ARGB); // Ảnh mặc định nếu lỗi
+        }
+
+        // Thiết lập timer cho hiệu ứng
+        timer = new Timer(50, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (fadeIn) {
+                    alpha += 0.05f; // Tăng độ trong suốt
+                    if (alpha >= 1f) {
+                        fadeIn = false; // Chuyển sang fade out
+                        timer.setDelay(1000); // Đợi 1 giây trước khi fade out
+                    }
+                } else {
+                    alpha -= 0.05f; // Giảm độ trong suốt
+                    if (alpha <= 0f) {
+                        timer.stop(); // Dừng timer khi fade out hoàn tất
+                        setVisible(false); // Ẩn panel
+                        getParent().remove(TransitionManager.this); // Xóa panel khỏi container
+                        getParent().revalidate();
+                        getParent().repaint();
+                        if (onComplete != null) {
+                            onComplete.run(); // Gọi callback để tiếp tục logic
+                        }
+                    }
+                }
+                repaint(); // Cập nhật giao diện
+            }
+        });
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        if (levelImage != null) {
+            g2d.drawImage(levelImage, 0, 0, getWidth(), getHeight(), this);
+        }
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // Khôi phục
+    }
+
+    public void startFade() {
+        alpha = 0f;
+        fadeIn = true;
+        setVisible(true);
+        timer.start();
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return levelImage != null ? new Dimension(levelImage.getWidth(), levelImage.getHeight()) : new Dimension(400, 200);
+    }
+}
