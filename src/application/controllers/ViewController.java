@@ -51,7 +51,7 @@ public class ViewController {
         cardLayout.show(mainPanel, "Menu");        
         menuPanel.setBackgroundPanel(backgroundPanel);
 
-        soundController.switchBackground(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
+        soundController.switchTrack(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
 
     }
 
@@ -69,7 +69,7 @@ public class ViewController {
 
 
 //         Phát nhạc nền khi vào game
-        soundController.switchBackground(getClass().getResource("/asset/resources/sfx/CI4Ingame2.wav").getPath());
+        soundController.switchTrack(getClass().getResource("/asset/resources/sfx/CI4Ingame2.wav").getPath());
 
         
         // Phát nhạc nền khi vào game

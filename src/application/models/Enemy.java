@@ -1,16 +1,18 @@
 package application.models;
 
 import java.awt.*;
+import java.io.InputStream;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
-
+import application.controllers.*;
 public class Enemy {
 
     protected Image spriteHeadSheet;
     protected Image spriteBodySheet;
     protected Image spriteWingsSheet;
     protected Image blinkAnimation;
+    protected SoundController soundController;
     protected int currentFrame = (int) (Math.random() * 40);
     protected int frameCount = (int) (Math.random() * 120);
     protected int[] headSprite;
@@ -51,14 +53,33 @@ public class Enemy {
         {1845, 223, 154, 74}, {1, 307, 154, 73}, {157, 307, 154, 73},
         {313, 307, 154, 73}, {469, 307, 153, 73}, {625, 307, 152, 73},
         {779, 307, 152, 73}, {933, 307, 152, 73}, {1087, 307, 153, 73},};
-
-    public Enemy(int hp, int PosX, int PosY, int level,
-            Image bodySheet, Image wingsSheet, Image headSheet, Image blinkAnimation) {
+    
+    String[] deathSounds = {
+    	    "/asset/resources/sfx/chickDie3.wav",
+    	    "/asset/resources/sfx/chickDie4.wav",
+    	    "/asset/resources/sfx/chickDie5.wav",
+    	    "/asset/resources/sfx/chickDie6.wav",
+    	    "/asset/resources/sfx/chicken1a(die).wav",
+    	    "/asset/resources/sfx/chicken2b(die).wav",
+    	    "/asset/resources/sfx/chicken3a(die).wav"
+    	};
+    String[] hitSounds = {
+            "/asset/resources/sfx/chicken1b1(pluck).wav",
+            "/asset/resources/sfx/chicken1b2(pluck).wav",
+            "/asset/resources/sfx/chicken2a1(pluck).wav",
+            "/asset/resources/sfx/chicken3b1(pluck).wav",
+            "/asset/resources/sfx/chicken3b2(pluck).wav",
+            "/asset/resources/sfx/chicken5b(pluck).wav"
+        };
+        
+    public Enemy(int hp, int PosX, int PosY,
+            Image bodySheet, Image wingsSheet, Image headSheet, Image blinkAnimation, SoundController soundController) {
         this.hp = hp;
         this.spriteBodySheet = bodySheet;
         this.spriteWingsSheet = wingsSheet;
         this.spriteHeadSheet = headSheet;
         this.blinkAnimation = blinkAnimation;
+        this.soundController = soundController;
 //        this.alive = true;
         Random random = new Random();
         this.PosX = PosX;
@@ -163,10 +184,31 @@ public class Enemy {
 
     public void takeDamage(int damage) {
         hp -= damage;
+        Random random = new Random();
+        InputStream soundStream = getClass().getResourceAsStream(hitSounds[random.nextInt(hitSounds.length)]);
+        if (soundStream == null) {
+            System.err.println("Không tìm thấy file âm thanh.");
+        } else {
+        	 System.err.println("hit " + hitSounds[random.nextInt(hitSounds.length)]);
+            soundController.playEffect(soundStream);
+        }
+      //  soundController.playEffect(getClass().getResource(hitSounds[random.nextInt(hitSounds.length)]).getPath());
     }
 
     public boolean isDead() {
-        return hp <= 0;
+        if (hp <= 0) {
+            Random random = new Random();
+            InputStream soundStream = getClass().getResourceAsStream(deathSounds[random.nextInt(deathSounds.length)]);
+            if (soundStream == null) {
+                System.err.println("Không tìm thấy file âm thanh.");
+            } else {
+            	System.err.println("dea  " + deathSounds[random.nextInt(deathSounds.length)]);
+                soundController.playEffect(soundStream);
+            }
+           // soundController.playEffect(getClass().getResource(deathSounds[random.nextInt(deathSounds.length)]).getPath());
+            return true;
+        }
+        return false;
     }
 
     public Rectangle getBounds() {

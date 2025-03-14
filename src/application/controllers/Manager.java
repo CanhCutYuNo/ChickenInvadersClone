@@ -1,5 +1,6 @@
 package application.controllers;
 
+import application.models.level.*;
 import application.models.*;
 import application.views.*;
 
@@ -43,7 +44,7 @@ public class Manager {
         enemies = new ArrayList<>();
 //      playerModel = new PlayerModel(100, 10, 1.0, 950, 540);
         playerController = new PlayerController(1.0, 950, 540, null);
-        playerView = new PlayerView(playerController);
+        playerView = new PlayerView(playerController, soundController);
         playerController.setPlayerView(playerView);
 
         eggs = new EnemyProjectilesController("/asset/resources/gfx/introEgg.png");
@@ -125,7 +126,8 @@ public class Manager {
         cardLayout.show(mainPanel, "Menu");        
 
         menuPanel.setBackgroundPanel(backgroundPanel);
-        soundController.switchBackground(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
+        soundController.switchTrack(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
+        
 
        
         playerExploded = false;
@@ -229,7 +231,7 @@ public class Manager {
 
                 for(int j = 0; j < nums; j++){
                     int posX = startX + j * spacing;
-                    enemies.add(new Enemy(100, posX, posY, 1, bodyImage, wingsImage, headImage, blinkImage));
+                    enemies.add(new EnemyLevel1(100, posX, posY, bodyImage, wingsImage, headImage, blinkImage, soundController));
                 }
                 posY+=200;
             }
@@ -243,7 +245,7 @@ public class Manager {
                 double angle = 2 * Math.PI * i / nums;
                 int posX = centerX +(int)(100 * Math.cos(angle));
                 int posY = centerY +(int)(100 * Math.sin(angle));
-                enemies.add(new Enemy(100, posX, posY, 2, bodyImage, wingsImage, headImage, blinkImage));
+                enemies.add(new EnemyLevel2(100, posX, posY, bodyImage, wingsImage, headImage, blinkImage, soundController));
             }
         }
     }

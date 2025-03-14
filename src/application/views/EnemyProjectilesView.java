@@ -8,7 +8,6 @@ import java.awt.RenderingHints;
 import javax.swing.ImageIcon;
 
 import application.models.EnemyProjectiles;
-import application.controllers.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +16,7 @@ public class EnemyProjectilesView {
     private Image ProjectilesImage;
     private Image eggSheet;
     
-    private EnemyProjectilesController Epc;
-    
     private List<int[]> EggSprites = new ArrayList<>();
-    
-    private int eFrame = 0;
     
     private static final int[][] EggBrokenSprite = {
             {1, 1, 31, 20}, {35, 1, 32, 21}, {69, 1, 34, 22},
@@ -83,8 +78,8 @@ public class EnemyProjectilesView {
             double scale = 2.0;
 
             g2d.drawImage(eggSheet, 
-                        (int)(projectile.getPosX() + offsetX), (int)(projectile.getPosY() + offsetY), 
-                        (int)(projectile.getPosX() + offsetX + (ew * scale) / 2), (int)(projectile.getPosY() + offsetY + (eh * scale) / 2), 
+                        (int)(projectile.getPosX() + offsetX + 15), (int)(projectile.getPosY() + offsetY), 
+                        (int)(projectile.getPosX() + offsetX + 15 + (ew * scale) / 2), (int)(projectile.getPosY() + offsetY + (eh * scale) / 2), 
                         ex, ey, ex + ew, ey + eh, 
                         null);
             //System.out.println("x = " +  projectile.getPosX() + ", y = " + projectile.getPosY() + ", f = " + eFrame);
