@@ -31,7 +31,7 @@ public class Manager {
     public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController) {
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
-        playerController = new PlayerController(1.0, 950, 540, null);
+        playerController = new PlayerController(0.5, null);
         playerView = new PlayerView(playerController, soundController);
         playerController.setPlayerView(playerView);
 
@@ -74,9 +74,10 @@ public class Manager {
     }
 
     public void update(double deltaTime) {
-        if(playerView.isExploding()) {
+     //   System.out.println("Đang update, số enemies: " + enemies.size());
+        if (playerView.isExploding()) {
             playerView.updateExplosion();
-            if(52 < playerView.getExFrame()) { 
+            if (52 < playerView.getExFrame()) {
                 restartGame();
             }
             return;
@@ -84,29 +85,30 @@ public class Manager {
 
         updateBullets();
         bullets.removeIf(bullet -> bullet.isOffScreen(1080));
-        if(frameDelay == 1) {
+        if (frameDelay == 1) {
             frameDelay = 0;
         }
         frameDelay++;
-        
+
         updateEggs();
-        
+
         playerController.update();
-        
-        for(Enemy enemy : enemies) {
-            enemy.nextFrame();
-            enemy.update();
+
+        for (Enemy enemy : enemies) {
+            if (enemy != null) {
+                enemy.nextFrame();
+                enemy.update();
+            }
         }
-      
+
         checkCollisions();
         checkBulletEnemyCollisions();
         checkPlayerCollisionsWithEnemies();
         checkPlayerCollisionsWithEgg();
-
-//        if(enemies.isEmpty()) {
+//
+//        if (enemies.isEmpty()) {
 //            level++;
-//            System.out.println("New level !!");
-//            //spawnEnemiesAfterFade();
+//            System.out.println("New level !! " + level);
 //        }
     }
 
@@ -116,6 +118,7 @@ public class Manager {
         playerController.setPosY(950);
         bullets.clear();
         eggs.clear();
+        level = 1;
         // Không cần gọi spawnEnemies, để GamePanel xử lý khi khởi tạo lại
 
         cardLayout.show(mainPanel, "Menu");        
@@ -201,32 +204,40 @@ public class Manager {
     // Loại bỏ tham chiếu gamePanel, chỉ giữ spawnEnemiesAfterFade
     public void spawnEnemiesAfterFade() {
         enemies = new ArrayList<>();
-        System.out.println("Spawn enemies for level: " + level);
+      //  System.out.println("Spawn enemies for level: " + level);
         if (level == 1) {
             enemies = new Level1Manager(soundController).getEnemies();
+        //    System.out.println("Số lượng enemies level 1: " + enemies.size());
         } else if (level == 2) {
             enemies = new Level2Manager(soundController).getEnemies();
+         //   System.out.println("Số lượng enemies level 2: " + enemies.size());
         } else if (level == 3) {
             enemies = new Level3Manager(soundController).getEnemies();
+         //   System.out.println("Số lượng enemies level 3: " + enemies.size());
         } else {
-            System.err.println("Level " + level + " không được hỗ trợ!");
+         //   System.err.println("Level " + level + " không được hỗ trợ!");
         }
+      //  System.out.println("Tổng số enemies sau spawn: " + enemies.size());
     }
 
     public void render(Graphics g) {
-        for(Bullet bullet : bullets) bullet.render(g);
+        long startTime = System.nanoTime();
+        for (Bullet bullet : bullets) bullet.render(g);
         eggs.drawProjectiles(g);
-        for(Enemy enemy : enemies) enemy.render(g);
-        if(playerView.isExploding()) {
-            playerView.explosionRender(g); // Vẽ hiệu ứng nổ
-        } else {
-            playerView.render(g); // Vẽ player nếu không đang nổ
+       // System.out.println("Số lượng enemies để render: " + enemies.size()); // Debug
+        for (Enemy enemy : enemies) {
+            if (enemy != null) enemy.render(g); // Kiểm tra null để tránh lỗi
         }
-        
+        if (playerView.isExploding()) {
+            playerView.explosionRender(g);
+        } else {
+            playerView.render(g);
+        }
         int fps = gameLoop.getFPS();
         g.setColor(Color.GREEN);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("FPS: " + fps, 50, 50);
+      //  System.out.println("Render time: " + (System.nanoTime() - startTime) / 1_000_000.0 + " ms");
     }
 
     public void movePlayer(int x, int y) {
