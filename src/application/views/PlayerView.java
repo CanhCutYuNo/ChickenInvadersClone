@@ -12,7 +12,7 @@ public class PlayerView {
     private Image exhaustImage;
     private Image explosionSheet;
     private PlayerController playerController;
-    private SoundController soundController;
+
 
 
     private int[][] spriteData = {
@@ -46,9 +46,9 @@ public class PlayerView {
     private boolean exploding = false;
 
     // Constructor
-    public PlayerView(PlayerController _playerController, SoundController soundController) {
+    public PlayerView(PlayerController _playerController) {
         this.playerController = _playerController;
-        this.soundController = soundController;
+  
 
         try {
             spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/spaceship.png")).getImage();
@@ -145,9 +145,6 @@ public class PlayerView {
     public void startExplosion() {
         exploding = true;
         exFrame = 0;
-//        if (soundController != null) {
-//        	 soundController.playEffect(getClass().getResource("/asset/resources/sfx/explosionPlayer.wav").getPath());
-//        }
     }
 
     public void updateExplosion() {
