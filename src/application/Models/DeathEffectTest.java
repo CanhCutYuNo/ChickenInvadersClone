@@ -86,18 +86,16 @@ public class DeathEffectTest extends DeathEffect {
             minFrameCount = Math.abs(random.nextInt() % 27);
             maxFrameCount = minFrameCount + Math.abs(random.nextInt() % 27);
             frameCount = minFrameCount;
-            vX = (random.nextInt() % 4);
-            vY = (random.nextInt() % 4);
+            vX = (random.nextInt() % 3);
+            vY = (random.nextInt() % 3);
         }
 
         public void render(Graphics g) {
-//            if (frameCount > maxFrameCount) {
-//                frameCount = minFrameCount;
-//            }
             if (frameCount != maxFrameCount) {
-                g.drawImage(spriteSheet, PosX, PosY, PosX + SPRITE[frameCount][2], PosY + SPRITE[frameCount][3], SPRITE[frameCount][0], SPRITE[frameCount][1], SPRITE[frameCount][0] + SPRITE[frameCount][2], SPRITE[frameCount][1] + SPRITE[frameCount][3], null);
-                frameCount++;
+                int offsetValue = -OFFSET[frameCount] - 10;
+                g.drawImage(spriteSheet, PosX + offsetValue, PosY + offsetValue, PosX + SPRITE[frameCount][2] + offsetValue, PosY + SPRITE[frameCount][3] + offsetValue, SPRITE[frameCount][0], SPRITE[frameCount][1], SPRITE[frameCount][0] + SPRITE[frameCount][2], SPRITE[frameCount][1] + SPRITE[frameCount][3], null);
             }
+            frameCount++;
         }
 
         public boolean isEnd() {

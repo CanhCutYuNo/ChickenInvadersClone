@@ -17,6 +17,7 @@ public class Manager {
     private PlayerController playerController;
     private ArrayList<Bullet> bullets;
     private ArrayList<Enemy> enemies;
+    private ArrayList<DeathEffect> deathEffects;
     private EnemyProjectilesController eggs;
     private static BackgroundPanel backgroundPanel;
     private static MenuPanel menuPanel; 
@@ -31,6 +32,7 @@ public class Manager {
     public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController) {
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
+        deathEffects = new ArrayList<>();
         playerController = new PlayerController(0.5, null);
         playerView = new PlayerView(playerController);
         playerController.setPlayerView(playerView);
@@ -95,6 +97,8 @@ public class Manager {
         playerController.update();
         
         updateEnemies();
+        
+        updateDeathEffects();
 
         checkCollisions();
         checkBulletEnemyCollisions();
@@ -151,11 +155,25 @@ public class Manager {
                 enemy.nextFrame();
                 enemy.update();
                 if(enemy.isDead()) {
+                    deathEffects.add(new DeathEffectTest(enemy.getPosX(), enemy.getPosY()));
                     enemiesToRemove.add(enemy);
                 }                
             }
         } 
         enemies.removeAll(enemiesToRemove);        
+    }
+    
+    private void updateDeathEffects(){
+        ArrayList<DeathEffect> deathEffectsToRemove = new ArrayList<>();
+        for(DeathEffect deathEffect: deathEffects){
+            if(deathEffect != null){
+                deathEffect.update();
+                if(deathEffect.isEnd()){
+                    deathEffectsToRemove.add(deathEffect);
+                }
+            }
+        }
+        deathEffects.removeAll(deathEffectsToRemove);
     }
     
     private void checkBulletEnemyCollisions() {
@@ -233,6 +251,10 @@ public class Manager {
        // System.out.println("Số lượng enemies để render: " + enemies.size()); // Debug
         for (Enemy enemy : enemies) {
             if (enemy != null) enemy.render(g); // Kiểm tra null để tránh lỗi
+        }
+        
+        for (DeathEffect deathEffect : deathEffects) {
+            if (deathEffect != null) deathEffect.render(g);
         }
        
         int fps = gameLoop.getFPS();
