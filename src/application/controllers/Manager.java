@@ -93,13 +93,8 @@ public class Manager {
         updateEggs();
 
         playerController.update();
-
-        for (Enemy enemy : enemies) {
-            if (enemy != null) {
-                enemy.nextFrame();
-                enemy.update();
-            }
-        }
+        
+        updateEnemies();
 
         checkCollisions();
         checkBulletEnemyCollisions();
@@ -149,6 +144,20 @@ public class Manager {
         eggs.updateProjectiles();
     }
     
+    private void updateEnemies(){
+        ArrayList<Enemy> enemiesToRemove = new ArrayList<>();        
+        for (Enemy enemy : enemies) {
+            if (enemy != null) {
+                enemy.nextFrame();
+                enemy.update();
+                if(enemy.isDead()) {
+                    enemiesToRemove.add(enemy);
+                }                
+            }
+        } 
+        enemies.removeAll(enemiesToRemove);        
+    }
+    
     private void checkBulletEnemyCollisions() {
         Iterator<Bullet> bulletIterator = bullets.iterator();
         while(bulletIterator.hasNext()) {
@@ -162,9 +171,6 @@ public class Manager {
                     enemy.takeDamage(bullet.getDamage());
                     bulletIterator.remove(); 
 
-                    if(enemy.getHp() <= 0) {
-                        enemyIterator.remove();
-                    }
                     break;
                 }
             }
@@ -260,7 +266,6 @@ public class Manager {
             for(Enemy enemy : enemies) {
                 if(isColliding(bullet, enemy)) {
                     enemy.takeDamage(bullet.getDamage());
-                    if(enemy.getHp() <= 0) enemies.remove(enemy);
                     return true;
                 }
             }
