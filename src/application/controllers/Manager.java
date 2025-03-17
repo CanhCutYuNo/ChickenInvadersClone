@@ -155,7 +155,7 @@ public class Manager {
                 enemy.nextFrame();
                 enemy.update();
                 if(enemy.isDead()) {
-                    deathEffects.add(new DeathEffectTest(enemy.getPosX(), enemy.getPosY()));
+                    deathEffects.add(new DeathEffectTest(enemy.getCenterX(), enemy.getCenterY()));
                     enemiesToRemove.add(enemy);
                 }                
             }

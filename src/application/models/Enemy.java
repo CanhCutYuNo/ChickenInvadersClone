@@ -116,6 +116,14 @@ public abstract class Enemy {
         return MODEL_HEIGHT;
     }
     
+    public int getCenterX(){
+        return (PosX + MODEL_WIDTH / 2);
+    }
+    
+    public int getCenterY(){
+        return (PosY + MODEL_HEIGHT / 2);
+    }
+    
     public int getCurrentFrame() {
         return currentFrame;
     }
