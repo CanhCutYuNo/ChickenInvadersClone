@@ -241,6 +241,8 @@ public class Manager {
         } else {
          //   System.err.println("Level " + level + " không được hỗ trợ!");
         }
+        // Test
+        enemies = new TestLevelManager(soundController).getEnemies();
       //  System.out.println("Tổng số enemies sau spawn: " + enemies.size());
     }
 
@@ -297,13 +299,13 @@ public class Manager {
 
     private boolean isColliding(Bullet bullet, Enemy enemy) {
         Rectangle bulletBounds = new Rectangle(bullet.getX(), bullet.getY(), 9, 52);
-        Rectangle enemyBounds = new Rectangle(enemy.getPosX(), enemy.getPosY(), 54, 50);
+        Rectangle enemyBounds = new Rectangle(enemy.getPosX(), enemy.getPosY(), enemy.getMODEL_WIDTH(), enemy.getMODEL_HEIGHT());
         return bulletBounds.intersects(enemyBounds);
     }
     
     private boolean isColliding2(PlayerController player, Enemy enemy) {
         Rectangle playerBounds = new Rectangle(player.getPosX(), player.getPosY(), 54, 50);
-        Rectangle enemyBounds = new Rectangle(enemy.getPosX(), enemy.getPosY(), 54, 50);
+        Rectangle enemyBounds = new Rectangle(enemy.getPosX(), enemy.getPosY(), enemy.getMODEL_WIDTH(), enemy.getMODEL_HEIGHT());
         return playerBounds.intersects(enemyBounds);
     }
     

@@ -108,6 +108,14 @@ public abstract class Enemy {
         return PosY;
     }
 
+    public int getMODEL_WIDTH() {
+        return MODEL_WIDTH;
+    }
+
+    public int getMODEL_HEIGHT() {
+        return MODEL_HEIGHT;
+    }
+    
     public int getCurrentFrame() {
         return currentFrame;
     }
