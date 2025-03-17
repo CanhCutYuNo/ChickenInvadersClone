@@ -32,37 +32,8 @@ public class MenuPanel extends JPanel {
         });
     }
 
-    // Phương thức sử dụng Robot để gán con trỏ chuột vào vị trí player
-    private void snapMouseToPlayer() {
-        if (gamePanel == null) {
-            System.err.println("gamePanel là null, không thể gán con trỏ chuột!");
-            return;
-        }
-
-        try {
-            Robot robot = new Robot();
-            // Tọa độ logic của player (cố định như bạn đã chỉ định)
-            int playerX = 800 + 35; // 835
-            int playerY = 950 + 32; // 982
-
-            // Chuyển đổi tọa độ logic thành tọa độ màn hình
-            Point panelLocation = gamePanel.getLocationOnScreen();
-            System.out.println("Panel Location: (" + panelLocation.x + ", " + panelLocation.y + ")");
-            int screenX = panelLocation.x + playerX;
-            int screenY = panelLocation.y + playerY;
-            System.out.println("Tọa độ trước khi gán: (" + screenX + ", " + screenY + ")");
-
-            // Đặt con trỏ chuột vào vị trí của player
-            robot.mouseMove(screenX, screenY);
-            System.out.println("Đã gán con trỏ chuột vào player tại: (" + screenX + ", " + screenY + ")");
-        } catch (AWTException e) {
-            System.err.println("Lỗi khi sử dụng Robot: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
     public void setBackgroundPanel(JPanel backgroundPanel) {
-        if (this.backgroundPanel != null) {
+        if(this.backgroundPanel != null) {
             jLayeredPane.remove(this.backgroundPanel);
         }
         this.backgroundPanel = backgroundPanel;
@@ -115,18 +86,11 @@ public class MenuPanel extends JPanel {
 
         button1.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-                if (viewController != null) {
+                if(viewController != null) {
                     sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
                     viewController.switchToGameContainerPanel();
-
-                    // Kích hoạt transition khi chuyển sang GamePanel
-                    if (gamePanel != null) {
+                    if(gamePanel != null) {
                         gamePanel.triggerTransition();
-
-                        // Sử dụng invokeLater để đảm bảo GamePanel đã hiển thị
-                        SwingUtilities.invokeLater(() -> {
-                            snapMouseToPlayer();
-                        });
                     }
                 }
             }
@@ -143,7 +107,7 @@ public class MenuPanel extends JPanel {
         button2.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
                 sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
-                if (viewController != null) {
+                if(viewController != null) {
                     viewController.switchToSettingPanel();
                 }
             }

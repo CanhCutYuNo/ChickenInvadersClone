@@ -17,7 +17,7 @@ public class Manager {
     private PlayerController playerController;
     private ArrayList<Bullet> bullets;
     private ArrayList<Enemy> enemies;
-    private ArrayList<DeathEffect> deathEffects;
+    private ArrayList<DeathEffectTest> deathEffects;
     private EnemyProjectilesController eggs;
     private static BackgroundPanel backgroundPanel;
     private static MenuPanel menuPanel; 
