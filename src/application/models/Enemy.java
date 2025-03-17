@@ -127,6 +127,10 @@ public abstract class Enemy {
     public int getCurrentFrame() {
         return currentFrame;
     }
+    
+    public DeathEffect getDeathEffect(){
+        return null;
+    }
 
 
     public abstract void update();

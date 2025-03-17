@@ -3,6 +3,7 @@ package application.controllers;
 import application.controllers.levels.*;
 import application.models.*;
 import application.views.*;
+import application.models.types.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -155,7 +156,10 @@ public class Manager {
                 enemy.nextFrame();
                 enemy.update();
                 if(enemy.isDead()) {
-                    deathEffects.add(new DeathEffectTest(enemy.getCenterX(), enemy.getCenterY()));
+                    DeathEffect tempDeathEffect = enemy.getDeathEffect();
+                    if(tempDeathEffect != null){
+                        deathEffects.add(tempDeathEffect); 
+                    }
                     enemiesToRemove.add(enemy);
                 }                
             }
@@ -242,7 +246,7 @@ public class Manager {
          //   System.err.println("Level " + level + " không được hỗ trợ!");
         }
         // Test
-        enemies = new TestLevelManager(soundController).getEnemies();
+//        enemies = new TestLevelManager(soundController).getEnemies();
       //  System.out.println("Tổng số enemies sau spawn: " + enemies.size());
     }
 
