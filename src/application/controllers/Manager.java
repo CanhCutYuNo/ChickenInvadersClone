@@ -207,6 +207,7 @@ public class Manager {
             if(isColliding2(playerController, enemy)) {
                 if(!playerExploded) {
                     playerController.getPlayerView().startExplosion();
+                    soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/explosionPlayer.wav").getPath());
                     playerExploded = true;
                 }
             }
@@ -222,6 +223,7 @@ public class Manager {
                 playerController.isDamaged(egg.getDamage());
                 if(playerController.getHP() <= 0) {
                     playerController.getPlayerView().startExplosion();
+                    soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/explosionPlayer.wav").getPath());
                     playerExploded = true;
                 }
                 eggIterator.remove();
@@ -287,6 +289,8 @@ public class Manager {
 
     public void shoot() {
         bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 50, 1.0, 0.4));
+        soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/bulletHenSolo.wav").getPath());
+
     }
 
     private void checkCollisions() {

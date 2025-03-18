@@ -9,7 +9,8 @@ import java.awt.Graphics;
 import java.awt.event.*;
 import javax.swing.*;
 
-import application.controllers.ViewController;
+
+import application.controllers.*;
 
 /**
  *
@@ -22,9 +23,11 @@ public class SettingPanel extends JPanel {
      */
     private static final long serialVersionUID = 1L;
     private ViewController viewController;
+    private SoundController soundClick;
 
-    public SettingPanel(ViewController viewController) {
+    public SettingPanel(ViewController viewController, SoundController soundClick) {
         this.viewController = viewController;
+        this.soundClick = soundClick;
         initComponents();
     }
 
@@ -77,6 +80,7 @@ public class SettingPanel extends JPanel {
         //Button 1 On Clicked Event
         button1.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
+            	soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
                 incrementDifficulty();
                 throw new UnsupportedOperationException("Chua them tinh nang luu trang thai do kho");
             }
@@ -95,6 +99,7 @@ public class SettingPanel extends JPanel {
         //Button 2 On Clicked Event
         button2.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
+            	soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         });
@@ -113,6 +118,7 @@ public class SettingPanel extends JPanel {
         //Button 3 On Clicked Event        
         button3.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
+            	soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         });
@@ -131,6 +137,7 @@ public class SettingPanel extends JPanel {
         //Button 4 On Clicked Event        
         button4.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
+            	soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
                 viewController.switchToMenuPanel();
             }
         });

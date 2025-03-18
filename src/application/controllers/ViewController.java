@@ -52,7 +52,6 @@ public class ViewController {
         menuPanel.setBackgroundPanel(backgroundPanel);
         soundController.stopBackgroundMusic();;
         soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
-
     }
 
     public void switchToSettingPanel() {

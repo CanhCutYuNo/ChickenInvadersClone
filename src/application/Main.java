@@ -50,7 +50,7 @@ public class Main {
             menuPanel = new MenuPanel(viewController, mouseController, gamePanel);
             gameManager.setMenuPanel(menuPanel);
 
-            settingPanel = new SettingPanel(viewController);
+            settingPanel = new SettingPanel(viewController, soundController);
             gameContainerPanel = new GameContainerPanel(gamePanel);
 
             mainPanel.add(menuPanel, "Menu");
