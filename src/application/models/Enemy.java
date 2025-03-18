@@ -108,8 +108,28 @@ public abstract class Enemy {
         return PosY;
     }
 
+    public int getMODEL_WIDTH() {
+        return MODEL_WIDTH;
+    }
+
+    public int getMODEL_HEIGHT() {
+        return MODEL_HEIGHT;
+    }
+    
+    public int getCenterX(){
+        return (PosX + MODEL_WIDTH / 2);
+    }
+    
+    public int getCenterY(){
+        return (PosY + MODEL_HEIGHT / 2);
+    }
+    
     public int getCurrentFrame() {
         return currentFrame;
+    }
+    
+    public DeathEffect getDeathEffect(){
+        return null;
     }
 
 

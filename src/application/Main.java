@@ -42,12 +42,13 @@ public class Main {
                     backgroundPanel, null, soundController);
 
             mouseController = new MouseController(gamePanel, soundController);
-            menuPanel = new MenuPanel(viewController, mouseController);
-            gameManager.setMenuPanel(menuPanel);
 
             gamePanel = new GamePanel(gameManager);
             gameLoop = new GameLoop(gamePanel, frame);
             gameManager.setGameLoop(gameLoop);
+            
+            menuPanel = new MenuPanel(viewController, mouseController, gamePanel);
+            gameManager.setMenuPanel(menuPanel);
 
             settingPanel = new SettingPanel(viewController, soundController);
             gameContainerPanel = new GameContainerPanel(gamePanel);

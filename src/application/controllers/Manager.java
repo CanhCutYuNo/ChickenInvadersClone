@@ -3,6 +3,7 @@ package application.controllers;
 import application.controllers.levels.*;
 import application.models.*;
 import application.views.*;
+import application.models.types.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,6 +18,7 @@ public class Manager {
     private PlayerController playerController;
     private ArrayList<Bullet> bullets;
     private ArrayList<Enemy> enemies;
+    private ArrayList<DeathEffect> deathEffects;
     private EnemyProjectilesController eggs;
     private static BackgroundPanel backgroundPanel;
     private static MenuPanel menuPanel; 
@@ -31,6 +33,7 @@ public class Manager {
     public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController) {
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
+        deathEffects = new ArrayList<>();
         playerController = new PlayerController(0.5, null);
         playerView = new PlayerView(playerController);
         playerController.setPlayerView(playerView);
@@ -93,13 +96,10 @@ public class Manager {
         updateEggs();
 
         playerController.update();
-
-        for (Enemy enemy : enemies) {
-            if (enemy != null) {
-                enemy.nextFrame();
-                enemy.update();
-            }
-        }
+        
+        updateEnemies();
+        
+        updateDeathEffects();
 
         checkCollisions();
         checkBulletEnemyCollisions();
@@ -149,6 +149,37 @@ public class Manager {
         eggs.updateProjectiles();
     }
     
+    private void updateEnemies(){
+        ArrayList<Enemy> enemiesToRemove = new ArrayList<>();        
+        for (Enemy enemy : enemies) {
+            if (enemy != null) {
+                enemy.nextFrame();
+                enemy.update();
+                if(enemy.isDead()) {
+                    DeathEffect tempDeathEffect = enemy.getDeathEffect();
+                    if(tempDeathEffect != null){
+                        deathEffects.add(tempDeathEffect); 
+                    }
+                    enemiesToRemove.add(enemy);
+                }                
+            }
+        } 
+        enemies.removeAll(enemiesToRemove);        
+    }
+    
+    private void updateDeathEffects(){
+        ArrayList<DeathEffect> deathEffectsToRemove = new ArrayList<>();
+        for(DeathEffect deathEffect: deathEffects){
+            if(deathEffect != null){
+                deathEffect.update();
+                if(deathEffect.isEnd()){
+                    deathEffectsToRemove.add(deathEffect);
+                }
+            }
+        }
+        deathEffects.removeAll(deathEffectsToRemove);
+    }
+    
     private void checkBulletEnemyCollisions() {
         Iterator<Bullet> bulletIterator = bullets.iterator();
         while(bulletIterator.hasNext()) {
@@ -162,9 +193,6 @@ public class Manager {
                     enemy.takeDamage(bullet.getDamage());
                     bulletIterator.remove(); 
 
-                    if(enemy.getHp() <= 0) {
-                        enemyIterator.remove();
-                    }
                     break;
                 }
             }
@@ -219,6 +247,8 @@ public class Manager {
         } else {
          //   System.err.println("Level " + level + " không được hỗ trợ!");
         }
+        // Test
+//        enemies = new TestLevelManager(soundController).getEnemies();
       //  System.out.println("Tổng số enemies sau spawn: " + enemies.size());
     }
 
@@ -230,16 +260,24 @@ public class Manager {
         for (Enemy enemy : enemies) {
             if (enemy != null) enemy.render(g); // Kiểm tra null để tránh lỗi
         }
-        if (playerView.isExploding()) {
-            playerView.explosionRender(g);
-        } else {
-            playerView.render(g);
+        
+        for (DeathEffect deathEffect : deathEffects) {
+            if (deathEffect != null) deathEffect.render(g);
         }
+       
         int fps = gameLoop.getFPS();
         g.setColor(Color.GREEN);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("FPS: " + fps, 50, 50);
       //  System.out.println("Render time: " + (System.nanoTime() - startTime) / 1_000_000.0 + " ms");
+    }
+    
+    public void renderPlayer(Graphics g) {
+    	if (playerView.isExploding()) {
+            playerView.explosionRender(g);
+        } else {
+            playerView.render(g);
+        }
     }
 
     public void movePlayer(int x, int y) {
@@ -260,7 +298,6 @@ public class Manager {
             for(Enemy enemy : enemies) {
                 if(isColliding(bullet, enemy)) {
                     enemy.takeDamage(bullet.getDamage());
-                    if(enemy.getHp() <= 0) enemies.remove(enemy);
                     return true;
                 }
             }
@@ -270,13 +307,13 @@ public class Manager {
 
     private boolean isColliding(Bullet bullet, Enemy enemy) {
         Rectangle bulletBounds = new Rectangle(bullet.getX(), bullet.getY(), 9, 52);
-        Rectangle enemyBounds = new Rectangle(enemy.getPosX(), enemy.getPosY(), 54, 50);
+        Rectangle enemyBounds = new Rectangle(enemy.getPosX(), enemy.getPosY(), enemy.getMODEL_WIDTH(), enemy.getMODEL_HEIGHT());
         return bulletBounds.intersects(enemyBounds);
     }
     
     private boolean isColliding2(PlayerController player, Enemy enemy) {
         Rectangle playerBounds = new Rectangle(player.getPosX(), player.getPosY(), 54, 50);
-        Rectangle enemyBounds = new Rectangle(enemy.getPosX(), enemy.getPosY(), 54, 50);
+        Rectangle enemyBounds = new Rectangle(enemy.getPosX(), enemy.getPosY(), enemy.getMODEL_WIDTH(), enemy.getMODEL_HEIGHT());
         return playerBounds.intersects(enemyBounds);
     }
     
