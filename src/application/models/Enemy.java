@@ -119,6 +119,18 @@ public abstract class Enemy {
     public int getCurrentFrame() {
         return currentFrame;
     }
+    
+    public DeathEffect getDeathEffect(){
+        return null;
+    }
+    
+    public int getCenterX(){
+        return (PosX + MODEL_WIDTH / 2);
+    }
+    
+    public int getCenterY(){
+        return (PosY + MODEL_HEIGHT / 2);
+    }
 
     // Loại bỏ abstract khỏi update(), để trống vì di chuyển do EnemyController xử lý
     public void update() {

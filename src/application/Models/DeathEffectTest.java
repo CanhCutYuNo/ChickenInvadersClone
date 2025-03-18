@@ -91,7 +91,7 @@ public class DeathEffectTest extends DeathEffect {
         }
 
         public void render(Graphics g) {
-            if (frameCount != maxFrameCount) {
+            if (frameCount != maxFrameCount && frameCount < OFFSET.length) {
                 int offsetValue = -OFFSET[frameCount] - 10;
                 g.drawImage(spriteSheet, PosX + offsetValue, PosY + offsetValue, PosX + SPRITE[frameCount][2] + offsetValue, PosY + SPRITE[frameCount][3] + offsetValue, SPRITE[frameCount][0], SPRITE[frameCount][1], SPRITE[frameCount][0] + SPRITE[frameCount][2], SPRITE[frameCount][1] + SPRITE[frameCount][3], null);
             }

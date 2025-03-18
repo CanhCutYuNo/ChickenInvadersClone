@@ -17,7 +17,7 @@ public class Manager {
     private PlayerController playerController;
     private ArrayList<Bullet> bullets;
     private List<Enemy> enemies;
-    private ArrayList<DeathEffectTest> deathEffects;
+    private ArrayList<DeathEffect> deathEffects;
     private EnemyProjectilesController eggs;
     private static BackgroundPanel backgroundPanel;
     private static MenuPanel menuPanel;
@@ -163,8 +163,8 @@ public class Manager {
     
     // Bỏ updateEnemies() vì đã được xử lý trong LevelXManager
     private void updateDeathEffects() {
-        ArrayList<DeathEffectTest> deathEffectsToRemove = new ArrayList<>();
-        for(DeathEffectTest deathEffect : deathEffects) {
+        ArrayList<DeathEffect> deathEffectsToRemove = new ArrayList<>();
+        for(DeathEffect deathEffect : deathEffects) {
             if(deathEffect != null) {
                 deathEffect.update();
                 if(deathEffect.isEnd()) {
@@ -196,7 +196,10 @@ public class Manager {
 
                     bulletsToRemove.add(bullet);
                     if (enemy.isDead()) {
-                        deathEffects.add(new DeathEffectTest(enemy.getPosX(), enemy.getPosY()));
+                    	DeathEffect tempDeathEffect = enemy.getDeathEffect();
+                        if(tempDeathEffect != null){
+                            deathEffects.add(tempDeathEffect); 
+                        }
                         enemiesToRemove.add(enemy);
                         //   System.out.println("Enemy marked for removal at (" + enemy.getPosX() + "," + enemy.getPosY() + ")");
                     }
@@ -287,7 +290,7 @@ public class Manager {
 //            level3Manager.render(g);
 //        }
         
-        for(DeathEffectTest deathEffect : deathEffects) {
+        for(DeathEffect deathEffect : deathEffects) {
             if(deathEffect != null) deathEffect.render(g);
         }
 

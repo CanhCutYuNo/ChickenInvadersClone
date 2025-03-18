@@ -51,7 +51,7 @@ public class EnemyController {
             // Cập nhật vị trí dựa trên initialIndex
             for(ChickenEnemy enemy : enemies) {
                 int index = enemy.getInitialIndex(); // Dùng initialIndex thay vì i
-                float posX = -50 + t + index * SPACING;
+                float posX = -1800 + t + index * SPACING;
                 float posY = startY + 10 *(float) Math.sin(0.02 * posX);
 
                 enemy.setPosX((int) posX);
