@@ -25,7 +25,7 @@ public abstract class Enemy {
     protected final int MODEL_WIDTH;
     protected final int MODEL_HEIGHT;
     protected static final int MAP_WIDTH = 1900;
-    //protected static final int MAP_HEIGHT = 1080;
+    //protected static final int MAP_HEIGHT = 1080; 123
     
     public Enemy(int hp, int MODEL_WIDTH, int MODEL_HEIGHT, int PosX, int PosY, SoundController sound) {
         this.hp = hp;       
