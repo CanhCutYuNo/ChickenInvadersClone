@@ -265,17 +265,17 @@ public class Manager {
             level1Manager = new Level1Manager(soundController);
             enemies = level1Manager.getEnemies();
             //   //   System.out.println("Số lượng enemies level 1: " + enemies.size());
-        } else if(level == 2) {
-            level2Manager = new Level2Manager(soundController);
-            enemies = level2Manager.getEnemies();
-            //   //   System.out.println("Số lượng enemies level 2: " + enemies.size());
-        } else if(level == 3) {
-            level3Manager = new Level3Manager(soundController);
-            enemies = level3Manager.getEnemies();
-            //   //   System.out.println("Số lượng enemies level 3: " + enemies.size());
-        } else {
-            System.err.println("Level " + level + " không được hỗ trợ!");
-        }
+        } //else if(level == 2) {
+//            level2Manager = new Level2Manager(soundController);
+//            enemies = level2Manager.getEnemies();
+//            //   //   System.out.println("Số lượng enemies level 2: " + enemies.size());
+//        } else if(level == 3) {
+//            level3Manager = new Level3Manager(soundController);
+//            enemies = level3Manager.getEnemies();
+//            //   //   System.out.println("Số lượng enemies level 3: " + enemies.size());
+//        } else {
+//            System.err.println("Level " + level + " không được hỗ trợ!");
+//        }
     }
 
     public void render(Graphics g) {
