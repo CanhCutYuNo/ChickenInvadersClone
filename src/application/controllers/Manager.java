@@ -156,7 +156,7 @@ public class Manager {
         Random rand = new Random();
         for(Enemy enemy : enemies) {
             if(rand.nextInt(1000) < 1) {
-                eggs.addProjectile(enemy.getPosX() + 15, enemy.getPosY() + 30);
+                eggs.addProjectile(enemy.getPosX() + 15, enemy.getPosY() + 30, -50);
             }
         }
         eggs.updateProjectiles();
