@@ -15,6 +15,7 @@ public class MenuPanel extends JPanel {
     private JPanel backgroundPanel;
     private SoundController sound;
     private MouseController mouseController;
+
     private GamePanel gamePanel; // Tham chiếu đến GamePanel để lấy tọa độ màn hình
 
     public MenuPanel(ViewController viewController, MouseController mouseController, GamePanel gamePanel) {
@@ -106,6 +107,7 @@ public class MenuPanel extends JPanel {
 
         button2.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
+
                 sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
                 if(viewController != null) {
                     viewController.switchToSettingPanel();

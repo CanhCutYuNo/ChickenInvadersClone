@@ -1,6 +1,7 @@
 package application.models;
 
 import java.awt.*;
+import java.io.InputStream;
 import java.util.Random;
 
 import application.controllers.SoundController;
@@ -9,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Enemy {
-
     protected int currentFrame = (int) (Math.random() * 40);
     protected int frameCount = (int) (Math.random() * 120);
 
@@ -23,7 +23,7 @@ public abstract class Enemy {
     protected final int MODEL_WIDTH;
     protected final int MODEL_HEIGHT;
     protected static final int MAP_WIDTH = 1900;
-    
+
     public Enemy(int hp, int MODEL_WIDTH, int MODEL_HEIGHT, int PosX, int PosY, SoundController sound) {
         this.hp = hp;       
         this.MODEL_WIDTH = MODEL_WIDTH;
@@ -116,20 +116,20 @@ public abstract class Enemy {
         return MODEL_HEIGHT;
     }
     
-    public int getCurrentFrame() {
-        return currentFrame;
-    }
-    
-    public DeathEffect getDeathEffect(){
-        return null;
-    }
-    
     public int getCenterX(){
         return (PosX + MODEL_WIDTH / 2);
     }
     
     public int getCenterY(){
         return (PosY + MODEL_HEIGHT / 2);
+    }
+    
+    public int getCurrentFrame() {
+        return currentFrame;
+    }
+    
+    public DeathEffect getDeathEffect(){
+        return null;
     }
 
     // Loại bỏ abstract khỏi update(), để trống vì di chuyển do EnemyController xử lý

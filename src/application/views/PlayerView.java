@@ -13,6 +13,8 @@ public class PlayerView {
     private Image explosionSheet;
     private PlayerController playerController;
 
+
+
     private int[][] spriteData = {
         {1, 1135, 104, 114}, {1, 1019, 104, 114}, {1, 903, 104, 114},
         {1, 787, 105, 114}, {1, 672, 106, 113}, {1, 556, 107, 113},
@@ -46,6 +48,7 @@ public class PlayerView {
     // Constructor
     public PlayerView(PlayerController _playerController) {
         this.playerController = _playerController;
+  
 
         try {
             spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/spaceship.png")).getImage();

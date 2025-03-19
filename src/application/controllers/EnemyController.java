@@ -80,6 +80,10 @@ public class EnemyController {
 
         enemies.forEach(ChickenEnemy::nextFrame);
     }
+    
+    public void update1(float deltaTime) {
+    	
+    }
 
     public void render(Graphics g) {
         if(isActive) {
