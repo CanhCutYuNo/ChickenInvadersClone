@@ -4,3 +4,8 @@
 /Manager.class
 /MouseController.class
 /SoundController.class
+/EnemyController.class
+/EnemyProjectilesController.class
+/LevelManager.class
+/PlayerController.class
+/ViewController.class

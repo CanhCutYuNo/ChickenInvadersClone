@@ -1,3 +1,8 @@
 /Bullet.class
 /Enemy.class
 /Player.class
+/DeathEffect.class
+/DeathEffectTest$Smoke.class
+/DeathEffectTest.class
+/Egg.class
+/EnemyProjectiles.class
