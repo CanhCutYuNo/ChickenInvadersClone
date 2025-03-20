@@ -77,7 +77,7 @@ public class Manager {
     }
 
     public void update(double deltaTime) {
-     //   System.out.println("Đang update, số enemies: " + enemies.size());
+     //   // System.out.println("Đang update, số enemies: " + enemies.size());
         if (playerView.isExploding()) {
             playerView.updateExplosion();
             if (52 < playerView.getExFrame()) {
@@ -108,7 +108,7 @@ public class Manager {
 //
 //        if (enemies.isEmpty()) {
 //            level++;
-//            System.out.println("New level !! " + level);
+//            // System.out.println("New level !! " + level);
 //        }
     }
 
@@ -234,29 +234,29 @@ public class Manager {
     // Loại bỏ tham chiếu gamePanel, chỉ giữ spawnEnemiesAfterFade
     public void spawnEnemiesAfterFade() {
         enemies = new ArrayList<>();
-      //  System.out.println("Spawn enemies for level: " + level);
+      //  // System.out.println("Spawn enemies for level: " + level);
         if (level == 1) {
             enemies = new Level1Manager(soundController).getEnemies();
-        //    System.out.println("Số lượng enemies level 1: " + enemies.size());
+        //    // System.out.println("Số lượng enemies level 1: " + enemies.size());
         } else if (level == 2) {
             enemies = new Level2Manager(soundController).getEnemies();
-         //   System.out.println("Số lượng enemies level 2: " + enemies.size());
+         //   // System.out.println("Số lượng enemies level 2: " + enemies.size());
         } else if (level == 3) {
             enemies = new Level3Manager(soundController).getEnemies();
-         //   System.out.println("Số lượng enemies level 3: " + enemies.size());
+         //   // System.out.println("Số lượng enemies level 3: " + enemies.size());
         } else {
          //   System.err.println("Level " + level + " không được hỗ trợ!");
         }
         // Test
 //        enemies = new TestLevelManager(soundController).getEnemies();
-      //  System.out.println("Tổng số enemies sau spawn: " + enemies.size());
+      //  // System.out.println("Tổng số enemies sau spawn: " + enemies.size());
     }
 
     public void render(Graphics g) {
         long startTime = System.nanoTime();
         for (Bullet bullet : bullets) bullet.render(g);
         eggs.drawProjectiles(g);
-       // System.out.println("Số lượng enemies để render: " + enemies.size()); // Debug
+       // // System.out.println("Số lượng enemies để render: " + enemies.size()); // Debug
         for (Enemy enemy : enemies) {
             if (enemy != null) enemy.render(g); // Kiểm tra null để tránh lỗi
         }
@@ -269,7 +269,7 @@ public class Manager {
         g.setColor(Color.GREEN);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("FPS: " + fps, 50, 50);
-      //  System.out.println("Render time: " + (System.nanoTime() - startTime) / 1_000_000.0 + " ms");
+      //  // System.out.println("Render time: " + (System.nanoTime() - startTime) / 1_000_000.0 + " ms");
     }
     
     public void renderPlayer(Graphics g) {
@@ -290,7 +290,7 @@ public class Manager {
     public void shoot() {
         bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 50, 1.0, 0.4));
         soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/bulletHenSolo.wav").getPath());
-
+         System.out.println("Bắn");
     }
 
     private void checkCollisions() {

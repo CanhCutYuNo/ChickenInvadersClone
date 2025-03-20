@@ -41,12 +41,12 @@ public class GamePanel extends JPanel {
         requestFocusInWindow();
 
         this.currentLevel = gameManager.getLevel();
-        System.out.println("Level ban đầu: " + currentLevel);
+        // System.out.println("Level ban đầu: " + currentLevel);
 
         try {
             File imageFile = new File("src/asset/resources/gfx/wave" + currentLevel + ".png");
             if (imageFile.exists()) {
-                System.out.println("Tìm thấy ảnh tại: " + imageFile.getAbsolutePath());
+                // System.out.println("Tìm thấy ảnh tại: " + imageFile.getAbsolutePath());
                 levelImage = ImageIO.read(imageFile);
             } else {
                 System.err.println("Không tìm thấy ảnh tại: " + imageFile.getAbsolutePath());
@@ -65,14 +65,14 @@ public class GamePanel extends JPanel {
     public void update(double deltaTime) {
         if (isTransitionTriggered && showTransition) {
             fadeTime += (float) deltaTime;
-            System.out.println("FadeTime: " + fadeTime + ", Alpha: " + alpha + ", FadeIn: " + fadeIn);
+            // System.out.println("FadeTime: " + fadeTime + ", Alpha: " + alpha + ", FadeIn: " + fadeIn);
             if (fadeIn) {
                 alpha = Math.min(1.0f, fadeTime / FADE_DURATION);
                 if (alpha >= 1.0f) {
                     fadeIn = false;
                     fadeTime = 0f;
                     if (!enemiesPrepared && gameManager != null) {
-                        System.out.println("Fade in xong, chuẩn bị enemies cho level: " + currentLevel);
+                        // System.out.println("Fade in xong, chuẩn bị enemies cho level: " + currentLevel);
                         gameManager.spawnEnemiesAfterFade();
                         gameManager.update(0);
                         enemiesPrepared = true;
@@ -83,19 +83,19 @@ public class GamePanel extends JPanel {
                 if (alpha <= 0.0f) {
                     showTransition = false;
                     postFadeTime = 0f;
-                    System.out.println("Fade out hoàn tất, chuyển sang trạng thái game");
+                    // System.out.println("Fade out hoàn tất, chuyển sang trạng thái game");
                 }
             }
         } else if (!showTransition && postFadeTime < POST_FADE_DURATION) {
             postFadeTime += (float) deltaTime;
-            System.out.println("PostFadeTime: " + postFadeTime + ", POST_FADE_DURATION: " + POST_FADE_DURATION);
+            // System.out.println("PostFadeTime: " + postFadeTime + ", POST_FADE_DURATION: " + POST_FADE_DURATION);
         }
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        System.out.println("Đang vẽ, showTransition: " + showTransition + ", postFadeTime: " + postFadeTime);
+        // System.out.println("Đang vẽ, showTransition: " + showTransition + ", postFadeTime: " + postFadeTime);
 
         Graphics2D g2d = (Graphics2D) g;
 
@@ -110,10 +110,10 @@ public class GamePanel extends JPanel {
         } else if (postFadeTime < POST_FADE_DURATION) {
             float transitionAlpha = postFadeTime / POST_FADE_DURATION;
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transitionAlpha));
-            System.out.println("Vẽ game với alpha: " + transitionAlpha);
+            // System.out.println("Vẽ game với alpha: " + transitionAlpha);
             // gameManager đã được vẽ ở trên, không cần vẽ lại
         } else {
-            System.out.println("Vẽ game bình thường");
+            // System.out.println("Vẽ game bình thường");
             gameManager.render(g);
             // gameManager đã được vẽ ở trên, không cần vẽ lại
         }
@@ -135,7 +135,7 @@ public class GamePanel extends JPanel {
         this.fadeTime = 0f;
         this.alpha = 0f;
         this.enemiesPrepared = false;
-        System.out.println("Transition đã được kích hoạt!");
+        // System.out.println("Transition đã được kích hoạt!");
     }
 
     public boolean isTransitionActive() {
@@ -150,7 +150,7 @@ public class GamePanel extends JPanel {
                 try {
                     File imageFile = new File("src/asset/resources/gfx/wave" + currentLevel + ".png");
                     if (imageFile.exists()) {
-                        System.out.println("Tìm thấy ảnh tại: " + imageFile.getAbsolutePath());
+                        // System.out.println("Tìm thấy ảnh tại: " + imageFile.getAbsolutePath());
                         levelImage = ImageIO.read(imageFile);
                     } else {
                         System.err.println("Không tìm thấy ảnh tại: " + imageFile.getAbsolutePath());
