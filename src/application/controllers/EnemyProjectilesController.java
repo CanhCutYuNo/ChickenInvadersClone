@@ -17,8 +17,8 @@ public class EnemyProjectilesController {
         projectileView = new EnemyProjectilesView(path);
     }
 
-    public void addProjectile(double x, double y) {
-        projectiles.add(new EnemyProjectiles(x, y,-10));
+    public void addProjectile(double x, double y, int damage) {
+        projectiles.add(new EnemyProjectiles(x, y,damage));
     }
 
     public void updateProjectiles() {
