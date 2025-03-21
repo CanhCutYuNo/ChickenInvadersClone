@@ -1,4 +1,5 @@
 package application.views;
+import application.models.Items;
 
 import javax.swing.*;
 import java.awt.*;
