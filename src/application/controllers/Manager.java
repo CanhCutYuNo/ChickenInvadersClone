@@ -18,7 +18,7 @@ public class Manager {
     private PlayerController playerController;
     private ArrayList<Bullet> bullets;
     private List<Enemy> enemies;
-    private ArrayList<DeathEffect> deathEffects;
+    private DeathEffectController deathEffectController;
     private EnemyProjectilesController eggs;
     private ItemsController items;
     private static BackgroundPanel backgroundPanel;
@@ -38,7 +38,7 @@ public class Manager {
     public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController) {
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
-        deathEffects = new ArrayList<>();
+        deathEffectController = new DeathEffectController();
         playerController = new PlayerController(0.5, null);
         playerView = new PlayerView(playerController);
         playerController.setPlayerView(playerView);
@@ -113,7 +113,7 @@ public class Manager {
 //            level3Manager.update((float) deltaTime);
 //        }
         
-        updateDeathEffects();
+        deathEffectController.update();
 
         //checkCollisions();
         checkBulletEnemyCollisions();
@@ -170,19 +170,6 @@ public class Manager {
         eggs.updateProjectiles();
     }
     
-
-    private void updateDeathEffects() {
-        ArrayList<DeathEffect> deathEffectsToRemove = new ArrayList<>();
-        for(DeathEffect deathEffect : deathEffects) {
-            if(deathEffect != null) {
-                deathEffect.update();
-                if(deathEffect.isEnd()) {
-                    deathEffectsToRemove.add(deathEffect);
-                }
-            }
-        }
-        deathEffects.removeAll(deathEffectsToRemove);
-    }
     private void checkPlayerCollisionsWithItems() {
         Iterator<Items> iterator = items.iterator();
         while (iterator.hasNext()) {
@@ -223,7 +210,7 @@ public class Manager {
                     if (enemy.isDead()) {
                     	DeathEffect tempDeathEffect = enemy.getDeathEffect();
                         if(tempDeathEffect != null){
-                            deathEffects.add(tempDeathEffect); 
+                            deathEffectController.add(tempDeathEffect); 
                         }
                         enemiesToRemove.add(enemy);
                         //   System.out.println("Enemy marked for removal at (" + enemy.getPosX() + "," + enemy.getPosY() + ")");
@@ -322,9 +309,7 @@ public class Manager {
 //            level3Manager.render(g);
 //        }
         
-        for(DeathEffect deathEffect : deathEffects) {
-            if(deathEffect != null) deathEffect.render(g);
-        }
+        deathEffectController.render(g);
 
         items.drawItems(g);
 

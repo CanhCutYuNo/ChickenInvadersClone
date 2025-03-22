@@ -46,11 +46,11 @@ public class DeathEffect {
     }
 
     public void render(Graphics g) {
-        deathEffectView.update();
+        
         deathEffectView.render(g);
     }
 
     public void update() {
-
+        deathEffectView.update();
     }
 }

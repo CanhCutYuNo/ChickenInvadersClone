@@ -36,7 +36,7 @@ public class DeathEffectView{
         Random random = new Random();
         spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/smoke4-white.png")).getImage();
         if(spriteSheet == null){
-            System.err.println("Không tải được smoke4!");
+            System.err.println("Không tải được smoke4-white!");
         }
         smokes = new ArrayList<>();
         int size = Math.abs(random.nextInt()) % 3 + 1;
