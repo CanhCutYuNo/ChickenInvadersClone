@@ -1,8 +1,8 @@
 package application.controllers;
 
-import java.awt.*;
+import java.awt.Point;
 
-import application.views.*;
+import application.views.PlayerView;
 
 public class PlayerController {
 

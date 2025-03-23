@@ -4,9 +4,14 @@ import java.awt.AWTException;
 import java.awt.CardLayout;
 import java.awt.Point;
 import java.awt.Robot;
+
 import javax.swing.JPanel;
 
-import application.views.*;
+import application.views.BackgroundPanel;
+import application.views.GameContainerPanel;
+import application.views.GamePanel;
+import application.views.MenuPanel;
+import application.views.SettingPanel;
 
 public class ViewController {
     private CardLayout cardLayout;

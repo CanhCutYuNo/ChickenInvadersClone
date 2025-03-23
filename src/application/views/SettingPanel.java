@@ -3,6 +3,7 @@ package application.views;
 import application.controllers.SoundController;
 import application.controllers.ViewController;
 
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -56,7 +57,7 @@ public class SettingPanel extends JPanel {
 
         // Difficulty Button
         buttonDifficulty = createButton("Difficulty: " + getDifficultyString(), e -> {
-            soundClick.playSoundEffect("/asset/resources/sfx/clickXP.wav");
+            soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
             incrementDifficulty();
             saveSettings();
         });
@@ -64,21 +65,21 @@ public class SettingPanel extends JPanel {
 
         // Audio Settings Button
         buttonAudio = createButton("Audio Settings", e -> {
-            soundClick.playSoundEffect("/asset/resources/sfx/clickXP.wav");
+            soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
             JOptionPane.showMessageDialog(this, "Audio Settings will be available soon.");
         });
         containerPanel.add(wrapButtonPanel(buttonAudio));
 
         // Credit Button
         buttonCredit = createButton("Credit", e -> {
-            soundClick.playSoundEffect("/asset/resources/sfx/clickXP.wav");
+            soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
             JOptionPane.showMessageDialog(this, "Game developed by [Your Name Here].");
         });
         containerPanel.add(wrapButtonPanel(buttonCredit));
 
         // Done Button
         buttonDone = createButton("Done", e -> {
-            soundClick.playSoundEffect("/asset/resources/sfx/clickXP.wav");
+            soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
             viewController.switchToMenuPanel();
         });
         containerPanel.add(wrapButtonPanel(buttonDone));

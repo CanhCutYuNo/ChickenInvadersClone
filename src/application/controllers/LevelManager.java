@@ -1,16 +1,8 @@
 package application.controllers;
 
-import application.models.*;
-import application.models.types.ChickEnemy;
-import application.views.*;
-
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
-import java.awt.*;
 
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
+import application.models.Enemy;
 
 public abstract class LevelManager {
 

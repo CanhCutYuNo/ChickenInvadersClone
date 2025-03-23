@@ -1,15 +1,15 @@
-package application.models;
+package application.views;
 
-import java.awt.Color;
+import application.models.DeathEffect;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.ImageIcon;
 
-public class DeathEffectTest extends DeathEffect {
-
-    private ArrayList<Smoke> smokes;
+public class DeathEffectView{
+    private final DeathEffect deathEffect;
+    private final ArrayList<Smoke> smokes;
     protected Image spriteSheet;
     protected static final int[][] SPRITE = {
         {1, 1, 20, 20}, {23, 1, 29, 29}, {55, 1, 38, 38}, {95, 1, 45, 45},
@@ -30,19 +30,21 @@ public class DeathEffectTest extends DeathEffect {
         0, 4, 9, 12, 15, 17, 18, 22, 24, 26, 28, 29, 30, 31, 34, 36, 41, 42, 44, 45, 45, 46, 47, 47, 48, 48, 49, 49, 49, 50, 50, 52, 53, 53, 53, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 51, 49
     };
 
-    public DeathEffectTest(int PosX, int PosY) {
-        super(PosX, PosY);
-
+    public DeathEffectView(DeathEffect deathEffect) {
+        this.deathEffect = deathEffect;
+        
         Random random = new Random();
-        spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/smoke4.png")).getImage();
+        spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/smoke4-white.png")).getImage();
+        if(spriteSheet == null){
+            System.err.println("Không tải được smoke4-white!");
+        }
         smokes = new ArrayList<>();
         int size = Math.abs(random.nextInt()) % 3 + 1;
         for (int i = 0; i < size; i++) {
-            smokes.add(new Smoke(PosX, PosY));
+            smokes.add(new Smoke(deathEffect.getPosX(), deathEffect.getPosY()));
         }
     }
 
-    @Override
     public void render(Graphics g) {
         for (Smoke smoke : smokes) {
             smoke.render(g);
@@ -53,10 +55,9 @@ public class DeathEffectTest extends DeathEffect {
 //        g.fillOval(PosX, PosY, 4, 4);
     }
 
-    @Override
     public void update() {
         if (smokes.isEmpty()) {
-            end = true;
+            deathEffect.setEndToTrue();
         }
         ArrayList<Smoke> smokesToRemove = new ArrayList<>();
         for (Smoke smoke : smokes) {
@@ -73,10 +74,10 @@ public class DeathEffectTest extends DeathEffect {
         private int PosX;
         private int PosY;
         private int frameCount;
-        private int minFrameCount;
-        private int maxFrameCount;
-        private int vX;
-        private int vY;
+        private final int minFrameCount;
+        private final int maxFrameCount;
+        private final int vX;
+        private final int vY;
 
         public Smoke(int PosX, int PosY) {
             Random random = new Random();
@@ -106,5 +107,5 @@ public class DeathEffectTest extends DeathEffect {
             PosX = PosX + vX;
             PosY = PosY + vY;
         }
-    }
+    }    
 }

@@ -16,6 +16,7 @@ import java.util.List;
 public class EnemyProjectilesView {
     private Image ProjectilesImage;
     private Image eggSheet;
+//    private Image flareSmall;
     
     private List<int[]> EggSprites = new ArrayList<>();
     
@@ -42,6 +43,7 @@ public class EnemyProjectilesView {
     	ProjectilesImage = new ImageIcon(getClass().getResource(path)).getImage();
     	
     	try {
+//            flareSmall = new ImageIcon(getClass().getResource("/asset/resources/gfx/flareSmall~1.png")).getImage();
             eggSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/eggbreak~1.png")).getImage();
         } catch(Exception e) {
             System.out.println("Error: Could not load player sprite sheet or exhaust image.");
@@ -52,7 +54,7 @@ public class EnemyProjectilesView {
     public void draw(Graphics g, EnemyProjectiles projectile) {
         g.drawImage(ProjectilesImage, (int) projectile.getPosX(), (int) projectile.getPosY(), 40, 80, null);    
     }
-    
+
     public void drawEggBroken(Graphics g, EnemyProjectiles projectile, int eFrame) {
     	for(int[] frame : EggBrokenSprite) {
     		EggSprites.add(frame);

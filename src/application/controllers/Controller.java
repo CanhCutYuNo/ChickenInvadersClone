@@ -1,11 +1,12 @@
 package application.controllers;
 
-import java.awt.event.*;
-import java.awt.*;
-import javax.swing.*;
+import java.awt.CardLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 public class Controller extends KeyAdapter {
 

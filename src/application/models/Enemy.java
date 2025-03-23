@@ -13,10 +13,12 @@ public abstract class Enemy {
     protected int currentFrame = (int) (Math.random() * 40);
     protected int frameCount = (int) (Math.random() * 120);
 
-    private int hp;
+    protected int hp;
     protected int PosX;
     protected int PosY;
     protected int speed;
+    protected int initialIndex = 0;
+    protected float rotate = 0f;
     
     protected SoundController sound;    
     protected boolean isForward = true; // Biến để theo dõi hướng di chuyển của animation
@@ -55,7 +57,7 @@ public abstract class Enemy {
 
     // Cập nhật animation frame
     public void nextFrame() {
-        if (isForward) {
+        if(isForward) {
             currentFrame++;
             if (currentFrame >= 48) {
                 isForward = false; // Đổi hướng khi đến cuối mảng
@@ -136,4 +138,16 @@ public abstract class Enemy {
     public void update() {
         // Không tự di chuyển, để EnemyController điều chỉnh
     }
+
+	public void setInitialIndex(int i) {
+		initialIndex = i;
+	}
+
+	public int getInitialIndex() {
+		return initialIndex;
+	}
+
+	public void setRotate(float rotate) {
+		this.rotate = rotate;
+	}
 }

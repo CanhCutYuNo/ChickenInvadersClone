@@ -9,6 +9,7 @@ import application.controllers.SoundController;
 import application.controllers.ViewController;
 import application.controllers.MouseController;
 
+
 public class MenuPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
@@ -29,6 +30,14 @@ public class MenuPanel extends JPanel {
         this.mouseController = mouseController;
         this.gamePanel = gamePanel;
         initComponents();
+
+
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+            }
+        });
     }
 
     public void setBackgroundPanel(JPanel backgroundPanel) {
@@ -75,24 +84,26 @@ public class MenuPanel extends JPanel {
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
         button1 = createMenuButton("Play", "/asset/resources/gfx/button.png", "/asset/resources/gfx/button_hover.png", () -> {
-            sound.playSoundEffect("/asset/resources/sfx/clickXP.wav");
+            sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+            
             if (viewController != null) {
                 viewController.switchToGameContainerPanel();
                 if (gamePanel != null) {
                     gamePanel.triggerTransition();
+                   
                 }
             }
         });
 
         button2 = createMenuButton("Options", "/asset/resources/gfx/button.png", "/asset/resources/gfx/button_hover.png", () -> {
-            sound.playSoundEffect("/asset/resources/sfx/clickXP.wav");
+            sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
             if (viewController != null) {
                 viewController.switchToSettingPanel();
             }
         });
 
         button3 = createMenuButton("Quit Game", "/asset/resources/gfx/button.png", "/asset/resources/gfx/button_hover.png", () -> {
-            sound.playSoundEffect("/asset/resources/sfx/clickXP.wav");
+            sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
             System.exit(0);
         });
 

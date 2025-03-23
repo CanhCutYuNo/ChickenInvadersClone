@@ -19,9 +19,9 @@ public class Level1Manager {
         this.enemyControllers = new ArrayList<>();
         this.enemies = new ArrayList<>();
 
-        enemyControllers.add(new EnemyController(10, 100, 0.0f, soundController));
-        enemyControllers.add(new EnemyController(10, 300, 0.0f, soundController));
-        enemyControllers.add(new EnemyController(10, 500, 0.0f, soundController));
+        enemyControllers.add(new EnemyController(10, "Chicken", 100, 0.0f, soundController));
+        enemyControllers.add(new EnemyController(10, "Chicken", 300, 0.0f, soundController));
+        enemyControllers.add(new EnemyController(10, "Chicken", 500, 0.0f, soundController));
 
         for(EnemyController controller : enemyControllers) {
             enemies.addAll(controller.getEnemies());

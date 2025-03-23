@@ -31,7 +31,7 @@ public class GamePanel extends JPanel {
 
     public GamePanel(Manager gameManager) {
         this.gameManager = gameManager;
-        this.soundController = new SoundController();
+        this.soundController = gameManager.getSound();
 
         hideCursor();
         setLayout(null);

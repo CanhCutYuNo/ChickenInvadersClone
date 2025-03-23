@@ -1,12 +1,12 @@
 package application.controllers;
 
-import application.models.EnemyProjectiles;
-import application.views.EnemyProjectilesView;
-
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import application.models.EnemyProjectiles;
+import application.views.EnemyProjectilesView;
 
 public class EnemyProjectilesController {
     private List<EnemyProjectiles> projectiles;
@@ -17,8 +17,8 @@ public class EnemyProjectilesController {
         projectileView = new EnemyProjectilesView(path);
     }
 
-    public void addProjectile(double x, double y) {
-        projectiles.add(new EnemyProjectiles(x, y,-10));
+    public void addProjectile(double x, double y, int damage) {
+        projectiles.add(new EnemyProjectiles(x, y,damage));
     }
 
     public void updateProjectiles() {
