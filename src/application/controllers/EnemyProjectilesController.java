@@ -1,12 +1,12 @@
 package application.controllers;
 
-import application.models.EnemyProjectiles;
-import application.views.EnemyProjectilesView;
-
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import application.models.EnemyProjectiles;
+import application.views.EnemyProjectilesView;
 
 public class EnemyProjectilesController {
     private List<EnemyProjectiles> projectiles;

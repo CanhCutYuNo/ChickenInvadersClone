@@ -16,9 +16,9 @@ public class Level2Manager {
     public Level2Manager(SoundController sound) {
         this.sound = sound;
         
-        enemyControllers.add(new EnemyController(5, -100, 0.0f, sound));
-        enemyControllers.add(new EnemyController(5, -100, 1.5f, sound));
-        enemyControllers.add(new EnemyController(5, -100, 0.0f, sound));
+//        enemyControllers.add(new EnemyController(5, -100, 0.0f, sound));
+//        enemyControllers.add(new EnemyController(5, -100, 1.5f, sound));
+//        enemyControllers.add(new EnemyController(5, -100, 0.0f, sound));
     }
 
    

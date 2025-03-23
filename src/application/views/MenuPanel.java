@@ -25,12 +25,12 @@ public class MenuPanel extends JPanel {
         this.gamePanel = gamePanel; // Lưu tham chiếu
         initComponents();
 
-        this.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
-            }
-        });
+//        this.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mousePressed(MouseEvent e) {
+//                sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+//            }
+//        });
     }
 
     public void setBackgroundPanel(JPanel backgroundPanel) {

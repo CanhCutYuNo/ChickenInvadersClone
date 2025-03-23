@@ -1,6 +1,7 @@
 package application.controllers;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.Timer;
 
 import application.views.GamePanel;
 
@@ -26,7 +27,7 @@ public class GameLoop {
             gameManager.update(deltaTime);
 
             if (gameManager.getEnemies().isEmpty() && !gamePanel.isTransitionActive()) {
-                gameManager.setLevel(gameManager.getLevel() + 1);
+            //    gameManager.setLevel(gameManager.getLevel());
                 gamePanel.updateLevel();
             }
 

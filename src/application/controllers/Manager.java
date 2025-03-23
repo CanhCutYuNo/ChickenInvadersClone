@@ -1,17 +1,29 @@
 package application.controllers;
 
-import application.controllers.levels.*;
-import application.models.*;
-import application.views.*;
-import application.models.types.*;
-
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.awt.*;
 
 import javax.swing.JPanel;
+
+import application.controllers.levels.Level1Manager;
+import application.controllers.levels.Level2Manager;
+import application.controllers.levels.Level3Manager;
+import application.controllers.levels.Level5Manager;
+import application.models.Bullet;
+import application.models.DeathEffect;
+import application.models.Enemy;
+import application.models.EnemyProjectiles;
+import application.views.BackgroundPanel;
+import application.views.MenuPanel;
+import application.views.PlayerView;
 
 public class Manager {
     private PlayerView playerView;
@@ -33,7 +45,8 @@ public class Manager {
     private Level1Manager level1Manager;
     private Level2Manager level2Manager;
     private Level3Manager level3Manager;
-
+    private Level5Manager level5Manager;
+    
     public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController) {
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
@@ -78,6 +91,10 @@ public class Manager {
     public List<Enemy> getEnemies() {
         return enemies;
     }
+    
+    public SoundController getSound() {
+    	return soundController;
+    }
 
     public void update(double deltaTime) {
         //   //   System.out.println("Manager update with deltaTime: " + deltaTime);
@@ -103,9 +120,9 @@ public class Manager {
         // Cập nhật LevelXManager thay vì updateEnemies() trực tiếp
         if(level == 1 && level1Manager != null) {
             level1Manager.update((float) deltaTime);
-        } //else if(level == 2 && level2Manager != null) {
-//            level2Manager.update((float) deltaTime);
-//        } else if(level == 3 && level3Manager != null) {
+        } else if(level == 5 && level5Manager != null) {
+            level5Manager.update((float) deltaTime);
+        } // else if(level == 3 && level3Manager != null) {
 //            level3Manager.update((float) deltaTime);
 //        }
         
@@ -134,6 +151,7 @@ public class Manager {
         level1Manager = null; // Reset LevelXManager
         level2Manager = null;
         level3Manager = null;
+        level5Manager = null;
 
         cardLayout.show(mainPanel, "Menu");        
         menuPanel.setBackgroundPanel(backgroundPanel);
@@ -216,9 +234,9 @@ public class Manager {
         for (Enemy enemy : enemiesToRemove) {
             if (level == 1 && level1Manager != null) {
                 level1Manager.removeEnemy(enemy);
-            } //else if (level == 2 && level2Manager != null) {
-//                level2Manager.removeEnemy(enemy);
-//            } else if (level == 3 && level3Manager != null) {
+            } else if (level == 5 && level5Manager != null) {
+                level5Manager.removeEnemy(enemy);
+            } //else if (level == 3 && level3Manager != null) {
 //                level3Manager.removeEnemy(enemy);
 //            }
         }
@@ -259,23 +277,21 @@ public class Manager {
     }
 
     public void spawnEnemiesAfterFade() {
-        enemies = new ArrayList<>();
-        //   //   System.out.println("Spawn enemies for level: " + level);
-        if(level == 1) {
+        System.out.println("Spawning enemies for level: " + level + ". Current enemies size before: " + enemies.size());
+        enemies.clear();
+        if (level == 1) {
             level1Manager = new Level1Manager(soundController);
-            enemies = level1Manager.getEnemies();
-            //   //   System.out.println("Số lượng enemies level 1: " + enemies.size());
-        } //else if(level == 2) {
-//            level2Manager = new Level2Manager(soundController);
-//            enemies = level2Manager.getEnemies();
-//            //   //   System.out.println("Số lượng enemies level 2: " + enemies.size());
-//        } else if(level == 3) {
+            enemies.addAll(level1Manager.getEnemies());
+        } else if (level == 5) {
+            level5Manager = new Level5Manager(soundController);
+            enemies.addAll(level5Manager.getEnemies());
+        } //else if (level == 3) {
 //            level3Manager = new Level3Manager(soundController);
-//            enemies = level3Manager.getEnemies();
-//            //   //   System.out.println("Số lượng enemies level 3: " + enemies.size());
+//            enemies.addAll(level3Manager.getEnemies());
 //        } else {
 //            System.err.println("Level " + level + " không được hỗ trợ!");
 //        }
+        System.out.println("Spawned enemies. New enemies size: " + enemies.size());
     }
 
     public void render(Graphics g) {
@@ -286,10 +302,9 @@ public class Manager {
         // Render thông qua LevelXManager thay vì render trực tiếp
         if(level == 1 && level1Manager != null) {
             level1Manager.render(g);
-        }
-//        } else if(level == 2 && level2Manager != null) {
-//            level2Manager.render(g);
-//        } else if(level == 3 && level3Manager != null) {
+        } else if(level == 5 && level5Manager != null) {
+            level5Manager.render(g);
+        } //else if(level == 3 && level3Manager != null) {
 //            level3Manager.render(g);
 //        }
         
