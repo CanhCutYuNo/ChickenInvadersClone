@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package application.models.types;
 
 import application.controllers.SoundController;
@@ -9,27 +5,25 @@ import application.models.DeathEffect;
 import application.models.Enemy;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import javax.swing.ImageIcon;
 
-/**
- *
- * @author hp
- */
-public abstract class ChickenEnemy extends Enemy {
-
-    private Image spriteHeadSheet;
-    private Image spriteBodySheet;
-    private Image spriteWingsSheet;
-    private Image blinkAnimation;
+public class ChickenEnemy extends Enemy {
+    protected Image spriteHeadSheet;
+    protected Image spriteBodySheet;
+    protected Image spriteWingsSheet;
+    protected Image blinkAnimation;
     
     protected int[] headSprite;
-    protected int[] bodySprite; // Lưu tọa độ body
+    protected int[] bodySprite;
     protected List<int[]> wingSprites = new ArrayList<>();
-
+    protected float rotate = 0f;
+    private int initialIndex;
+    
     private static final int[][] SPRITE_HEAD = {{195, 93, 30, 45}};
     private static final int[][] SPRITE_BODY = {
         {1, 1, 70, 53}, {217, 1, 70, 53}, {433, 1, 70, 53},
@@ -51,7 +45,8 @@ public abstract class ChickenEnemy extends Enemy {
         {1377, 223, 154, 75}, {1533, 223, 154, 74}, {1689, 223, 154, 74},
         {1845, 223, 154, 74}, {1, 307, 154, 73}, {157, 307, 154, 73},
         {313, 307, 154, 73}, {469, 307, 153, 73}, {625, 307, 152, 73},
-        {779, 307, 152, 73}, {933, 307, 152, 73}, {1087, 307, 153, 73},};
+        {779, 307, 152, 73}, {933, 307, 152, 73}, {1087, 307, 153, 73}
+    };
 
     public ChickenEnemy(int PosX, int PosY, SoundController sound) {
         super(100, 64, 64, PosX, PosY, sound);
@@ -61,92 +56,101 @@ public abstract class ChickenEnemy extends Enemy {
         spriteHeadSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-face.png")).getImage();
         blinkAnimation = new ImageIcon(getClass().getResource("/asset/resources/gfx/chickenBlink.png")).getImage();
 
+        if (spriteBodySheet == null) {
+            System.err.println("Không tải được spriteBodySheet!");
+        }
+        if (spriteWingsSheet == null) {
+            System.err.println("Không tải được spriteWingsSheet!");
+        }
+        if (spriteHeadSheet == null) {
+            System.err.println("Không tải được spriteHeadSheet!");
+        }
+        if (blinkAnimation == null) {
+            System.err.println("Không tải được blinkAnimation!");
+        }
+
         Random random = new Random();
-        // Chọn ngẫu nhiên một phần của body
         this.bodySprite = SPRITE_BODY[random.nextInt(SPRITE_BODY.length)];
         this.headSprite = SPRITE_HEAD[0];
 
-        // Thêm tất cả các frame của cánh vào danh sách
         for (int[] frame : SPRITE_WINGS) {
             wingSprites.add(frame);
         }
     }
 
+    public void setRotate(float angle) {
+        this.rotate = angle;
+    }
+
     @Override
     public void render(Graphics g) {
-        if (spriteBodySheet != null && spriteWingsSheet != null) {
-            int[] wingFrame = wingSprites.get(currentFrame);
-            int wingWidth = wingFrame[2];
-            int wingHeight = wingFrame[3];
-            int[][] wingOffsets = {
-                //1-4
-                {-5, -10}, {-5, -10}, {-5, -10}, {-5, -10}, {-5, -10},
-                //5-9
-                {-5, -10}, {-5, -10}, {-5, -10}, {-5, -9}, {-5, -9},
-                //10-14
-                {-5, -9}, {-5, -9}, {-5, -9}, {-5, -8}, {-5, -8},
-                //15-19
-                {-5, -8}, {-5, -7}, {-5, -7}, {-5, -6}, {-5, -6},
-                //20-24
-                {-5, -5}, {-5, -4}, {-5, -3}, {-5, -3}, {-5, -2},
-                //25-29
-                {-5, -1}, {-5, 0}, {-5, 0}, {-5, 1}, {-5, 2},
-                //30-34
-                {-5, 2}, {-5, 2}, {-5, 3}, {-5, 3}, {-5, 3},
-                //35-39
-                {-5, 4}, {-5, 4}, {-5, 4}, {-5, 4}, {-5, 5},
-                //40-44
-                {-5, 5}, {-5, 5}, {-5, 5}, {-5, 5}, {-5, 5},
-                //45-49
-                {-5, 5}, {-5, 5}, {-5, 5}, {-5, 5}, {-5, 5},};
-            // Lấy offset của frame hiện tại
-            int[] wingOffset = wingOffsets[currentFrame];
-            int offsetX = wingOffset[0];
-            int offsetY = wingOffset[1];
-            int centerX = PosX + bodySprite[2] / 2;
-            int centerY = PosY + bodySprite[3] / 2;
-
-            // Vẽ cánh với offset
-            g.drawImage(spriteWingsSheet,
-                    centerX - wingWidth / 2 + offsetX, centerY - wingHeight / 2 + offsetY - 1,
-                    centerX + wingWidth / 2 + offsetX, centerY + wingHeight / 2 + offsetY - 1,
-                    wingFrame[0], wingFrame[1],
-                    wingFrame[0] + wingWidth, wingFrame[1] + wingHeight, null);
-
-//        	// Debug: Vẽ khung viền đỏ quanh cánh 
-//        	g.setColor(Color.RED);
-//        	g.drawRect(centerX - wingWidth / 2 + offsetX, centerY - wingHeight / 2 + offsetY, wingWidth, wingHeight);
-//
-//        	// Debug: Vẽ tâm (dấu chấm đỏ) ở trung tâm cánh
-//        	g.setColor(Color.RED);
-//        	g.fillOval(centerX + offsetX - 2, centerY + offsetY - 2, 4, 4);
-            g.drawImage(spriteHeadSheet, PosX + 15, PosY - 50, PosX + headSprite[2] + 15, PosY + headSprite[3] - 50,
-                    headSprite[0], headSprite[1], headSprite[0] + headSprite[2], headSprite[1] + headSprite[3], null);
-
-            // Vẽ body
-            g.drawImage(spriteBodySheet, PosX - 5, PosY - 10, PosX + bodySprite[2] - 5, PosY + bodySprite[3] - 10,
-                    bodySprite[0], bodySprite[1], bodySprite[0] + bodySprite[2], bodySprite[1] + bodySprite[3], null);
-//           g.drawImage(spriteBodySheet, PosX, PosY, PosX, PosY,
-//                    bodySprite[0], bodySprite[1], bodySprite[0] + bodySprite[2], bodySprite[1] + bodySprite[3], null);
-//            g.setColor(Color.RED);
-//        	g.drawRect(PosX, PosY, bodySprite[2], bodySprite[3]);
-            if (frameCount < 20) {
-                g.drawImage(blinkAnimation, PosX + 23, PosY - 40, 50, 40, null);
-            }
-            frameCount++;
-            if (frameCount > 120) {
-                frameCount = 0;
-            }
-
-        } else {
+        if (spriteBodySheet == null || spriteWingsSheet == null) {
             g.setColor(Color.RED);
             g.fillRect(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
+            return;
         }
 
+        Graphics2D g2d = (Graphics2D) g.create();
+        int centerX = PosX + MODEL_WIDTH / 2;
+        int centerY = PosY + MODEL_HEIGHT / 2;
+        g2d.rotate(Math.toRadians(rotate), centerX, centerY);
+
+        int[] wingFrame = wingSprites.get(currentFrame);
+        int wingWidth = wingFrame[2];
+        int wingHeight = wingFrame[3];
+        int[][] wingOffsets = {
+            {-5, -10}, {-5, -10}, {-5, -10}, {-5, -10}, {-5, -10},
+            {-5, -10}, {-5, -10}, {-5, -10}, {-5, -9}, {-5, -9},
+            {-5, -9}, {-5, -9}, {-5, -9}, {-5, -8}, {-5, -8},
+            {-5, -8}, {-5, -7}, {-5, -7}, {-5, -6}, {-5, -6},
+            {-5, -5}, {-5, -4}, {-5, -3}, {-5, -3}, {-5, -2},
+            {-5, -1}, {-5, 0}, {-5, 0}, {-5, 1}, {-5, 2},
+            {-5, 2}, {-5, 2}, {-5, 3}, {-5, 3}, {-5, 3},
+            {-5, 4}, {-5, 4}, {-5, 4}, {-5, 4}, {-5, 5},
+            {-5, 5}, {-5, 5}, {-5, 5}, {-5, 5}, {-5, 5},
+            {-5, 5}, {-5, 5}, {-5, 5}, {-5, 5}, {-5, 5},
+        };
+        int[] wingOffset = wingOffsets[currentFrame];
+        int offsetX = wingOffset[0];
+        int offsetY = wingOffset[1];
+        int wingCenterX = PosX + bodySprite[2] / 2;
+        int wingCenterY = PosY + bodySprite[3] / 2;
+
+        g2d.drawImage(spriteWingsSheet,
+                wingCenterX - wingWidth / 2 + offsetX, wingCenterY - wingHeight / 2 + offsetY - 1,
+                wingCenterX + wingWidth / 2 + offsetX, wingCenterY + wingHeight / 2 + offsetY - 1,
+                wingFrame[0], wingFrame[1],
+                wingFrame[0] + wingWidth, wingFrame[1] + wingHeight, null);
+
+        g2d.drawImage(spriteHeadSheet, PosX + 15, PosY - 50, PosX + headSprite[2] + 15, PosY + headSprite[3] - 50,
+                headSprite[0], headSprite[1], headSprite[0] + headSprite[2], headSprite[1] + headSprite[3], null);
+
+        g2d.drawImage(spriteBodySheet, PosX - 5, PosY - 10, PosX + bodySprite[2] - 5, PosY + bodySprite[3] - 10,
+                bodySprite[0], bodySprite[1], bodySprite[0] + bodySprite[2], bodySprite[1] + bodySprite[3], null);
+
+        if (frameCount < 20) {
+            g2d.drawImage(blinkAnimation, PosX + 23, PosY - 40, 50, 40, null);
+        }
+        frameCount++;
+        if (frameCount > 120) {
+            frameCount = 0;
+        }
+
+        g2d.dispose();
+    }
+
+    @Override
+    public void update() {
+ 
+    }
+
+    public int getInitialIndex() {
+        return initialIndex;
     }
     
-    @Override
-    public abstract void update();
+    public void setInitialIndex(int initialIndex) {
+        this.initialIndex = initialIndex;
+    }
     
     @Override
     public DeathEffect getDeathEffect() {
@@ -172,9 +176,20 @@ public abstract class ChickenEnemy extends Enemy {
             {651, 461, 128, 128}, {781, 461, 128, 128}, {1, 589, 128, 128}, {131, 589, 128, 128},
             {261, 589, 128, 128}, {391, 589, 128, 128}, {521, 589, 128, 128}, {651, 589, 123, 123}, {777, 591, 118, 118}};
 
-        protected static final int[] OFFSET = {
-            0, 4, 9, 12, 15, 17, 18, 22, 24, 26, 28, 29, 30, 31, 34, 36, 41, 42, 44, 45, 45, 46, 47, 47, 48, 48, 49, 49, 49, 50, 50, 52, 53, 53, 53, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 51, 49
-        };
+        protected static final int[][] OFFSET = {
+        	    {-5, -10}, {-9, -14}, {-14, -19}, {-17, -22}, {-20, -25},
+        	    {-22, -27}, {-23, -28}, {-27, -32}, {-29, -34}, {-31, -36},
+        	    {-33, -38}, {-34, -39}, {-35, -40}, {-36, -41}, {-39, -44},
+        	    {-41, -46}, {-46, -51}, {-47, -52}, {-49, -54}, {-50, -55},
+        	    {-50, -55}, {-51, -56}, {-52, -57}, {-52, -57}, {-53, -58},
+        	    {-53, -58}, {-54, -59}, {-54, -59}, {-54, -59}, {-55, -60},
+        	    {-55, -60}, {-57, -62}, {-58, -63}, {-58, -63}, {-58, -63},
+        	    {-59, -64}, {-59, -64}, {-59, -64}, {-59, -64}, {-59, -64},
+        	    {-59, -64}, {-59, -64}, {-59, -64}, {-59, -64}, {-59, -64},
+        	    {-59, -64}, {-59, -64}, {-59, -64}, {-59, -64}, {-59, -64},
+        	    {-59, -64}, {-56, -61}
+        	};
+
 
         private ChickDeathEffect(int PosX, int PosY) {
             super(PosX, PosY);
@@ -182,7 +197,7 @@ public abstract class ChickenEnemy extends Enemy {
             Random random = new Random();
             spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/smoke4-white.png")).getImage();
             smokes = new ArrayList<>();
-            int size = Math.abs(random.nextInt()) % 3 + 1;
+            int size = 4;
             for (int i = 0; i < size; i++) {
                 smokes.add(new Smoke(PosX, PosY));
             }
@@ -225,29 +240,55 @@ public abstract class ChickenEnemy extends Enemy {
             private final int maxFrameCount;
             private final int vX;
             private final int vY;
+            private final float sizeScale; // Will be random for each smoke
 
             public Smoke(int PosX, int PosY) {
                 Random random = new Random();
-
                 this.PosX = PosX + (random.nextInt() % 4);
                 this.PosY = PosY + (random.nextInt() % 4);
-                minFrameCount = Math.abs(random.nextInt() % 20);
-                maxFrameCount = Math.abs(random.nextInt() % 27) + 26;
+                minFrameCount = 0;
+                maxFrameCount = 51;
                 frameCount = minFrameCount;
-                vX = (random.nextInt() % 3);
-                vY = (random.nextInt() % 3);
+                vX = (random.nextInt() % 2);
+                vY = (random.nextInt() % 2);
+                // Random sizeScale between 0.5 and 1.5 (half size to 1.5x size)
+                sizeScale = 0.5f + random.nextFloat() * (1.0f - 0.5f);
             }
 
             public void render(Graphics g) {
-                if (frameCount != maxFrameCount) {
-                    int offsetValue = -OFFSET[frameCount] - 10;
-                    g.drawImage(spriteSheet, PosX + offsetValue, PosY + offsetValue, PosX + SPRITE[frameCount][2] + offsetValue, PosY + SPRITE[frameCount][3] + offsetValue, SPRITE[frameCount][0], SPRITE[frameCount][1], SPRITE[frameCount][0] + SPRITE[frameCount][2], SPRITE[frameCount][1] + SPRITE[frameCount][3], null);
+                if (frameCount < maxFrameCount) {
+                    int offsetX = OFFSET[frameCount][0];
+                    int offsetY = OFFSET[frameCount][1];
+                    
+                    // Calculate scaled dimensions
+                    int scaledWidth = (int)(SPRITE[frameCount][2] * sizeScale);
+                    int scaledHeight = (int)(SPRITE[frameCount][3] * sizeScale);
+                    
+                    g.drawImage(spriteSheet, 
+                              PosX + offsetX, 
+                              PosY + offsetY, 
+                              PosX + offsetX + scaledWidth, 
+                              PosY + offsetY + scaledHeight, 
+                              SPRITE[frameCount][0], 
+                              SPRITE[frameCount][1], 
+                              SPRITE[frameCount][0] + SPRITE[frameCount][2], 
+                              SPRITE[frameCount][1] + SPRITE[frameCount][3], 
+                              null);
+
+//                    int centerX = PosX + offsetX + scaledWidth / 2;
+//                    int centerY = PosY + offsetY + scaledHeight / 2;
+//
+//                    g.setColor(Color.RED);
+//                    g.fillOval(centerX - 2, centerY - 2, 4, 4);
+//                    
+//                    System.out.println("centerX: " + centerX + ", centerY: " + centerY + ", id:" + frameCount + ", sizeScale:" + sizeScale);
+//                    
+                    frameCount++;
                 }
-                frameCount++;
             }
 
             public boolean isEnd() {
-                return (maxFrameCount == frameCount);
+                return (frameCount >= maxFrameCount);
             }
 
             public void update() {
@@ -255,5 +296,5 @@ public abstract class ChickenEnemy extends Enemy {
                 PosY = PosY + vY;
             }
         }
-    }    
+    }
 }

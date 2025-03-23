@@ -1,33 +1,30 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package application.views;
 
-import java.awt.Graphics;
+import application.controllers.SoundController;
+import application.controllers.ViewController;
 
-import java.awt.event.*;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.*;
+import java.util.Properties;
 
-
-import application.controllers.*;
-
-/**
- *
- * @author hp
- */
 public class SettingPanel extends JPanel {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private ViewController viewController;
     private SoundController soundClick;
+    private JLayeredPane jLayeredPane;
+    private JPanel backgroundPanel;
+    private Button buttonDifficulty, buttonAudio, buttonCredit, buttonDone;
+    private int difficulty;
+    private final File settingsFile = new File("settings.properties");
 
     public SettingPanel(ViewController viewController, SoundController soundClick) {
         this.viewController = viewController;
         this.soundClick = soundClick;
+        loadSettings();
         initComponents();
     }
 
@@ -41,164 +38,108 @@ public class SettingPanel extends JPanel {
     }
 
     private void initComponents() {
-        jLayeredPane = new javax.swing.JLayeredPane();
-        containerPanel = new javax.swing.JPanel();
-        labelPanel = new javax.swing.JPanel();
-        label = new javax.swing.JLabel();
-        buttonPanel1 = new javax.swing.JPanel();
-        button1 = new Button(300, 50);
-        buttonPanel2 = new javax.swing.JPanel();
-        button2 = new Button(300, 50);
-        buttonPanel3 = new javax.swing.JPanel();
-        button3 = new Button(300, 50);
-        buttonPanel4 = new javax.swing.JPanel();
-        button4 = new Button(300, 50);
+        jLayeredPane = new JLayeredPane();
+        setLayout(new GridLayout(1, 1));
+        jLayeredPane.setLayout(new OverlayLayout(jLayeredPane));
 
-        setLayout(new java.awt.GridLayout(1, 1));
-
-        jLayeredPane.setLayout(new javax.swing.OverlayLayout(jLayeredPane));
-
-        containerPanel.setBackground(new java.awt.Color(255, 0, 0));
+        JPanel containerPanel = new JPanel(new GridLayout(5, 1));
         containerPanel.setOpaque(false);
-        containerPanel.setPreferredSize(new java.awt.Dimension(485, 410));
-        containerPanel.setLayout(new java.awt.GridLayout(5, 1));
 
-        labelPanel.setLayout(new java.awt.GridBagLayout());
+        // Label
+        JPanel labelPanel = new JPanel(new GridBagLayout());
         labelPanel.setOpaque(false);
-
-        label.setFont(new java.awt.Font("Segoe UI", 0, 42)); // NOI18N
-        label.setForeground(new java.awt.Color(255, 255, 255));
-        label.setText("Options");
-        labelPanel.add(label, new java.awt.GridBagConstraints());
-
+        JLabel label = new JLabel("Options");
+        label.setFont(new Font("Segoe UI", Font.BOLD, 60));
+        label.setForeground(Color.WHITE);
+        labelPanel.add(label);
         containerPanel.add(labelPanel);
 
-        //Button 1
-        buttonPanel1.setOpaque(false);
-        buttonPanel1.setLayout(new java.awt.GridBagLayout());
-
-        //Button 1 On Clicked Event
-        button1.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-            	soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
-                incrementDifficulty();
-                throw new UnsupportedOperationException("Chua them tinh nang luu trang thai do kho");
-            }
+        // Difficulty Button
+        buttonDifficulty = createButton("Difficulty: " + getDifficultyString(), e -> {
+            soundClick.playSoundEffect("/asset/resources/sfx/clickXP.wav");
+            incrementDifficulty();
+            saveSettings();
         });
+        containerPanel.add(wrapButtonPanel(buttonDifficulty));
 
-        button1.setFont(new java.awt.Font("SansSerif", 0, 30)); // NOI18N
-        button1.setText("Difficulty: " + getDifficultyString());
-        buttonPanel1.add(button1, new java.awt.GridBagConstraints());
-
-        containerPanel.add(buttonPanel1);
-
-        //Button 2
-        buttonPanel2.setOpaque(false);
-        buttonPanel2.setLayout(new java.awt.GridBagLayout());
-
-        //Button 2 On Clicked Event
-        button2.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-            	soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
+        // Audio Settings Button
+        buttonAudio = createButton("Audio Settings", e -> {
+            soundClick.playSoundEffect("/asset/resources/sfx/clickXP.wav");
+            JOptionPane.showMessageDialog(this, "Audio Settings will be available soon.");
         });
+        containerPanel.add(wrapButtonPanel(buttonAudio));
 
-        button2.setFont(new java.awt.Font("SansSerif", 0, 30)); // NOI18N
-        button2.setText("Audio Settings");
-        button2.setPreferredSize(new java.awt.Dimension(300, 50));
-        buttonPanel2.add(button2, new java.awt.GridBagConstraints());
-
-        containerPanel.add(buttonPanel2);
-
-        //Button 3
-        buttonPanel3.setOpaque(false);
-        buttonPanel3.setLayout(new java.awt.GridBagLayout());
-
-        //Button 3 On Clicked Event        
-        button3.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-            	soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
+        // Credit Button
+        buttonCredit = createButton("Credit", e -> {
+            soundClick.playSoundEffect("/asset/resources/sfx/clickXP.wav");
+            JOptionPane.showMessageDialog(this, "Game developed by [Your Name Here].");
         });
+        containerPanel.add(wrapButtonPanel(buttonCredit));
 
-        button3.setFont(new java.awt.Font("SansSerif", 0, 30)); // NOI18N
-        button3.setText("Credit");
-        button3.setPreferredSize(new java.awt.Dimension(300, 50));
-        buttonPanel3.add(button3, new java.awt.GridBagConstraints());
-
-        containerPanel.add(buttonPanel3);
-
-        //Button 4
-        buttonPanel4.setOpaque(false);
-        buttonPanel4.setLayout(new java.awt.GridBagLayout());
-
-        //Button 4 On Clicked Event        
-        button4.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-            	soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
-                viewController.switchToMenuPanel();
-            }
+        // Done Button
+        buttonDone = createButton("Done", e -> {
+            soundClick.playSoundEffect("/asset/resources/sfx/clickXP.wav");
+            viewController.switchToMenuPanel();
         });
-
-        button4.setFont(new java.awt.Font("SansSerif", 0, 30)); // NOI18N
-        button4.setText("Done");
-        button4.setPreferredSize(new java.awt.Dimension(300, 50));
-        buttonPanel4.add(button4, new java.awt.GridBagConstraints());
-
-        containerPanel.add(buttonPanel4);
+        containerPanel.add(wrapButtonPanel(buttonDone));
 
         jLayeredPane.setLayer(containerPanel, 1);
         jLayeredPane.add(containerPanel);
-
         add(jLayeredPane);
+    }
 
-    }// </editor-fold>     
+    private Button createButton(String text, java.awt.event.ActionListener action) {
+        Button button = new Button(400, 80, "/asset/resources/gfx/button.png", "/asset/resources/gfx/button_hover.png");
+        button.setText(text);
+        button.setFont(new Font("Comic Sans MS", Font.PLAIN, 36));
+        button.addActionListener(action);
+        return button;
+    }
+
+    private JPanel wrapButtonPanel(Button button) {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setOpaque(false);
+        panel.add(button, new GridBagConstraints());
+        return panel;
+    }
+
+    public enum Difficulty { PEACEFUL, EASY, NORMAL, HARD, EXTREME; }
+
+    private String getDifficultyString() {
+        return Difficulty.values()[difficulty].name().charAt(0) + Difficulty.values()[difficulty].name().substring(1).toLowerCase();
+    }
+
+    private void incrementDifficulty() {
+        difficulty = (difficulty + 1) % Difficulty.values().length;
+        buttonDifficulty.setText("Difficulty: " + getDifficultyString());
+    }
+
+    private void loadSettings() {
+        Properties props = new Properties();
+        if (settingsFile.exists()) {
+            try (FileInputStream fis = new FileInputStream(settingsFile)) {
+                props.load(fis);
+                difficulty = Integer.parseInt(props.getProperty("difficulty", "0"));
+            } catch (IOException e) {
+                difficulty = 0;
+            }
+        } else {
+            difficulty = 0;
+        }
+    }
+
+    private void saveSettings() {
+        Properties props = new Properties();
+        props.setProperty("difficulty", String.valueOf(difficulty));
+        try (FileOutputStream fos = new FileOutputStream(settingsFile)) {
+            props.store(fos, "Game Settings");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void paint(Graphics g) {
         paintChildren(g);
     }
-
-    public enum Difficulty {
-        PEACEFUL, EASY, NORMAL, HARD, EXTREME;
-    }
-
-    public String getDifficultyString() {
-        switch (Difficulty.values()[difficulty]) {
-            case PEACEFUL:
-                return "Peaceful";
-            case EASY:
-                return "Easy";
-            case NORMAL:
-                return "Normal";
-            case HARD:
-                return "Hard";
-            case EXTREME:
-                return "Extreme";
-            default:
-                throw new IllegalArgumentException("Invalid difficulty level: " + difficulty);
-        }
-    }
-
-    public void incrementDifficulty() {
-        difficulty = (difficulty + 1) % Difficulty.values().length;
-        button1.setText("Difficulty: " + getDifficultyString());
-    }
-
-    private int difficulty;
-    private javax.swing.JPanel backgroundPanel;
-    private Button button1;
-    private Button button2;
-    private Button button3;
-    private Button button4;
-    private javax.swing.JPanel buttonPanel1;
-    private javax.swing.JPanel buttonPanel2;
-    private javax.swing.JPanel buttonPanel3;
-    private javax.swing.JPanel buttonPanel4;
-    private javax.swing.JLabel label;
-    private javax.swing.JPanel labelPanel;
-    private javax.swing.JLayeredPane jLayeredPane;
-    private javax.swing.JPanel containerPanel;
 }

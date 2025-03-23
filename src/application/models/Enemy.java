@@ -19,8 +19,6 @@ public abstract class Enemy {
     protected int speed;
     
     protected SoundController sound;    
-//    protected boolean alive; //Ktra ga die chua
-//	protected int level = 1;
     protected boolean isForward = true; // Biến để theo dõi hướng di chuyển của animation
     protected final int MODEL_WIDTH;
     protected final int MODEL_HEIGHT;
@@ -33,32 +31,31 @@ public abstract class Enemy {
         this.PosX = PosX;
         this.PosY = PosY;
         this.sound = sound;
-//        this.alive = true;
     }
-    
+    //123
     String[] deathSounds = {
-    	    "/asset/resources/sfx/chickDie3.wav",
-    	    "/asset/resources/sfx/chickDie4.wav",
-    	    "/asset/resources/sfx/chickDie5.wav",
-    	    "/asset/resources/sfx/chickDie6.wav",
-    	    "/asset/resources/sfx/chicken1a(die).wav",
-    	    "/asset/resources/sfx/chicken2b(die).wav",
-    	    "/asset/resources/sfx/chicken3a(die).wav"
-    	};
+        "/asset/resources/sfx/chickDie3.wav",
+        "/asset/resources/sfx/chickDie4.wav",
+        "/asset/resources/sfx/chickDie5.wav",
+        "/asset/resources/sfx/chickDie6.wav",
+        "/asset/resources/sfx/chicken1a(die).wav",
+        "/asset/resources/sfx/chicken2b(die).wav",
+        "/asset/resources/sfx/chicken3a(die).wav"
+    };
     String[] hitSounds = {
-            "/asset/resources/sfx/chicken1b1(pluck).wav",
-            "/asset/resources/sfx/chicken1b2(pluck).wav",
-            "/asset/resources/sfx/chicken2a1(pluck).wav",
-            "/asset/resources/sfx/chicken3b1(pluck).wav",
-            "/asset/resources/sfx/chicken3b2(pluck).wav",
-            "/asset/resources/sfx/chicken5b(pluck).wav"
-        };
+        "/asset/resources/sfx/chicken1b1(pluck).wav",
+        "/asset/resources/sfx/chicken1b2(pluck).wav",
+        "/asset/resources/sfx/chicken2a1(pluck).wav",
+        "/asset/resources/sfx/chicken3b1(pluck).wav",
+        "/asset/resources/sfx/chicken3b2(pluck).wav",
+        "/asset/resources/sfx/chicken5b(pluck).wav"
+    };
 
     public abstract void render(Graphics g);
 
-    // ?
+    // Cập nhật animation frame
     public void nextFrame() {
-        if(isForward) {
+        if (isForward) {
             currentFrame++;
             if (currentFrame >= 48) {
                 isForward = false; // Đổi hướng khi đến cuối mảng
@@ -75,7 +72,6 @@ public abstract class Enemy {
         hp -= damage;
         Random random = new Random();
         sound.playSoundEffect(getClass().getResource(hitSounds[random.nextInt(hitSounds.length)]).getPath());
-      //  soundController.playEffect(getClass().getResource(hitSounds[random.nextInt(hitSounds.length)]).getPath());
         if (hp <= 0) {
             sound.playSoundEffect(getClass().getResource(deathSounds[random.nextInt(deathSounds.length)]).getPath());
         }
@@ -83,9 +79,6 @@ public abstract class Enemy {
 
     public boolean isDead() {
         if (hp <= 0) {
-           // Random random = new Random();
-            //sound.playSoundEffect(getClass().getResource(deathSounds[random.nextInt(deathSounds.length)]).getPath());
-            //soundController.playEffect(getClass().getResource(deathSounds[random.nextInt(deathSounds.length)]).getPath());
             return true;
         }
         return false;
@@ -101,6 +94,14 @@ public abstract class Enemy {
 
     public int getPosX() {
         return PosX;
+    }
+    
+    public void setPosX(int posX) {
+        this.PosX = posX;
+    }
+    
+    public void setPosY(int posY) {
+        this.PosY = posY;
     }
 
     public int getPosY() {
@@ -131,6 +132,8 @@ public abstract class Enemy {
         return null;
     }
 
-
-    public abstract void update();
+    // Loại bỏ abstract khỏi update(), để trống vì di chuyển do EnemyController xử lý
+    public void update() {
+        // Không tự di chuyển, để EnemyController điều chỉnh
+    }
 }
