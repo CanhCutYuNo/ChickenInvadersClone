@@ -40,7 +40,7 @@ public class Manager {
     private JPanel mainPanel;
     private GameLoop gameLoop;
     private int frameDelay = 0;
-    private int level = 2;
+    private int level = 1;
     private boolean playerExploded = false;
     // Thêm các biến để lưu trữ LevelXManager
     private Level1Manager level1Manager;
@@ -140,13 +140,11 @@ public class Manager {
         checkPlayerCollisionsWithEgg();
         checkPlayerCollisionsWithItems();
 
-        // Kiểm tra nếu hết enemies thì tăng level
-//        if(enemies.isEmpty()) {
-//            level++;
-
-//            //   //   System.out.println("New level !! " + level);
-//            spawnEnemiesAfterFade(); // Tự động spawn enemies cho level mới
-//        }
+        if (getEnemies().isEmpty() && level2Manager != null) {
+            level++;
+            spawnEnemiesAfterFade(); // Gọi lại để tạo kẻ địch mới cho level tiếp theo
+            System.out.println("Level Up! Chuyển sang Level " + level);
+        }
 
     }
 
