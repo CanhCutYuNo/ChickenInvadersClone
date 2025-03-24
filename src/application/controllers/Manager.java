@@ -40,14 +40,14 @@ public class Manager {
     private JPanel mainPanel;
     private GameLoop gameLoop;
     private int frameDelay = 0;
-    private int level = 1;
+    private int level = 2;
     private boolean playerExploded = false;
     // Thêm các biến để lưu trữ LevelXManager
     private Level1Manager level1Manager;
     private Level2Manager level2Manager;
     private Level3Manager level3Manager;
     private Level5Manager level5Manager;
-    
+
     public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController) {
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
@@ -93,7 +93,7 @@ public class Manager {
     public List<Enemy> getEnemies() {
         return enemies;
     }
-    
+
     public SoundController getSound() {
     	return soundController;
     }
@@ -125,8 +125,9 @@ public class Manager {
         // Cập nhật LevelXManager thay vì updateEnemies() trực tiếp
         if(level == 1 && level1Manager != null) {
             level1Manager.update((float) deltaTime);
-        } else if(level == 5 && level5Manager != null) {
-            level5Manager.update((float) deltaTime);
+        }
+        else if(level == 2 && level2Manager != null) {
+            level2Manager.update((float) deltaTime);
         } // else if(level == 3 && level3Manager != null) {
 //            level3Manager.update((float) deltaTime);
 //        }
@@ -235,7 +236,12 @@ public class Manager {
                         enemiesToRemove.add(enemy);
                         //   System.out.println("Enemy marked for removal at (" + enemy.getPosX() + "," + enemy.getPosY() + ")");
                         //Them item
-                        items.addItem((int)enemy.getPosX(),(int) enemy.getPosY(), 10);
+
+                        Random random = new Random();
+                        if(random.nextFloat() <  0.3){
+                            items.addItem((int)enemy.getPosX(),(int) enemy.getPosY()-15, 10);
+                        }
+
                     }
 
                     break;
@@ -250,9 +256,13 @@ public class Manager {
         for (Enemy enemy : enemiesToRemove) {
             if (level == 1 && level1Manager != null) {
                 level1Manager.removeEnemy(enemy);
-            } else if (level == 5 && level5Manager != null) {
-                level5Manager.removeEnemy(enemy);
-            } //else if (level == 3 && level3Manager != null) {
+            }
+            else if (level== 2 && level2Manager != null){
+                level2Manager.removeEnemy(enemy);
+            }
+//            else if (level == 5 && level5Manager != null) {
+//                level5Manager.removeEnemy(enemy);
+//            } //else if (level == 3 && level3Manager != null) {
 //                level3Manager.removeEnemy(enemy);
 //            }
         }
@@ -301,10 +311,15 @@ public class Manager {
         if (level == 1) {
             level1Manager = new Level1Manager(soundController);
             enemies.addAll(level1Manager.getEnemies());
-        } else if (level == 5) {
-            level5Manager = new Level5Manager(soundController);
-            enemies.addAll(level5Manager.getEnemies());
-        } //else if (level == 3) {
+        }
+        else if(level == 2){
+            level2Manager = new Level2Manager(soundController);
+            enemies.addAll(level2Manager.getEnemies());
+        }
+//        else if (level == 5) {
+//            level5Manager = new Level5Manager(soundController);
+//            enemies.addAll(level5Manager.getEnemies());
+//        } //else if (level == 3) {
 //            level3Manager = new Level3Manager(soundController);
 //            enemies.addAll(level3Manager.getEnemies());
 //        } else {
@@ -321,9 +336,13 @@ public class Manager {
         // Render thông qua LevelXManager thay vì render trực tiếp
         if(level == 1 && level1Manager != null) {
             level1Manager.render(g);
-        } else if(level == 5 && level5Manager != null) {
-            level5Manager.render(g);
-        } //else if(level == 3 && level3Manager != null) {
+        }
+        else if(level == 2 && level2Manager != null){
+            level2Manager.render(g);
+        }
+//        else if(level == 5 && level5Manager != null) {
+//            level5Manager.render(g);
+//        } //else if(level == 3 && level3Manager != null) {
 //            level3Manager.render(g);
 //        }
         
@@ -335,7 +354,6 @@ public class Manager {
         g.setColor(Color.GREEN);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("FPS: " + fps, 50, 50);
-
         //   //   System.out.println("Render time: " +(System.nanoTime() - startTime) / 1_000_000.0 + " ms");
     }
     

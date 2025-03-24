@@ -3,6 +3,7 @@ package application.controllers;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import application.models.Enemy;
 import application.models.types.ChickenBoss;
@@ -23,18 +24,30 @@ public class EnemyController {
     private static final int SCREEN_LEFT = 0;
     private static final int SCREEN_RIGHT = SCREEN_WIDTH;
     private String enemyType;
+    private int level;
 
-    public EnemyController(int numEnemies, String enemyType, int startY, float timeDelay, SoundController soundController) {
+    public EnemyController(int numEnemies, String enemyType, int startY, float timeDelay, SoundController soundController, int level ) {
         this.enemies = new ArrayList<>();
         this.startY = startY;
         this.timeDelay = timeDelay;
         this.enemyType = enemyType;
         this.soundController = soundController;
+        this.level = level;
 
+        Random random = new Random();
         for (int i = 0; i < numEnemies; i++) {
-            Enemy enemy = createEnemy(-50 - i * SPACING, startY);
-            enemy.setInitialIndex(i);
-            enemies.add(enemy);
+            if(level==1){
+                Enemy enemy = createEnemy(-50 - i * SPACING, startY);
+                enemy.setInitialIndex(i);
+                enemies.add(enemy);
+            }
+            else if(level==2){
+                Enemy enemy = createEnemy(random.nextInt(SCREEN_WIDTH-200),startY);
+                enemy.setInitialIndex(i);
+                enemies.add(enemy);
+            }
+
+
         }
     }
 
@@ -73,7 +86,8 @@ public class EnemyController {
                     enemy.setPosX((int) posX);
                     enemy.setPosY((int) posY);
                     ((ChickenEnemy) enemy).setRotate(rotate);
-                } else if (enemy instanceof ChickenBoss) {
+                }
+                else if (enemy instanceof ChickenBoss) {
                     ((ChickenBoss) enemy).setRotate(rotate);
                 }
 
@@ -97,6 +111,51 @@ public class EnemyController {
                 }
             }
         }
+    }
+
+    public void update1(float deltaTime){
+        timeElapsed += deltaTime;
+        if (!isActive && timeElapsed >= timeDelay) {
+            isActive = true;
+                  System.out.println("Row at Y=" + startY + " is now active!");
+        }
+
+        if (isActive) {
+            t += deltaTime * 100 * direction;
+            // rotate = (float) (20 * Math.sin(0.05 * t));
+            Random random = new Random();
+            float gravity = 30.0f; // Tốc độ rơi
+            float oscillationSpeed = 0.5f; // Tốc độ lắc
+            float oscillationAmplitude = 1.0f; // Biên độ lắc
+            for (Enemy enemy : enemies) {
+                if (enemy instanceof ChickenEnemy) {
+                    float posY = enemy.getPosY() + 2; // Gà rơi xuống
+                    float offsetX = (float) Math.sin(posY * 0.005) * oscillationAmplitude; // Lắc nhẹ
+                    float posX = enemy.getPosX() + offsetX * deltaTime * oscillationSpeed; // Lắc mượt hơn
+
+                    enemy.setPosY((int) posY);
+
+                    enemy.setPosX((int) posX);
+                    ((ChickenEnemy) enemy).setRotate((float) (20 * Math.sin(0.05 * t))); // Xoay nhẹ
+                }
+                else if (enemy instanceof ChickenBoss) {
+                    ((ChickenBoss) enemy).setRotate((float) (20 * Math.sin(0.05 * t)));
+                }
+
+                enemy.nextFrame();
+            }
+
+
+            // Kiểm tra nếu gà chạm đáy màn hình, sinh lại từ trên
+            for (Enemy enemy : enemies) {
+                if (enemy.getPosY() > 1000) {
+                    enemy.setPosY(random.nextInt(200) - 300); // Xuất hiện lại từ trên
+                    enemy.setPosX(random.nextInt(1600) + 100); // X ngẫu nhiên
+                }
+            }
+        }
+
+
     }
 
     public void render(Graphics g) {
