@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 import javax.swing.ImageIcon;
 
@@ -18,7 +19,7 @@ import javax.swing.ImageIcon;
  *
  * @author hp
  */
-public abstract class ChickEnemy extends Enemy {
+public class ChickEnemy extends Enemy {
 
     protected Image spriteSheet;
 
@@ -26,7 +27,7 @@ public abstract class ChickEnemy extends Enemy {
         super(50, 46, 54, PosX, PosY, sound);
         currentFrame = (int) (Math.random() % 26);
         frameCount = 0;
-        spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/chick.png")).getImage();
+        spriteSheet = new ImageIcon(Objects.requireNonNull(getClass().getResource("/asset/resources/gfx/chick.png"))).getImage();
 
     }
 

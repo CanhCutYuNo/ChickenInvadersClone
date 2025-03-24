@@ -40,7 +40,7 @@ public class Manager {
     private JPanel mainPanel;
     private GameLoop gameLoop;
     private int frameDelay = 0;
-    private int level = 1;
+    private int level = 3;
     private boolean playerExploded = false;
     // Thêm các biến để lưu trữ LevelXManager
     private Level1Manager level1Manager;
@@ -128,9 +128,10 @@ public class Manager {
         }
         else if(level == 2 && level2Manager != null) {
             level2Manager.update((float) deltaTime);
-        } // else if(level == 3 && level3Manager != null) {
-//            level3Manager.update((float) deltaTime);
-//        }
+        }
+        else if(level == 3 && level3Manager != null) {
+            level3Manager.update((float) deltaTime);
+        }
         
         deathEffectController.update();
 
@@ -141,6 +142,11 @@ public class Manager {
         checkPlayerCollisionsWithItems();
 
         if (getEnemies().isEmpty() && level2Manager != null) {
+            level++;
+            spawnEnemiesAfterFade(); // Gọi lại để tạo kẻ địch mới cho level tiếp theo
+            System.out.println("Level Up! Chuyển sang Level " + level);
+        }
+        if (getEnemies().isEmpty() && level3Manager != null) {
             level++;
             spawnEnemiesAfterFade(); // Gọi lại để tạo kẻ địch mới cho level tiếp theo
             System.out.println("Level Up! Chuyển sang Level " + level);
@@ -260,9 +266,10 @@ public class Manager {
             }
 //            else if (level == 5 && level5Manager != null) {
 //                level5Manager.removeEnemy(enemy);
-//            } //else if (level == 3 && level3Manager != null) {
-//                level3Manager.removeEnemy(enemy);
 //            }
+            else if (level == 3 && level3Manager != null) {
+                level3Manager.removeEnemy(enemy);
+            }
         }
         enemies.removeAll(enemiesToRemove);
         //   System.out.println("Removed " + bulletsRemoved + " bullets and " + enemiesRemoved + " enemies. Current enemies size: " + enemies.size());
@@ -317,10 +324,12 @@ public class Manager {
 //        else if (level == 5) {
 //            level5Manager = new Level5Manager(soundController);
 //            enemies.addAll(level5Manager.getEnemies());
-//        } //else if (level == 3) {
-//            level3Manager = new Level3Manager(soundController);
-//            enemies.addAll(level3Manager.getEnemies());
-//        } else {
+//        }
+        else if (level == 3) {
+            level3Manager = new Level3Manager(soundController);
+            enemies.addAll(level3Manager.getEnemies());
+        }
+//        else {
 //            System.err.println("Level " + level + " không được hỗ trợ!");
 //        }
         System.out.println("Spawned enemies. New enemies size: " + enemies.size());
@@ -340,9 +349,10 @@ public class Manager {
         }
 //        else if(level == 5 && level5Manager != null) {
 //            level5Manager.render(g);
-//        } //else if(level == 3 && level3Manager != null) {
-//            level3Manager.render(g);
 //        }
+        else if(level == 3 && level3Manager != null) {
+            level3Manager.render(g);
+        }
         
         deathEffectController.render(g);
 
