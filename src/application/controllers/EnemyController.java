@@ -31,7 +31,7 @@ public class EnemyController {
         this.enemyType = enemyType;
         this.soundController = soundController;
 
-        for (int i = 0; i < numEnemies; i++) {
+        for(int i = 0; i < numEnemies; i++) {
             Enemy enemy = createEnemy(-50 - i * SPACING, startY);
             enemy.setInitialIndex(i);
             enemies.add(enemy);
@@ -39,12 +39,12 @@ public class EnemyController {
     }
 
     private Enemy createEnemy(int posX, int posY) {
-     //   System.out.println("Creating enemy of type: " + enemyType + " at (" + posX + "," + posY + ")");
-        switch (enemyType) {
+     //   System.out.println("Creating enemy of type: " + enemyType + " at(" + posX + "," + posY + ")");
+        switch(enemyType) {
             case "Chicken":
                 return new ChickenEnemy(posX, posY, soundController);
             case "Boss":
-                // Đặt tọa độ cố định cho ChickenBoss (giữa màn hình)
+                // Đặt tọa độ cố định cho ChickenBoss(giữa màn hình)
                 return new ChickenBoss(SCREEN_WIDTH / 2 - 150, 100, soundController);
             default:
                 throw new IllegalArgumentException("Unknown enemy type: " + enemyType);
@@ -55,43 +55,43 @@ public class EnemyController {
         timeElapsed += deltaTime;
      //   System.out.println("Time elapsed: " + timeElapsed + ", Time delay: " + timeDelay + ", Is active: " + isActive);
 
-        if (!isActive && timeElapsed >= timeDelay) {
+        if(!isActive && timeElapsed >= timeDelay) {
             isActive = true;
       //      System.out.println("Row at Y=" + startY + " is now active!");
         }
 
-        if (isActive) {
+        if(isActive) {
             t += deltaTime * 100 * direction;
-           // rotate = (float) (20 * Math.sin(0.05 * t));
+           // rotate =(float)(20 * Math.sin(0.05 * t));
 
-            for (Enemy enemy : enemies) {
-                if (enemy instanceof ChickenEnemy) {
+            for(Enemy enemy : enemies) {
+                if(enemy instanceof ChickenEnemy) {
                     // Logic di chuyển theo hàng cho ChickenEnemy
                     int index = enemy.getInitialIndex();
                     float posX = -1800 + t + index * SPACING;
-                    float posY = startY + 20 * (float) Math.sin(0.02 * posX);
+                    float posY = startY + 20 *(float) Math.sin(0.02 * posX);
                     enemy.setPosX((int) posX);
                     enemy.setPosY((int) posY);
-                    ((ChickenEnemy) enemy).setRotate(rotate);
-                } else if (enemy instanceof ChickenBoss) {
-                    ((ChickenBoss) enemy).setRotate(rotate);
+                   ((ChickenEnemy) enemy).setRotate(rotate);
+                } else if(enemy instanceof ChickenBoss) {
+                   ((ChickenBoss) enemy).setRotate(rotate);
                 }
 
                 enemy.nextFrame();
             }
 
-            if (!enemies.isEmpty() && enemyType.equals("Chicken")) {
+            if(!enemies.isEmpty() && enemyType.equals("Chicken")) {
                 // Chỉ áp dụng logic di chuyển hàng cho ChickenEnemy
                 Enemy firstEnemy = enemies.get(0);
                 Enemy lastEnemy = enemies.get(enemies.size() - 1);
 
-                if (lastEnemy.getPosX() > SCREEN_RIGHT && direction == 1) {
+                if(lastEnemy.getPosX() > SCREEN_RIGHT && direction == 1) {
                     direction = -1;
-                    t -= 2 * (lastEnemy.getPosX() - SCREEN_RIGHT);
+                    t -= 2 *(lastEnemy.getPosX() - SCREEN_RIGHT);
                     System.out.println("Row at Y=" + startY + " turning left at right edge");
-                } else if (firstEnemy.getPosX() < SCREEN_LEFT && direction == -1) {
+                } else if(firstEnemy.getPosX() < SCREEN_LEFT && direction == -1) {
                     direction = 1;
-                    t += 2 * (SCREEN_LEFT - firstEnemy.getPosX());
+                    t += 2 *(SCREEN_LEFT - firstEnemy.getPosX());
                     System.out.println("Row at Y=" + startY + " turning right at left edge");
                 }
             }
@@ -99,9 +99,9 @@ public class EnemyController {
     }
 
     public void render(Graphics g) {
-        if (isActive) {
-            for (Enemy enemy : enemies) {
-                if (!enemy.isDead()) {
+        if(isActive) {
+            for(Enemy enemy : enemies) {
+                if(!enemy.isDead()) {
                     enemy.render(g);
                 }
             }
@@ -121,6 +121,6 @@ public class EnemyController {
 
     public void removeEnemy(Enemy enemy) {
         enemies.remove(enemy);
-        System.out.println("Removed enemy from EnemyController at (" + enemy.getPosX() + "," + enemy.getPosY() + "). New size: " + enemies.size());
+        System.out.println("Removed enemy from EnemyController at(" + enemy.getPosX() + "," + enemy.getPosY() + "). New size: " + enemies.size());
     }
 }

@@ -11,11 +11,9 @@ public class GameLoop {
     private int frameCount = 0;
     private int fps = 0;
     private long lastTime = System.nanoTime();
-    private final GamePanel gamePanel;
     private final Manager gameManager;
 
     public GameLoop(GamePanel gamePanel, JFrame frame) {
-        this.gamePanel = gamePanel;
         this.gameManager = gamePanel.getGameManager();
 
         gameTimer = new Timer(16, e -> {

@@ -12,10 +12,8 @@ import java.util.List;
 public class Level1Manager {
     private List<EnemyController> enemyControllers;
     private List<Enemy> enemies;
-    private SoundController soundController;
-
+    
     public Level1Manager(SoundController soundController) {
-        this.soundController = soundController;
         this.enemyControllers = new ArrayList<>();
         this.enemies = new ArrayList<>();
 
