@@ -1,14 +1,15 @@
-package application.views;
+package application.views.types;
 
 import application.models.DeathEffect;
+import application.models.types.ChickDeathEffect;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.ImageIcon;
 
-public class DeathEffectView{
-    private final DeathEffect deathEffect;
+public class ChickDeathEffectView {
+   private final DeathEffect deathEffect;
     private final ArrayList<Smoke> smokes;
     protected Image spriteSheet;
     protected static final int[][] SPRITE = {
@@ -30,13 +31,13 @@ public class DeathEffectView{
         0, 4, 9, 12, 15, 17, 18, 22, 24, 26, 28, 29, 30, 31, 34, 36, 41, 42, 44, 45, 45, 46, 47, 47, 48, 48, 49, 49, 49, 50, 50, 52, 53, 53, 53, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 51, 49
     };
 
-    public DeathEffectView(DeathEffect deathEffect) {
+    public ChickDeathEffectView(ChickDeathEffect deathEffect) {
         this.deathEffect = deathEffect;
         
         Random random = new Random();
-        spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/smoke4-white.png")).getImage();
+        spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/smoke4-yellow.png")).getImage();
         if(spriteSheet == null){
-            System.err.println("Không tải được smoke4-white!");
+            System.err.println("Không tải được smoke4-yellow!");
         }
         smokes = new ArrayList<>();
         int size = Math.abs(random.nextInt()) % 3 + 1;
@@ -84,8 +85,8 @@ public class DeathEffectView{
 
             this.PosX = PosX + (random.nextInt() % 4);
             this.PosY = PosY + (random.nextInt() % 4);
-            minFrameCount = Math.abs(random.nextInt() % 27);
-            maxFrameCount = minFrameCount + Math.abs(random.nextInt() % 27);
+            minFrameCount = Math.abs(random.nextInt() % 20);
+            maxFrameCount = Math.abs(random.nextInt() % 27) + 26;
             frameCount = minFrameCount;
             vX = (random.nextInt() % 3);
             vY = (random.nextInt() % 3);
@@ -107,5 +108,5 @@ public class DeathEffectView{
             PosX = PosX + vX;
             PosY = PosY + vY;
         }
-    }    
+    }     
 }
