@@ -4,29 +4,33 @@
  */
 package application.models.types;
 
+import java.awt.Graphics;
+import java.awt.Image;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+import javax.swing.ImageIcon;
+
+import application.controllers.EnemySkillsController;
 import application.controllers.SoundController;
 import application.models.DeathEffect;
 import application.models.Enemy;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.util.ArrayList;
-import java.util.Random;
-import javax.swing.ImageIcon;
+import application.models.EnemySkills.SkillType;
 
 /**
  *
  * @author hp
  */
-public abstract class ChickEnemy extends Enemy {
+public class ChickEnemy extends Enemy {
 
     protected Image spriteSheet;
 
     public ChickEnemy(int PosX, int PosY, SoundController sound) {
-        super(50, 46, 54, PosX, PosY, sound);
-        currentFrame = (int) (Math.random() % 26);
+        super(50, 46, 54, PosX, PosY, sound, createSkillImagePaths());
+        curFrame = (int) (Math.random() % 26);
         frameCount = 0;
-        spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/chick.png")).getImage();
+        spriteSheet = new ImageIcon(Objects.requireNonNull(getClass().getResource("/asset/resources/gfx/chick.png"))).getImage();
 
     }
 
@@ -41,6 +45,10 @@ public abstract class ChickEnemy extends Enemy {
     private static final int[] offsetX = {
         0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 3, 4, 5, 5, 6, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8
     };
+    
+    private static Map<SkillType, String> createSkillImagePaths() {
+        return new HashMap<>(); // Trả về Map rỗng vì ChickEnemy không có chiêu thức
+    }
 
     @Override
     public void render(Graphics g) {
@@ -48,8 +56,8 @@ public abstract class ChickEnemy extends Enemy {
 //            frameCount = 0;
 //        }
         g.drawImage(spriteSheet,
-                PosX - offsetX[currentFrame] - 15, PosY - 15, PosX + SPRITE[currentFrame][2] - offsetX[currentFrame] - 15, PosY + SPRITE[currentFrame][3] - 15,
-                SPRITE[currentFrame][0], SPRITE[currentFrame][1], SPRITE[currentFrame][0] + SPRITE[currentFrame][2], SPRITE[currentFrame][1] + SPRITE[currentFrame][3], null);
+                PosX - offsetX[curFrame] - 15, PosY - 15, PosX + SPRITE[curFrame][2] - offsetX[curFrame] - 15, PosY + SPRITE[curFrame][3] - 15,
+                SPRITE[curFrame][0], SPRITE[curFrame][1], SPRITE[curFrame][0] + SPRITE[curFrame][2], SPRITE[curFrame][1] + SPRITE[curFrame][3], null);
 
         //debug
 //        g.setColor(Color.WHITE);
@@ -69,13 +77,13 @@ public abstract class ChickEnemy extends Enemy {
     @Override
     public void nextFrame() {
         if (isForward) {
-            currentFrame++;
-            if (currentFrame >= 25) {
+            curFrame++;
+            if (curFrame >= 25) {
                 isForward = false; // Đổi hướng khi đến cuối mảng
             }
         } else {
-            currentFrame--;
-            if (currentFrame <= 0) {
+            curFrame--;
+            if (curFrame <= 0) {
                 isForward = true; // Đổi hướng khi về đầu mảng
             }
         }
@@ -90,4 +98,9 @@ public abstract class ChickEnemy extends Enemy {
     public DeathEffect getDeathEffect() {
         return new DeathEffect(getCenterX(), getCenterY());
     }
+
+	@Override
+	public EnemySkillsController getSkillsController() {
+		return null;
+	}
 }

@@ -1,13 +1,22 @@
 package application.views;
 
-import javax.swing.*;
-import application.controllers.*;
-
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
+import javax.swing.JPanel;
+
+import application.controllers.Manager;
+import application.controllers.MouseController;
+import application.controllers.SoundController;
 
 public class GamePanel extends JPanel {
 
@@ -22,12 +31,11 @@ public class GamePanel extends JPanel {
     private boolean showTransition = true;
     private int currentLevel;
     private float fadeTime = 0f;
-    private float postFadeTime = 0f;
     private static final float FADE_DURATION = 0.5f;
     private static final float WAIT_DURATION = 0.5f;
-    private static final float POST_FADE_DURATION = 0.2f;
     private boolean enemiesPrepared = false;
     private boolean isTransitionTriggered = false;
+    private boolean transitionComplete = false;
 
     public GamePanel(Manager gameManager) {
         this.gameManager = gameManager;
@@ -41,18 +49,15 @@ public class GamePanel extends JPanel {
         requestFocusInWindow();
 
         this.currentLevel = gameManager.getLevel();
-       // System.out.println("Level ban đầu: " + currentLevel);
 
         try {
             File imageFile = new File("src/asset/resources/gfx/wave" + currentLevel + ".png");
-            if(imageFile.exists()) {
-           //     System.out.println("Tìm thấy ảnh tại: " + imageFile.getAbsolutePath());
+            if (imageFile.exists()) {
                 levelImage = ImageIO.read(imageFile);
             } else {
-            //    System.err.println("Không tìm thấy ảnh tại: " + imageFile.getAbsolutePath());
                 levelImage = new BufferedImage(400, 200, BufferedImage.TYPE_INT_ARGB);
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             levelImage = new BufferedImage(400, 200, BufferedImage.TYPE_INT_ARGB);
         }
@@ -63,69 +68,65 @@ public class GamePanel extends JPanel {
     }
 
     public void update(double deltaTime) {
-        if(isTransitionTriggered && showTransition) {
-            fadeTime +=(float) deltaTime;
-          //  System.out.println("FadeTime: " + fadeTime + ", Alpha: " + alpha + ", FadeIn: " + fadeIn);
-            if(fadeIn) {
+        if (isTransitionTriggered && showTransition) {
+            fadeTime += (float) deltaTime;
+            if (fadeIn) {
                 alpha = Math.min(1.0f, fadeTime / FADE_DURATION);
-                if(alpha >= 1.0f) {
+                if (alpha >= 1.0f) {
                     fadeIn = false;
                     fadeTime = 0f;
-                    if(!enemiesPrepared && gameManager != null) {
-                  //      System.out.println("Fade in xong, chuẩn bị enemies cho level: " + currentLevel);
+
+                    if (!enemiesPrepared && gameManager != null) {
                         gameManager.spawnEnemiesAfterFade();
-                        gameManager.update(0);
                         enemiesPrepared = true;
                     }
                 }
-            } else if(fadeTime >= WAIT_DURATION) {
-                alpha = Math.max(0.0f, 1.0f -((fadeTime - WAIT_DURATION) / FADE_DURATION));
-                if(alpha <= 0.0f) {
-                    showTransition = false;
-                    postFadeTime = 0f;
-              //      System.out.println("Fade out hoàn tất, chuyển sang trạng thái game");
+            } else {
+                // Giai đoạn chờ và fade-out
+                if (fadeTime < WAIT_DURATION) {
+                    // Chờ, giữ alpha = 1.0
+                    alpha = 1.0f;
+                } else {
+                    // Fade-out
+                    alpha = Math.max(0.0f, 1.0f - ((fadeTime - WAIT_DURATION) / FADE_DURATION));
+                    if (alpha <= 0.0f) {
+                        showTransition = false;
+                        transitionComplete = true;
+                    }
                 }
             }
-        } else if(!showTransition && postFadeTime < POST_FADE_DURATION) {
-            postFadeTime +=(float) deltaTime;
-        //    System.out.println("PostFadeTime: " + postFadeTime + ", POST_FADE_DURATION: " + POST_FADE_DURATION);
+        }
+
+        if (transitionComplete) {
+            gameManager.update(deltaTime);
         }
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-    //    System.out.println("Đang vẽ, showTransition: " + showTransition + ", postFadeTime: " + postFadeTime);
 
-        Graphics2D g2d =(Graphics2D) g;
+        Graphics2D g2d = (Graphics2D) g;
 
-        if(showTransition && isTransitionTriggered) {
-            // Vẽ transition(levelImage) lên trên với độ trong suốt
-            if(levelImage != null) {
+        // Vẽ levelImage với hiệu ứng fade-in/fade-out
+        if (showTransition && isTransitionTriggered) {
+            if (levelImage != null) {
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-                int x =(getWidth() - levelImage.getWidth()) / 2;
-                int y =(getHeight() - levelImage.getHeight()) / 2;
+                int x = (getWidth() - levelImage.getWidth()) / 2;
+                int y = (getHeight() - levelImage.getHeight()) / 2;
                 g2d.drawImage(levelImage, x, y, levelImage.getWidth(), levelImage.getHeight(), this);
             }
-        } else if(postFadeTime < POST_FADE_DURATION) {
-            float transitionAlpha = postFadeTime / POST_FADE_DURATION;
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transitionAlpha));
-        //    System.out.println("Vẽ game với alpha: " + transitionAlpha);
-            // gameManager đã được vẽ ở trên, không cần vẽ lại
-        } else {
-        //    System.out.println("Vẽ game bình thường");
-            gameManager.render(g);
-            // gameManager đã được vẽ ở trên, không cần vẽ lại
         }
         
-        if(gameManager != null) {
+        // Vẽ các thành phần khác của game khi transition hoàn tất
+        if (transitionComplete && gameManager != null) {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-            gameManager.renderPlayer(g);
+            gameManager.render(g);
         }
-
-
-        // Đặt lại độ trong suốt về mặc định
+        
+     // Đặt lại độ trong suốt về 1.0 trước khi vẽ Player
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+        gameManager.renderPlayer(g);
     }
 
     public void triggerTransition() {
@@ -135,7 +136,7 @@ public class GamePanel extends JPanel {
         this.fadeTime = 0f;
         this.alpha = 0f;
         this.enemiesPrepared = false;
-   //     System.out.println("Transition đã được kích hoạt!");
+        this.transitionComplete = false;
     }
 
     public boolean isTransitionActive() {
@@ -143,20 +144,18 @@ public class GamePanel extends JPanel {
     }
 
     public void updateLevel() {
-        if(gameManager != null) {
+        if (gameManager != null) {
             int newLevel = gameManager.getLevel();
-            if(newLevel != currentLevel &&(newLevel == 1 || newLevel == 2 || newLevel == 3)) {
+            if (newLevel != currentLevel && (newLevel == 1 || newLevel == 2 || newLevel == 3 || newLevel == 5)) {
                 this.currentLevel = newLevel;
                 try {
                     File imageFile = new File("src/asset/resources/gfx/wave" + currentLevel + ".png");
-                    if(imageFile.exists()) {
-                    //    System.out.println("Tìm thấy ảnh tại: " + imageFile.getAbsolutePath());
+                    if (imageFile.exists()) {
                         levelImage = ImageIO.read(imageFile);
                     } else {
-                     //   System.err.println("Không tìm thấy ảnh tại: " + imageFile.getAbsolutePath());
                         levelImage = new BufferedImage(400, 200, BufferedImage.TYPE_INT_ARGB);
                     }
-                } catch(IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                     levelImage = new BufferedImage(400, 200, BufferedImage.TYPE_INT_ARGB);
                 }
@@ -165,6 +164,7 @@ public class GamePanel extends JPanel {
                 fadeIn = true;
                 showTransition = true;
                 enemiesPrepared = false;
+                transitionComplete = false;
             }
         }
     }

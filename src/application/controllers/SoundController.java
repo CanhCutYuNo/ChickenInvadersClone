@@ -70,7 +70,7 @@ public class SoundController {
                 synchronized (clips) {
                     clips.add(effectClip);
                 }
-
+                System.out.println("tìm thấy file: " + path);
                 effectClip.start();
 
                 // Khi phát xong, tự động xóa khỏi danh sách

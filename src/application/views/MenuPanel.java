@@ -5,8 +5,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 
-import application.Main;
-import application.controllers.*;
+import application.controllers.SoundController;
+import application.controllers.ViewController;
+import application.controllers.MouseController;
+
 
 public class MenuPanel extends JPanel {
 
@@ -15,26 +17,31 @@ public class MenuPanel extends JPanel {
     private JPanel backgroundPanel;
     private SoundController sound;
     private MouseController mouseController;
+    private GamePanel gamePanel;
+    private JLayeredPane jLayeredPane;
 
-    private GamePanel gamePanel; // Tham chiếu đến GamePanel để lấy tọa độ màn hình
+    private JPanel containerPanel, symbolPanel, buttonPanel;
+    private JLabel icon;
+    private Button button1, button2, button3;
 
     public MenuPanel(ViewController viewController, MouseController mouseController, GamePanel gamePanel) {
         this.viewController = viewController;
         this.sound = new SoundController();
         this.mouseController = mouseController;
-        this.gamePanel = gamePanel; // Lưu tham chiếu
+        this.gamePanel = gamePanel;
         initComponents();
 
-//        this.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mousePressed(MouseEvent e) {
-//                sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
-//            }
-//        });
+
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+            }
+        });
     }
 
     public void setBackgroundPanel(JPanel backgroundPanel) {
-        if(this.backgroundPanel != null) {
+        if (this.backgroundPanel != null) {
             jLayeredPane.remove(this.backgroundPanel);
         }
         this.backgroundPanel = backgroundPanel;
@@ -46,14 +53,7 @@ public class MenuPanel extends JPanel {
         jLayeredPane = new JLayeredPane();
         containerPanel = new JPanel();
         symbolPanel = new JPanel();
-        icon = new JLabel();
         buttonPanel = new JPanel();
-        buttonPanel1 = new JPanel();
-        button1 = new Button(300, 50);
-        buttonPanel2 = new JPanel();
-        button2 = new Button(300, 50);
-        buttonPanel3 = new JPanel();
-        button3 = new Button(300, 50);
 
         setLayout(new GridLayout(1, 1));
         jLayeredPane.setLayout(new OverlayLayout(jLayeredPane));
@@ -66,74 +66,50 @@ public class MenuPanel extends JPanel {
         symbolPanel.setLayout(new GridBagLayout());
 
         ImageIcon gameIcon = new ImageIcon(getClass().getResource("/asset/resources/gfx/logo5.png"));
+        icon = new JLabel();
         icon.setIcon(gameIcon);
-        icon.setFont(new Font("Segoe UI", Font.PLAIN, 48));
-        icon.setForeground(Color.WHITE);
         icon.setHorizontalTextPosition(SwingConstants.CENTER);
         icon.setVerticalTextPosition(SwingConstants.BOTTOM);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(20, 155, 20, 0);
-        gbc.anchor = GridBagConstraints.CENTER;
-        symbolPanel.add(icon, gbc);
+
+        GridBagConstraints gbcIcon = new GridBagConstraints();
+        gbcIcon.gridx = 0;
+        gbcIcon.gridy = 0;
+        gbcIcon.insets = new Insets(20, 155, 20, 0);
+        gbcIcon.anchor = GridBagConstraints.CENTER;
+        symbolPanel.add(icon, gbcIcon);
 
         containerPanel.add(symbolPanel);
+
         buttonPanel.setOpaque(false);
-        buttonPanel.setLayout(new GridLayout(3, 1));
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
-        buttonPanel1.setOpaque(false);
-        buttonPanel1.setLayout(new GridBagLayout());
-
-        button1.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-                if(viewController != null) {
-                    sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
-                    viewController.switchToGameContainerPanel();
-                    if(gamePanel != null) {
-                        gamePanel.triggerTransition();
-                    }
+        button1 = createMenuButton("Play", "/asset/resources/gfx/button.png", "/asset/resources/gfx/button_hover.png", () -> {
+            sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+            
+            if (viewController != null) {
+                viewController.switchToGameContainerPanel();
+                if (gamePanel != null) {
+                    gamePanel.triggerTransition();
+                   
                 }
             }
         });
 
-        button1.setText("Play");
-        button1.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
-        buttonPanel1.add(button1, new GridBagConstraints());
-        buttonPanel.add(buttonPanel1);
-
-        buttonPanel2.setOpaque(false);
-        buttonPanel2.setLayout(new GridBagLayout());
-
-        button2.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-
-                sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
-                if(viewController != null) {
-                    viewController.switchToSettingPanel();
-                }
+        button2 = createMenuButton("Options", "/asset/resources/gfx/button.png", "/asset/resources/gfx/button_hover.png", () -> {
+            sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+            if (viewController != null) {
+                viewController.switchToSettingPanel();
             }
         });
 
-        button2.setText("Options");
-        button2.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
-        buttonPanel2.add(button2, new GridBagConstraints());
-        buttonPanel.add(buttonPanel2);
-
-        buttonPanel3.setOpaque(false);
-        buttonPanel3.setLayout(new GridBagLayout());
-
-        button3.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-                sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
-                System.exit(0);
-            }
+        button3 = createMenuButton("Quit Game", "/asset/resources/gfx/button.png", "/asset/resources/gfx/button_hover.png", () -> {
+            sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+            System.exit(0);
         });
 
-        button3.setText("Quit Game");
-        button3.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
-        buttonPanel3.add(button3, new GridBagConstraints());
-        buttonPanel.add(buttonPanel3);
+        addButtonToPanel(button1);
+        addButtonToPanel(button2);
+        addButtonToPanel(button3);
 
         containerPanel.add(buttonPanel);
         jLayeredPane.setLayer(containerPanel, 1);
@@ -141,13 +117,27 @@ public class MenuPanel extends JPanel {
         add(jLayeredPane);
     }
 
-    @Override
-    public void paint(Graphics g) {
-        paintChildren(g);
+    private Button createMenuButton(String text, String imagePath, String hoverImagePath, Runnable action) {
+        Button button = new Button(384, 70, imagePath, hoverImagePath);
+        button.setText(text);
+        button.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent evt) {
+                action.run();
+            }
+        });
+        return button;
     }
 
-    private Button button1, button2, button3;
-    private JPanel buttonPanel, buttonPanel1, buttonPanel2, buttonPanel3, containerPanel, symbolPanel;
-    private JLabel icon;
-    private JLayeredPane jLayeredPane;
+    private void addButtonToPanel(Button button) {
+        JPanel panelWrapper = new JPanel(new GridBagLayout());
+        panelWrapper.setOpaque(false);
+        GridBagConstraints gbcButton = new GridBagConstraints();
+        gbcButton.gridx = 0;
+        gbcButton.gridy = 0;
+        gbcButton.anchor = GridBagConstraints.CENTER;
+        panelWrapper.add(button, gbcButton);
+        buttonPanel.add(panelWrapper);
+    }
 }
