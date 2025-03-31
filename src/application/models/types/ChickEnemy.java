@@ -96,7 +96,7 @@ public class ChickEnemy extends Enemy {
 
     @Override
     public DeathEffect getDeathEffect() {
-        return new DeathEffect(getCenterX(), getCenterY());
+        return new ChickDeathEffect(getCenterX(), getCenterY());
     }
 
 	@Override
