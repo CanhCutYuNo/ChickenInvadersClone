@@ -22,9 +22,13 @@ public class Level3Manager {
         this.enemies = new ArrayList<>();
         this.random = new Random();
 
-        EnemyController controller1 = new EnemyController(8,"Chicken", 100, 0.0f,sound,3);
-        enemyControllers.add(controller1);
-        enemies.addAll(controller1.getEnemies());
+        for(int i = 0; i < 4; i++){
+            EnemyController controller1 = new EnemyController(5,"Chicken", 100 * (i) + 100, 0.0f + i*20.f,sound,3);
+
+            enemyControllers.add(controller1);
+            enemies.addAll(controller1.getEnemies());
+        }
+
 
         for(int i = 0; i < 10; i++){
             int posY = random.nextInt(100);

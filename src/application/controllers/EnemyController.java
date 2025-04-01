@@ -200,8 +200,9 @@ public class EnemyController {
                     ((ChickEnemy) enemy).setRotate((float) (20 * Math.sin(0.05 * t))); // Xoay nhẹ
                 }
                 else if (enemy instanceof ChickenEnemy) {
+//                    SPACING = 200;
                     int index = enemy.getInitialIndex();
-                    float posX = -1800 + t + index * SPACING;
+                    float posX = -1800 + t + index * (SPACING+100);
                     float posY = startY + 20 * (float) Math.sin(0.02 * posX);
                     enemy.setPosX((int) posX);
                     enemy.setPosY((int) posY);
