@@ -11,7 +11,7 @@ public class ItemsView {
         I = new ImageIcon(getClass().getResource(path)).getImage();
 
         try{
-            I = new ImageIcon(getClass().getResource("/asset/resources/gfx/flareSmall~1.png")).getImage();
+            I = new ImageIcon(getClass().getResource("/asset/resources/gfx/food_thighs.png")).getImage();
 
         } catch (Exception e) {
             System.out.println("Khong load duoc anh");
@@ -19,6 +19,6 @@ public class ItemsView {
     }
 
     public void draw(Graphics g, Items item){
-        g.drawImage(I, (int) item.getPosX(), item.getPosY(), 40, 40, null);
+        g.drawImage(I, (int) item.getPosX(), item.getPosY(), 40, 60, null);
     }
 }

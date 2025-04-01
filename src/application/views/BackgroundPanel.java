@@ -26,7 +26,11 @@ import javax.swing.JComponent;
  */
 public class BackgroundPanel extends javax.swing.JPanel {
 
-    private final Thread updateThread;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final Thread updateThread;
     private Image backgroundImage;
     private int y;
     private final int width = 1920;

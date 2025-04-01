@@ -1,16 +1,21 @@
 package application.models.types;
 
-import application.controllers.SoundController;
-import application.models.DeathEffect;
-import application.models.Enemy;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+
 import javax.swing.ImageIcon;
+
+import application.controllers.SoundController;
+import application.models.DeathEffect;
+import application.models.Enemy;
+import application.models.EnemySkills.SkillType;
 
 public class ChickenEnemy extends Enemy {
     protected Image spriteHeadSheet;
@@ -23,6 +28,8 @@ public class ChickenEnemy extends Enemy {
     protected List<int[]> wingSprites = new ArrayList<>();
     protected float rotate = 0f;
     private int initialIndex;
+    
+    private Random rand; // Để tạo EGG ngẫu nhiên
     
     private static final int[][] SPRITE_HEAD = {{195, 93, 30, 45}};
     private static final int[][] SPRITE_BODY = {
@@ -49,23 +56,25 @@ public class ChickenEnemy extends Enemy {
     };
 
     public ChickenEnemy(int PosX, int PosY, SoundController sound) {
-        super(100, 64, 64, PosX, PosY, sound);
+        // Gọi super() với các tham số phù hợp, phải là câu lệnh đầu tiên
+        super(100, 64, 64, PosX, PosY, sound, createSkillImagePaths());
         
+        // Sau khi gọi super(), mới thực hiện các khởi tạo khác
         spriteBodySheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-body-stripes.png")).getImage();
         spriteWingsSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-wings.png")).getImage();
         spriteHeadSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-face.png")).getImage();
         blinkAnimation = new ImageIcon(getClass().getResource("/asset/resources/gfx/chickenBlink.png")).getImage();
 
-        if (spriteBodySheet == null) {
+        if(spriteBodySheet == null) {
             System.err.println("Không tải được spriteBodySheet!");
         }
-        if (spriteWingsSheet == null) {
+        if(spriteWingsSheet == null) {
             System.err.println("Không tải được spriteWingsSheet!");
         }
-        if (spriteHeadSheet == null) {
+        if(spriteHeadSheet == null) {
             System.err.println("Không tải được spriteHeadSheet!");
         }
-        if (blinkAnimation == null) {
+        if(blinkAnimation == null) {
             System.err.println("Không tải được blinkAnimation!");
         }
 
@@ -73,9 +82,18 @@ public class ChickenEnemy extends Enemy {
         this.bodySprite = SPRITE_BODY[random.nextInt(SPRITE_BODY.length)];
         this.headSprite = SPRITE_HEAD[0];
 
-        for (int[] frame : SPRITE_WINGS) {
+        for(int[] frame : SPRITE_WINGS) {
             wingSprites.add(frame);
         }
+
+        rand = new Random();
+    }
+
+    // Phương thức hỗ trợ để tạo Map<SkillType, String>
+    private static Map<SkillType, String> createSkillImagePaths() {
+        Map<SkillType, String> skillImagePaths = new HashMap<>();
+        skillImagePaths.put(SkillType.EGG, "/asset/resources/gfx/introEgg.png");
+        return skillImagePaths;
     }
 
     public void setRotate(float angle) {
@@ -84,18 +102,18 @@ public class ChickenEnemy extends Enemy {
 
     @Override
     public void render(Graphics g) {
-        if (spriteBodySheet == null || spriteWingsSheet == null) {
+        if(spriteBodySheet == null || spriteWingsSheet == null) {
             g.setColor(Color.RED);
             g.fillRect(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
             return;
         }
 
-        Graphics2D g2d = (Graphics2D) g.create();
+        Graphics2D g2d =(Graphics2D) g.create();
         int centerX = PosX + MODEL_WIDTH / 2;
         int centerY = PosY + MODEL_HEIGHT / 2;
         g2d.rotate(Math.toRadians(rotate), centerX, centerY);
 
-        int[] wingFrame = wingSprites.get(currentFrame);
+        int[] wingFrame = wingSprites.get(curFrame);
         int wingWidth = wingFrame[2];
         int wingHeight = wingFrame[3];
         int[][] wingOffsets = {
@@ -110,7 +128,7 @@ public class ChickenEnemy extends Enemy {
             {-5, 5}, {-5, 5}, {-5, 5}, {-5, 5}, {-5, 5},
             {-5, 5}, {-5, 5}, {-5, 5}, {-5, 5}, {-5, 5},
         };
-        int[] wingOffset = wingOffsets[currentFrame];
+        int[] wingOffset = wingOffsets[curFrame];
         int offsetX = wingOffset[0];
         int offsetY = wingOffset[1];
         int wingCenterX = PosX + bodySprite[2] / 2;
@@ -128,20 +146,41 @@ public class ChickenEnemy extends Enemy {
         g2d.drawImage(spriteBodySheet, PosX - 5, PosY - 10, PosX + bodySprite[2] - 5, PosY + bodySprite[3] - 10,
                 bodySprite[0], bodySprite[1], bodySprite[0] + bodySprite[2], bodySprite[1] + bodySprite[3], null);
 
-        if (frameCount < 20) {
+        if(frameCount < 20) {
             g2d.drawImage(blinkAnimation, PosX + 23, PosY - 40, 50, 40, null);
         }
         frameCount++;
-        if (frameCount > 120) {
+        if(frameCount > 120) {
             frameCount = 0;
         }
+
+        // Vẽ các chiêu thức(EGG)
+        skillsController.drawSkills(g);
 
         g2d.dispose();
     }
 
     @Override
-    public void update() {
- 
+    public void nextFrame() {
+        if(isForward) {
+            curFrame++;
+            if (curFrame >= 48) {
+                isForward = false; // Đổi hướng khi đến cuối mảng
+            }
+        } else {
+            curFrame--;
+            if (curFrame <= 0) {
+                isForward = true; // Đổi hướng khi về đầu mảng
+            }
+        }
+
+        // Tạo EGG ngẫu nhiên
+        if(rand.nextInt(1000) < 1) {
+            skillsController.addSkill(PosX + MODEL_WIDTH / 2, PosY, 5, 10, SkillType.EGG); // EGG rơi xuống(speedY = 5)
+        }
+
+        // Cập nhật các chiêu thức
+        skillsController.updateSkills();
     }
 
     public int getInitialIndex() {
@@ -154,6 +193,6 @@ public class ChickenEnemy extends Enemy {
     
     @Override
     public DeathEffect getDeathEffect() {
-        return new DeathEffect(getCenterX(), getCenterY());
+        return new ChickenDeathEffect(getCenterX(), getCenterY());
     }
 }

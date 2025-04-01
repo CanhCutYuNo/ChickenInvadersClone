@@ -1,11 +1,10 @@
 package application.controllers;
 
-import application.models.DeathEffect;
-import application.views.DeathEffectView;
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
+import application.models.DeathEffect;
 
 public class DeathEffectController {
     private final List<DeathEffect> deathEffects;

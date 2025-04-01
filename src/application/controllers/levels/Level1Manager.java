@@ -12,16 +12,14 @@ import java.util.List;
 public class Level1Manager {
     private List<EnemyController> enemyControllers;
     private List<Enemy> enemies;
-    private SoundController soundController;
-
+    
     public Level1Manager(SoundController soundController) {
-        this.soundController = soundController;
         this.enemyControllers = new ArrayList<>();
         this.enemies = new ArrayList<>();
 
-        enemyControllers.add(new EnemyController(10, "Chicken", 100, 0.0f, soundController));
-        enemyControllers.add(new EnemyController(10, "Chicken", 300, 0.0f, soundController));
-        enemyControllers.add(new EnemyController(10, "Chicken", 500, 0.0f, soundController));
+        enemyControllers.add(new EnemyController(10, "Chicken", 100, 0.0f, soundController,1));
+        enemyControllers.add(new EnemyController(10, "Chicken", 300, 0.0f, soundController,1));
+        enemyControllers.add(new EnemyController(10, "Chicken", 500, 0.0f, soundController,1));
 
         for(EnemyController controller : enemyControllers) {
             enemies.addAll(controller.getEnemies());
