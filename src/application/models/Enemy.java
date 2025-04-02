@@ -22,8 +22,8 @@ public abstract class Enemy {
     
     protected SoundController sound;    
     protected boolean isForward = true; // Biến để theo dõi hướng di chuyển của animation
-    protected final int MODEL_WIDTH;
-    protected final int MODEL_HEIGHT;
+    protected int MODEL_WIDTH;
+    protected int MODEL_HEIGHT;
     protected static final int MAP_WIDTH = 1900;
 
     public Enemy(int hp, int MODEL_WIDTH, int MODEL_HEIGHT, int PosX, int PosY, SoundController sound) {

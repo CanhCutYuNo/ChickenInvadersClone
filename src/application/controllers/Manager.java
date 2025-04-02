@@ -12,15 +12,14 @@ import java.util.List;
 import java.util.Random;
 import javax.swing.JPanel;
 
-import application.controllers.levels.Level1Manager;
-import application.controllers.levels.Level2Manager;
-import application.controllers.levels.Level3Manager;
-import application.controllers.levels.Level5Manager;
+import application.controllers.levels.*;
 import application.models.Bullet;
 import application.models.DeathEffect;
 import application.models.Enemy;
 import application.models.EnemyProjectiles;
 import application.models.Items;
+import application.models.types.ChickEnemy;
+import application.models.types.EggShellEnemy;
 import application.views.BackgroundPanel;
 import application.views.MenuPanel;
 import application.views.PlayerView;
@@ -40,12 +39,13 @@ public class Manager {
     private JPanel mainPanel;
     private GameLoop gameLoop;
     private int frameDelay = 0;
-    private int level = 3;
+    private int level = 4;
     private boolean playerExploded = false;
     // Thêm các biến để lưu trữ LevelXManager
     private Level1Manager level1Manager;
     private Level2Manager level2Manager;
     private Level3Manager level3Manager;
+    private Level4Manager level4Manager;
     private Level5Manager level5Manager;
 
     public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController) {
@@ -116,7 +116,10 @@ public class Manager {
         }
         frameDelay++;
 
-        updateEggs();
+        if(level != 4){
+            updateEggs();
+        }
+
 
         playerController.update();
 
@@ -132,11 +135,14 @@ public class Manager {
         else if(level == 3 && level3Manager != null) {
             level3Manager.update((float) deltaTime);
         }
-        
+        else if(level == 4 && level4Manager != null){
+            level4Manager.update((float) deltaTime);
+        }
         deathEffectController.update();
 
         //checkCollisions();
         checkBulletEnemyCollisions();
+//        checkBulletEggEnemyCollisions();
         checkPlayerCollisionsWithEnemies();
         checkPlayerCollisionsWithEgg();
         checkPlayerCollisionsWithItems();
@@ -150,6 +156,10 @@ public class Manager {
             level++;
             spawnEnemiesAfterFade(); // Gọi lại để tạo kẻ địch mới cho level tiếp theo
             System.out.println("Level Up! Chuyển sang Level " + level);
+        }
+        if(getEnemies().isEmpty() && level4Manager != null){
+            level++;
+            System.out.println("Level up! Chuyển sang level " + level);
         }
 
     }
@@ -167,6 +177,7 @@ public class Manager {
         level2Manager = null;
         level3Manager = null;
         level5Manager = null;
+        level4Manager = null;
 
         cardLayout.show(mainPanel, "Menu");        
         menuPanel.setBackgroundPanel(backgroundPanel);
@@ -212,9 +223,55 @@ public class Manager {
             }
         }
     }
+//    private void checkBulletEggEnemyCollisions() {
+//        ArrayList<Bullet> bulletsToRemove = new ArrayList<>();
+//        ArrayList<Enemy> enemiesToRemove = new ArrayList<>();
+//        ArrayList<Enemy> newEnemies = new ArrayList<>(); // Chứa gà con mới
+//
+//        Iterator<Bullet> bulletIterator = bullets.iterator();
+//        while (bulletIterator.hasNext()) {
+//            Bullet bullet = bulletIterator.next();
+//
+//            Iterator<Enemy> enemyIterator = enemies.iterator();
+//            while (enemyIterator.hasNext()) {
+//                Enemy enemy = enemyIterator.next();
+//
+//                if (enemy instanceof EggShellEnemy) {  // Kiểm tra nếu là trứng
+//                    if (isColliding(bullet, enemy)) {
+//                        enemy.takeDamage(bullet.getDamage()); // Trứng bị bắn trúng
+//                        bulletsToRemove.add(bullet);
+//
+//                        if (enemy.isDead()) {
+////                            // Tạo hiệu ứng vỡ trứng
+////                            DeathEffect tempDeathEffect = enemy.getDeathEffect();
+////                            if (tempDeathEffect != null) {
+////                                deathEffectController.add(tempDeathEffect);
+////                            }
+//
+//                            // Tạo gà con tại vị trí trứng vỡ
+//                            ChickEnemy chickEnemy = new ChickEnemy(enemy.getPosX(), enemy.getPosY(), soundController);
+//                            newEnemies.add(chickEnemy);
+//                            enemies.addAll(newEnemies);
+//
+//                            // Đánh dấu trứng để xóa
+//                            enemiesToRemove.add(enemy);
+//                        }
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+
+        // Xóa trứng đã vỡ và thêm gà con vào danh sách
+//        enemies.removeAll(enemiesToRemove);
+//        enemies.addAll(newEnemies);
+//        bullets.removeAll(bulletsToRemove);
+//    }
+
     private void checkBulletEnemyCollisions() {
         ArrayList<Bullet> bulletsToRemove = new ArrayList<>();
         ArrayList<Enemy> enemiesToRemove = new ArrayList<>();
+        ArrayList<Enemy> enemiesToAdd = new ArrayList<>();
 
         Iterator<Bullet> bulletIterator = bullets.iterator();
         while (bulletIterator.hasNext()) {
@@ -233,21 +290,27 @@ public class Manager {
 
                     bulletsToRemove.add(bullet);
                     if (enemy.isDead()) {
-                    	DeathEffect tempDeathEffect = enemy.getDeathEffect();
-                        if(tempDeathEffect != null){
-                            deathEffectController.add(tempDeathEffect); 
+                        if(enemy instanceof EggShellEnemy){
+                            ChickEnemy chickEnemy = new ChickEnemy(enemy.getPosX(), enemy.getPosY(), soundController);
+                            enemiesToAdd.add(chickEnemy);
+                            enemiesToRemove.add(enemy);
                         }
-                        enemiesToRemove.add(enemy);
-                        //   System.out.println("Enemy marked for removal at (" + enemy.getPosX() + "," + enemy.getPosY() + ")");
-                        //Them item
+                        else{
+                            DeathEffect tempDeathEffect = enemy.getDeathEffect();
+                            if(tempDeathEffect != null){
+                                deathEffectController.add(tempDeathEffect);
+                            }
+                            enemiesToRemove.add(enemy);
+                            //   System.out.println("Enemy marked for removal at (" + enemy.getPosX() + "," + enemy.getPosY() + ")");
+                            //Them item
 
-                        Random random = new Random();
-                        if(random.nextFloat() <  0.3){
-                            items.addItem((int)enemy.getPosX(),(int) enemy.getPosY()-15, 10);
+                            Random random = new Random();
+                            if(random.nextFloat() <  0.3){
+                                items.addItem((int)enemy.getPosX(),(int) enemy.getPosY()-15, 10);
+                            }
+
                         }
-
                     }
-
                     break;
                 }
             }
@@ -270,10 +333,23 @@ public class Manager {
             else if (level == 3 && level3Manager != null) {
                 level3Manager.removeEnemy(enemy);
             }
+            else if(level == 4 && level4Manager != null){
+                level4Manager.removeEnemy(enemy);
+            }
         }
+        enemies.addAll(enemiesToAdd);
         enemies.removeAll(enemiesToRemove);
+
         //   System.out.println("Removed " + bulletsRemoved + " bullets and " + enemiesRemoved + " enemies. Current enemies size: " + enemies.size());
     }
+
+//    private void hatchEgg(EggShellEnemy egg){
+//        ChickEnemy chickEnemy = new ChickEnemy(egg.getPosX(), egg.getPosY(), soundController);
+//
+//        enemies.add(chickEnemy);
+//
+//    }
+
     
     private void checkPlayerCollisionsWithEnemies() {
         Iterator<Enemy> enemyIterator = enemies.iterator();
@@ -329,6 +405,10 @@ public class Manager {
             level3Manager = new Level3Manager(soundController);
             enemies.addAll(level3Manager.getEnemies());
         }
+        else if(level == 4){
+            level4Manager = new Level4Manager(soundController);
+            enemies.addAll(level4Manager.getEnemies());
+        }
 //        else {
 //            System.err.println("Level " + level + " không được hỗ trợ!");
 //        }
@@ -352,6 +432,9 @@ public class Manager {
 //        }
         else if(level == 3 && level3Manager != null) {
             level3Manager.render(g);
+        }
+        else if(level == 4 && level4Manager != null){
+            level4Manager.render(g);
         }
         
         deathEffectController.render(g);
