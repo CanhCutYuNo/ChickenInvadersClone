@@ -1,19 +1,25 @@
 package application.models.types;
 
-import application.controllers.SoundController;
-import application.models.Enemy;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.swing.ImageIcon;
+
+import application.controllers.EnemySkillsController;
+import application.controllers.SoundController;
+import application.models.Enemy;
+import application.models.EnemySkills.SkillType;
 
 public class EggShellEnemy extends Enemy {
 
     protected Image spriteSheet;
 
     public EggShellEnemy(int PosX, int PosY, SoundController sound) {
-        super(400, SPRITE_SIZE[0], SPRITE_SIZE[1], PosX, PosY, sound);
-        currentFrame = 0;
+        super(400, SPRITE_SIZE[0], SPRITE_SIZE[1], PosX, PosY, sound, createSkillImagePaths());
+        curFrame = 0;
         frameCount = 0;
         spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/eggShell.png")).getImage();
         MODEL_HEIGHT = 97;
@@ -26,6 +32,10 @@ public class EggShellEnemy extends Enemy {
 
     protected static final int[] SPRITE_SIZE = {150, 194};
 
+    private static Map<SkillType, String> createSkillImagePaths() {
+        return new HashMap<>();
+    }
+    
     @Override
     public void render(Graphics g) {
         int state;
@@ -49,11 +59,16 @@ public class EggShellEnemy extends Enemy {
 
     @Override
     public void nextFrame() {
-        // Do nothing
+       
     }
 
     @Override
     public void update() {
 
     }
+
+	@Override
+	public EnemySkillsController getSkillsController() {
+		return null;
+	}
 }

@@ -1,12 +1,12 @@
 package application.controllers;
 
-import java.awt.*;
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import application.models.Items;
 import application.views.ItemsView;
-import application.models.Enemy;
 
 public class ItemsController {
     private List<Items> items;  // Danh sách vật phẩm thay vì một vật phẩm duy nhất

@@ -16,7 +16,7 @@ import application.controllers.levels.*;
 import application.models.Bullet;
 import application.models.DeathEffect;
 import application.models.Enemy;
-import application.models.EnemyProjectiles;
+import application.models.EnemySkills;
 import application.models.Items;
 import application.models.types.ChickEnemy;
 import application.models.types.EggShellEnemy;
@@ -30,7 +30,7 @@ public class Manager {
     private ArrayList<Bullet> bullets;
     private List<Enemy> enemies;
     private DeathEffectController deathEffectController;
-    private EnemyProjectilesController eggs;
+//    private EnemyProjectilesController eggs;
     private ItemsController items;
     private static BackgroundPanel backgroundPanel;
     private static MenuPanel menuPanel;
@@ -39,7 +39,7 @@ public class Manager {
     private JPanel mainPanel;
     private GameLoop gameLoop;
     private int frameDelay = 0;
-    private int level = 4;
+    private int level = 1;
     private boolean playerExploded = false;
     // Thêm các biến để lưu trữ LevelXManager
     private Level1Manager level1Manager;
@@ -57,7 +57,7 @@ public class Manager {
         playerController.setPlayerView(playerView);
 
         items = new ItemsController("/asset/resources/gfx/flareSmall~1.png");
-        eggs = new EnemyProjectilesController("/asset/resources/gfx/introEgg.png");
+//        eggs = new EnemyProjectilesController("/asset/resources/gfx/introEgg.png");
         this.cardLayout = _cardLayout;
         this.mainPanel = _mainPanel;
         Manager.backgroundPanel = _backgroundPanel;
@@ -116,9 +116,9 @@ public class Manager {
         }
         frameDelay++;
 
-        if(level != 4){
-            updateEggs();
-        }
+//        if(level != 4){
+//            updateEggs();
+//        }
 
 
         playerController.update();
@@ -134,6 +134,8 @@ public class Manager {
         }
         else if(level == 3 && level3Manager != null) {
             level3Manager.update((float) deltaTime);
+        } else if (level == 5 && level5Manager != null) {
+            level5Manager.update((float) deltaTime);
         }
         else if(level == 4 && level4Manager != null){
             level4Manager.update((float) deltaTime);
@@ -142,11 +144,16 @@ public class Manager {
 
         //checkCollisions();
         checkBulletEnemyCollisions();
-//        checkBulletEggEnemyCollisions();
         checkPlayerCollisionsWithEnemies();
         checkPlayerCollisionsWithEgg();
         checkPlayerCollisionsWithItems();
 
+
+        if (getEnemies().isEmpty() && level1Manager != null) {
+            level++;
+            spawnEnemiesAfterFade(); // Gọi lại để tạo kẻ địch mới cho level tiếp theo
+            System.out.println("Level Up! Chuyển sang Level " + level);
+        }
         if (getEnemies().isEmpty() && level2Manager != null) {
             level++;
             spawnEnemiesAfterFade(); // Gọi lại để tạo kẻ địch mới cho level tiếp theo
@@ -171,7 +178,7 @@ public class Manager {
         playerController.setPosX(800);
         playerController.setPosY(950);
         bullets.clear();
-        eggs.clear();
+//        eggs.clear();
         level = 1;
         level1Manager = null; // Reset LevelXManager
         level2Manager = null;
@@ -195,17 +202,7 @@ public class Manager {
         }
         bullets.removeAll(bulletsToRemove);
     }
-    
-    private void updateEggs() {
-        Random rand = new Random();
-        for(Enemy enemy : enemies) {
-            if(rand.nextInt(1000) < 1) {
-                eggs.addProjectile(enemy.getPosX() + 15, enemy.getPosY() + 30, -50);
-            }
-        }
-        eggs.updateProjectiles();
-    }
-    
+
     private void checkPlayerCollisionsWithItems() {
         Iterator<Items> iterator = items.iterator();
         while (iterator.hasNext()) {
@@ -223,51 +220,6 @@ public class Manager {
             }
         }
     }
-//    private void checkBulletEggEnemyCollisions() {
-//        ArrayList<Bullet> bulletsToRemove = new ArrayList<>();
-//        ArrayList<Enemy> enemiesToRemove = new ArrayList<>();
-//        ArrayList<Enemy> newEnemies = new ArrayList<>(); // Chứa gà con mới
-//
-//        Iterator<Bullet> bulletIterator = bullets.iterator();
-//        while (bulletIterator.hasNext()) {
-//            Bullet bullet = bulletIterator.next();
-//
-//            Iterator<Enemy> enemyIterator = enemies.iterator();
-//            while (enemyIterator.hasNext()) {
-//                Enemy enemy = enemyIterator.next();
-//
-//                if (enemy instanceof EggShellEnemy) {  // Kiểm tra nếu là trứng
-//                    if (isColliding(bullet, enemy)) {
-//                        enemy.takeDamage(bullet.getDamage()); // Trứng bị bắn trúng
-//                        bulletsToRemove.add(bullet);
-//
-//                        if (enemy.isDead()) {
-////                            // Tạo hiệu ứng vỡ trứng
-////                            DeathEffect tempDeathEffect = enemy.getDeathEffect();
-////                            if (tempDeathEffect != null) {
-////                                deathEffectController.add(tempDeathEffect);
-////                            }
-//
-//                            // Tạo gà con tại vị trí trứng vỡ
-//                            ChickEnemy chickEnemy = new ChickEnemy(enemy.getPosX(), enemy.getPosY(), soundController);
-//                            newEnemies.add(chickEnemy);
-//                            enemies.addAll(newEnemies);
-//
-//                            // Đánh dấu trứng để xóa
-//                            enemiesToRemove.add(enemy);
-//                        }
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-
-        // Xóa trứng đã vỡ và thêm gà con vào danh sách
-//        enemies.removeAll(enemiesToRemove);
-//        enemies.addAll(newEnemies);
-//        bullets.removeAll(bulletsToRemove);
-//    }
-
     private void checkBulletEnemyCollisions() {
         ArrayList<Bullet> bulletsToRemove = new ArrayList<>();
         ArrayList<Enemy> enemiesToRemove = new ArrayList<>();
@@ -311,6 +263,7 @@ public class Manager {
 
                         }
                     }
+
                     break;
                 }
             }
@@ -339,17 +292,8 @@ public class Manager {
         }
         enemies.addAll(enemiesToAdd);
         enemies.removeAll(enemiesToRemove);
-
         //   System.out.println("Removed " + bulletsRemoved + " bullets and " + enemiesRemoved + " enemies. Current enemies size: " + enemies.size());
     }
-
-//    private void hatchEgg(EggShellEnemy egg){
-//        ChickEnemy chickEnemy = new ChickEnemy(egg.getPosX(), egg.getPosY(), soundController);
-//
-//        enemies.add(chickEnemy);
-//
-//    }
-
     
     private void checkPlayerCollisionsWithEnemies() {
         Iterator<Enemy> enemyIterator = enemies.iterator();
@@ -367,18 +311,19 @@ public class Manager {
     }
     
     private void checkPlayerCollisionsWithEgg() {
-        Iterator<EnemyProjectiles> eggIterator = eggs.getProjectiles().iterator();
-        while(eggIterator.hasNext()) {
-            EnemyProjectiles egg = eggIterator.next();
-
-            if(isColliding3(playerController, egg)) {
-                playerController.isDamaged(egg.getDamage());
-                if(playerController.getHP() <= 0) {
-                    playerController.getPlayerView().startExplosion();
-                    soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/explosionPlayer.wav").getPath());
-                    playerExploded = true;
+        for (Enemy enemy : enemies) {
+            Iterator<EnemySkills> eggIterator = enemy.getSkillsController().getSkills().iterator();
+            while (eggIterator.hasNext()) {
+                EnemySkills egg = eggIterator.next();
+                if (isColliding3(playerController, egg)) {
+                    playerController.isDamaged(egg.getDamage());
+                    if (playerController.getHP() <= 0) {
+                        playerController.getPlayerView().startExplosion();
+                        soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/explosionPlayer.wav").getPath());
+                        playerExploded = true;
+                    }
+                    eggIterator.remove();
                 }
-                eggIterator.remove();
             }
         }
     }
@@ -396,12 +341,10 @@ public class Manager {
         else if(level == 2){
             level2Manager = new Level2Manager(soundController);
             enemies.addAll(level2Manager.getEnemies());
-        }
-//        else if (level == 5) {
-//            level5Manager = new Level5Manager(soundController);
-//            enemies.addAll(level5Manager.getEnemies());
-//        }
-        else if (level == 3) {
+        } else if (level == 5) {
+            level5Manager = new Level5Manager(soundController);
+            enemies.addAll(level5Manager.getEnemies());
+        } else if (level == 3) {
             level3Manager = new Level3Manager(soundController);
             enemies.addAll(level3Manager.getEnemies());
         }
@@ -417,8 +360,7 @@ public class Manager {
 
     public void render(Graphics g) {
         long startTime = System.nanoTime();
-        for(Bullet bullet : bullets) bullet.render(g);
-        eggs.drawProjectiles(g);
+        for (Bullet bullet : bullets) bullet.render(g);
 
         // Render thông qua LevelXManager thay vì render trực tiếp
         if(level == 1 && level1Manager != null) {
@@ -436,7 +378,7 @@ public class Manager {
         else if(level == 4 && level4Manager != null){
             level4Manager.render(g);
         }
-        
+
         deathEffectController.render(g);
 
         items.drawItems(g);
@@ -482,9 +424,9 @@ public class Manager {
         return playerBounds.intersects(enemyBounds);
     }
     
-    private boolean isColliding3(PlayerController player, EnemyProjectiles egg) {
+    private boolean isColliding3(PlayerController player, EnemySkills egg) {
         Rectangle playerBounds = new Rectangle(player.getPosX(), player.getPosY(), 54, 50);
-        Rectangle eggBounds = new Rectangle((int)egg.getPosX(),(int)egg.getPosY(), 5, 5);
+        Rectangle eggBounds = new Rectangle((int) egg.getPosX(), (int) egg.getPosY(), 5, 5);
         return playerBounds.intersects(eggBounds);
     }
 

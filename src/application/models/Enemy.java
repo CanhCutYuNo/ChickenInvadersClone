@@ -1,16 +1,16 @@
 package application.models;
 
-import java.awt.*;
-import java.io.InputStream;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.util.Map;
 import java.util.Random;
 
+import application.controllers.EnemySkillsController;
 import application.controllers.SoundController;
-
-import java.util.ArrayList;
-import java.util.List;
+import application.models.EnemySkills.SkillType;
 
 public abstract class Enemy {
-    protected int currentFrame = (int) (Math.random() * 40);
+    protected int curFrame = (int) (Math.random() * 40);
     protected int frameCount = (int) (Math.random() * 120);
 
     protected int hp;
@@ -25,16 +25,18 @@ public abstract class Enemy {
     protected int MODEL_WIDTH;
     protected int MODEL_HEIGHT;
     protected static final int MAP_WIDTH = 1900;
+    protected EnemySkillsController skillsController;
 
-    public Enemy(int hp, int MODEL_WIDTH, int MODEL_HEIGHT, int PosX, int PosY, SoundController sound) {
+    public Enemy(int hp, int MODEL_WIDTH, int MODEL_HEIGHT, int PosX, int PosY, SoundController sound, Map<SkillType, String> skillImagePaths) {
         this.hp = hp;       
         this.MODEL_WIDTH = MODEL_WIDTH;
         this.MODEL_HEIGHT = MODEL_HEIGHT;
         this.PosX = PosX;
         this.PosY = PosY;
         this.sound = sound;
+        this.skillsController = new EnemySkillsController(skillImagePaths);
     }
-    //123
+
     String[] deathSounds = {
         "/asset/resources/sfx/chickDie3.wav",
         "/asset/resources/sfx/chickDie4.wav",
@@ -58,13 +60,13 @@ public abstract class Enemy {
     // Cập nhật animation frame
     public void nextFrame() {
         if(isForward) {
-            currentFrame++;
-            if (currentFrame >= 48) {
+            curFrame++;
+            if (curFrame >= 48) {
                 isForward = false; // Đổi hướng khi đến cuối mảng
             }
         } else {
-            currentFrame--;
-            if (currentFrame <= 0) {
+            curFrame--;
+            if (curFrame <= 0) {
                 isForward = true; // Đổi hướng khi về đầu mảng
             }
         }
@@ -126,8 +128,8 @@ public abstract class Enemy {
         return (PosY + MODEL_HEIGHT / 2);
     }
     
-    public int getCurrentFrame() {
-        return currentFrame;
+    public int getcurFrame() {
+        return curFrame;
     }
     
     public DeathEffect getDeathEffect(){
@@ -139,15 +141,19 @@ public abstract class Enemy {
         // Không tự di chuyển, để EnemyController điều chỉnh
     }
 
-	public void setInitialIndex(int i) {
-		initialIndex = i;
-	}
+    public void setInitialIndex(int i) {
+        initialIndex = i;
+    }
 
-	public int getInitialIndex() {
-		return initialIndex;
-	}
+    public int getInitialIndex() {
+        return initialIndex;
+    }
 
-	public void setRotate(float rotate) {
-		this.rotate = rotate;
-	}
+    public void setRotate(float rotate) {
+        this.rotate = rotate;
+    }
+
+    public EnemySkillsController getSkillsController() {
+        return skillsController;
+    }
 }

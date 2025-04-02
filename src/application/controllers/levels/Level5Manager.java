@@ -11,10 +11,7 @@ import application.models.Enemy;
 public class Level5Manager {
     private EnemyController bossController;
     private List<Enemy> boss;
-    private SoundController soundController;
-
     public Level5Manager(SoundController soundController) {
-        this.soundController = soundController;
         this.bossController = new EnemyController(1, "Boss", 100, 0.0f, soundController,5);
         this.boss = new ArrayList<>();
 

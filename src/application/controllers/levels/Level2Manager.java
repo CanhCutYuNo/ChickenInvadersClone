@@ -1,13 +1,14 @@
 package application.controllers.levels;
 
-import application.controllers.*;
-import application.models.*;
-import application.models.types.ChickenEnemy;
-
-import java.awt.*;
-import java.util.*;
+import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+import application.controllers.EnemyController;
+import application.controllers.SoundController;
+import application.models.Enemy;
+import application.models.types.ChickenEnemy;
 
 public class Level2Manager {
 
