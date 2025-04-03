@@ -1,9 +1,5 @@
 package application.controllers.levels;
 
-import java.awt.Graphics;
-import java.util.ArrayList;
-import java.util.List;
-
 import application.controllers.EnemyController;
 import application.controllers.LevelManager;
 import application.controllers.SoundController;

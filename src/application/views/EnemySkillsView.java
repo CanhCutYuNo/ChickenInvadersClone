@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +23,7 @@ import application.models.EnemySkills.SkillType;
 public class EnemySkillsView {
     private Map<SkillType, Image> skillImages;
     private Image eggSheet;
-    private BufferedImage fireballSheet; // Đổi thành BufferedImage để hỗ trợ getSubimage
+    private BufferedImage fireballSheet;
     private List<int[]> EggSprites = new ArrayList<>();
     private List<int[]> FireballSprites = new ArrayList<>();
 
@@ -49,35 +50,33 @@ public class EnemySkillsView {
             {14, 11, 153, 62}, {194, 11, 159, 62}, {15, 99, 159, 64},
             {193, 99, 149, 64}, {366, 99, 133, 64}, {16, 185, 134, 69},
             {174, 185, 147, 69}, {344, 185, 152, 69}, {14, 266, 164, 74},
-            {202, 266, 173, 74}, {19, 357, 161, 70}
+            {202, 6, 173, 74}, {19, 357, 161, 70}
     };
 
     public EnemySkillsView(Map<SkillType, String> skillImagePaths) {
         skillImages = new HashMap<>();
         try {
-            for(Map.Entry<SkillType, String> entry : skillImagePaths.entrySet()) {
+            for (Map.Entry<SkillType, String> entry : skillImagePaths.entrySet()) {
                 SkillType skillType = entry.getKey();
                 String path = entry.getValue();
 
-                if(skillType == SkillType.EGG) {
+                if (skillType == SkillType.EGG) {
                     Image image = new ImageIcon(getClass().getResource(path)).getImage();
                     skillImages.put(skillType, image);
                     eggSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/eggbreak~1.png")).getImage();
-                } else if(skillType == SkillType.FIREBALL) {
-                    // Tải sprite sheet cho FIREBALL dưới dạng BufferedImage
+                } else if (skillType == SkillType.FIREBALL) {
                     InputStream inputStream = getClass().getResourceAsStream("/asset/resources/gfx/bullet-bolt1.png");
-                    if(inputStream == null) {
+                    if (inputStream == null) {
                         throw new IOException("Không tìm thấy hình ảnh: /asset/resources/gfx/bullet-bolt1.png");
                     }
                     fireballSheet = ImageIO.read(inputStream);
                     inputStream.close();
-                    // Thêm các frame vào FireballSprites
-                    for(int[] frame : BossBulletsSprite) {
+                    for (int[] frame : BossBulletsSprite) {
                         FireballSprites.add(frame);
                     }
                 } else {
                     InputStream inputStream = getClass().getResourceAsStream(path);
-                    if(inputStream == null) {
+                    if (inputStream == null) {
                         throw new IOException("Không tìm thấy hình ảnh: " + path);
                     }
                     BufferedImage originalImage = ImageIO.read(inputStream);
@@ -95,11 +94,11 @@ public class EnemySkillsView {
                     System.out.println("Loaded " + skillType + " image from path: " + path);
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            for(SkillType skillType : skillImagePaths.keySet()) {
-                if(!skillImages.containsKey(skillType)) {
-                    if(skillType == SkillType.EGG) {
+            for (SkillType skillType : skillImagePaths.keySet()) {
+                if (!skillImages.containsKey(skillType)) {
+                    if (skillType == SkillType.EGG) {
                         skillImages.put(skillType, new BufferedImage(40, 80, BufferedImage.TYPE_INT_ARGB));
                     } else {
                         skillImages.put(skillType, new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB));
@@ -110,37 +109,43 @@ public class EnemySkillsView {
     }
 
     public void draw(Graphics g, EnemySkills skill) {
-        if(!skill.isActive()) {
+        if (!skill.isActive()) {
             return;
         }
 
-        if(skill.getSkillType() == SkillType.EGG) {
-            if(!skill.isExploding()) {
+        if (skill.getSkillType() == SkillType.EGG) {
+            if (!skill.isExploding()) {
                 Image eggImage = skillImages.get(SkillType.EGG);
-                if(eggImage != null) {
+                if (eggImage != null) {
                     g.drawImage(eggImage, (int) skill.getPosX(), (int) skill.getPosY(), 40, 80, null);
                 }
             } else {
                 drawEggBroken(g, skill, skill.getAnimationFrame());
             }
-        } else if(skill.getSkillType() == SkillType.FIREBALL) {
+        } else if (skill.getSkillType() == SkillType.FIREBALL) {
             drawFireball(g, skill, skill.getAnimationFrame());
         } else {
             Image skillImage = skillImages.get(skill.getSkillType());
-            if(skillImage != null) {
+            if (skillImage != null) {
                 drawSkill(g, skill.getPosX(), skill.getPosY(), skill.getScale(), skill.getAngle(), skillImage);
             }
         }
+
+        // Vẽ hitbox
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(Color.RED);
+        Shape hitbox = skill.getHitbox();
+        g2d.draw(hitbox);
     }
 
     private void drawSkill(Graphics g, double posX, double posY, double scale, double angle, Image skillImage) {
         Graphics2D g2d = (Graphics2D) g.create();
 
-        int newWidth = (int)(skillImage.getWidth(null) * scale);
-        int newHeight = (int)(skillImage.getHeight(null) * scale);
+        int newWidth = (int) (skillImage.getWidth(null) * scale);
+        int newHeight = (int) (skillImage.getHeight(null) * scale);
 
-        int x = (int)(posX - newWidth / 2);
-        int y = (int)(posY - newHeight / 2);
+        int x = (int) (posX - newWidth / 2);
+        int y = (int) (posY - newHeight / 2);
 
         double centerX = x + newWidth / 2.0;
         double centerY = y + newHeight / 2.0;
@@ -158,11 +163,11 @@ public class EnemySkillsView {
     }
 
     public void drawEggBroken(Graphics g, EnemySkills skill, int eFrame) {
-        for(int[] frame : EggBrokenSprite) {
+        for (int[] frame : EggBrokenSprite) {
             EggSprites.add(frame);
         }
 
-        if(eggSheet != null) {
+        if (eggSheet != null) {
             int[] eggFrame = EggSprites.get(eFrame);
             int ex = eggFrame[0], ey = eggFrame[1], ew = eggFrame[2], eh = eggFrame[3];
 
@@ -182,18 +187,19 @@ public class EnemySkillsView {
             double scale = 2.0;
 
             g2d.drawImage(eggSheet,
-                   (int)(skill.getPosX() + offsetX + 15), (int)(skill.getPosY() + offsetY),
-                   (int)(skill.getPosX() + offsetX + 15 + (ew * scale) / 2), (int)(skill.getPosY() + offsetY + (eh * scale) / 2),
+                    (int) (skill.getPosX() + offsetX + 15), (int) (skill.getPosY() + offsetY),
+                    (int) (skill.getPosX() + offsetX + 15 + (ew * scale) / 2), (int) (skill.getPosY() + offsetY + (eh * scale) / 2),
                     ex, ey, ex + ew, ey + eh,
                     null);
         }
     }
 
     public void drawFireball(Graphics g, EnemySkills skill, int fFrame) {
+        int frameIndex = fFrame % FireballSprites.size();
         int[] fireballFrame = FireballSprites.get(frameIndex);
         int fx = fireballFrame[0], fy = fireballFrame[1], fw = fireballFrame[2], fh = fireballFrame[3];
 
-        if(fw <= 0 || fh <= 0) {
+        if (fw <= 0 || fh <= 0) {
             return;
         }
 
@@ -203,25 +209,23 @@ public class EnemySkillsView {
         int y = (int) (posY - fh / 2);
         int centerX = x + fw / 2;
         int centerY = y + fh / 2;
-        
+
         double speedX = skill.getSpeedX();
         double speedY = skill.getSpeedY();
         double angle = Math.atan2(speedY, speedX);
 
         BufferedImage fireballFrameImage;
         fireballFrameImage = fireballSheet.getSubimage(fx, fy, fw, fh);
-        
+
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
         java.awt.geom.AffineTransform transform = new java.awt.geom.AffineTransform();
-        transform.translate(centerX, centerY); 
-        transform.rotate(angle); 
+        transform.translate(centerX, centerY);
+        transform.rotate(angle);
         transform.translate(-fw / 2.0, -fh / 2.0);
 
         g2d.drawImage(fireballFrameImage, transform, null);
-
-        updateFrameIndex();
 
         g2d.dispose();
     }
