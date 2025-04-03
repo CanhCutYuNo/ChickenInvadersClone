@@ -62,6 +62,35 @@ public class EnemyController {
 
     }
 
+    public void update3(float deltaTime){
+        timeElapsed += deltaTime;
+        if (!isActive && timeElapsed >= timeDelay) {
+            isActive = true;
+            System.out.println("Row at Y=" + startY + " is now active!");
+        }
+
+        if (isActive) {
+            t += deltaTime * 100 * direction;
+            // rotate = (float) (20 * Math.sin(0.05 * t));
+            Random random = new Random();
+            float gravity = 30.0f; // Tốc độ rơi
+//            float oscillationSpeed = 0.5f; // Tốc độ lắc
+//            float oscillationAmplitude = 1.0f; // Biên độ lắc
+            for (Enemy enemy : enemies) {
+                if (enemy instanceof EggShellEnemy) {
+                    float posY = enemy.getPosY() + 2; // Gà rơi xuống
+//                    float offsetX = (float) Math.sin(posY * 0.005) * oscillationAmplitude; // Lắc nhẹ
+//                    float posX = enemy.getPosX() + offsetX * deltaTime * oscillationSpeed; // Lắc mượt hơn
+
+                    enemy.setPosY((int) posY);
+
+//                    enemy.setPosX((int) posX);
+//                    ((EggShellEnemy) enemy).setRotate((float) (20 * Math.sin(0.05 * t))); // Xoay nhẹ
+                }
+            }
+        }
+    }
+
     public void render(Graphics g) {
         if(isActive) {
             for(Enemy enemy : enemies) {
@@ -69,6 +98,9 @@ public class EnemyController {
                     enemy.render(g);
                 }
             }
+            System.out.println("Rendering row at Y=" + startY + ", Active enemies: " + enemies.size());
+        } else {
+            System.out.println("Row at Y=" + startY + " not active yet");
         }
     }
 
@@ -82,5 +114,6 @@ public class EnemyController {
 
     public void removeEnemy(Enemy enemy) {
         enemies.remove(enemy);
+        System.out.println("Removed enemy from EnemyController at (" + enemy.getPosX() + "," + enemy.getPosY() + "). New size: " + enemies.size());
     }
 }
