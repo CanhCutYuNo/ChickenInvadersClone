@@ -15,8 +15,8 @@ public class Level2Manager extends LevelManager {
 
     Random random;
 
-    public Level2Manager(SoundController sound) {
-        super(sound);
+    public Level2Manager(SoundController sound, List<Enemy> enemies) {
+        super(sound, enemies);
 
         this.random = new Random();
 

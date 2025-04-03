@@ -12,8 +12,8 @@ import java.util.List;
 
 public class Level1Manager extends LevelManager {
     
-    public Level1Manager(SoundController soundController) {
-        super(soundController);
+    public Level1Manager(SoundController soundController, List<Enemy> enemies) {
+        super(soundController, enemies);
 
         enemyControllers.add(new EnemyControllerLevel1(10, EnemyController.CHICKEN, 100, 0.0f, soundController));
         enemyControllers.add(new EnemyControllerLevel1(10, EnemyController.CHICKEN, 300, 0.0f, soundController));

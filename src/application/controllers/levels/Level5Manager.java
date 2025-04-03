@@ -12,8 +12,8 @@ import application.models.types.ChickenBoss;
 import application.models.types.ChickenEnemy;
 
 public class Level5Manager extends LevelManager {
-    public Level5Manager(SoundController soundController) {
-        super(soundController);
+    public Level5Manager(SoundController soundController, List<Enemy> enemies) {
+        super(soundController, enemies);
 
         EnemyController bossController = new EnemyControllerLevel5(1, EnemyController.BOSS, 100, 0.0f, soundController);
         enemyControllers.add(bossController);

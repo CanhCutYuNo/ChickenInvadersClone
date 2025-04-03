@@ -335,21 +335,21 @@ public class Manager {
         System.out.println("Spawning enemies for level: " + level + ". Current enemies size before: " + enemies.size());
         enemies.clear();
         if (level == 1) {
-            level1Manager = new Level1Manager(soundController);
+            level1Manager = new Level1Manager(soundController, enemies);
             enemies.addAll(level1Manager.getEnemies());
         }
         else if(level == 2){
-            level2Manager = new Level2Manager(soundController);
+            level2Manager = new Level2Manager(soundController, enemies);
             enemies.addAll(level2Manager.getEnemies());
         } else if (level == 5) {
-            level5Manager = new Level5Manager(soundController);
+            level5Manager = new Level5Manager(soundController, enemies);
             enemies.addAll(level5Manager.getEnemies());
         } else if (level == 3) {
-            level3Manager = new Level3Manager(soundController);
+            level3Manager = new Level3Manager(soundController, enemies);
             enemies.addAll(level3Manager.getEnemies());
         }
         else if(level == 4){
-            level4Manager = new Level4Manager(soundController);
+            level4Manager = new Level4Manager(soundController, enemies);
             enemies.addAll(level4Manager.getEnemies());
         }
 //        else {

@@ -16,8 +16,8 @@ public class Level4Manager extends LevelManager{
 //    List<EggShellEnemy> eggShellEnemies;
     Random random;
 
-    public Level4Manager(SoundController sound){
-        super(sound);
+    public Level4Manager(SoundController sound, List<Enemy> enemies) {
+        super(sound, enemies);
 //        this.eggShellEnemies = new ArrayList<>();
         this.random = new Random();
 

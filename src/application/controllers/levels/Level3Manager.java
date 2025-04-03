@@ -15,8 +15,8 @@ import java.util.Random;
 public class Level3Manager extends LevelManager {
     Random random;
 
-    public Level3Manager(SoundController sound) {
-        super(sound);
+    public Level3Manager(SoundController sound, List<Enemy> enemies) {
+        super(sound, enemies);
         this.random = new Random();
 
 
