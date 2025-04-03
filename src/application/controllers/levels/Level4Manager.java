@@ -4,6 +4,8 @@ import application.controllers.EnemyController;
 import application.controllers.LevelManager;
 import application.controllers.SoundController;
 import application.models.Enemy;
+import application.models.types.ChickEnemy;
+import application.models.types.ChickenEnemy;
 import application.models.types.EggShellEnemy;
 
 import java.awt.*;
@@ -16,17 +18,26 @@ public class Level4Manager extends LevelManager{
 //    List<EggShellEnemy> eggShellEnemies;
     Random random;
 
-    public Level4Manager(SoundController sound){
-        super(sound);
+    public Level4Manager(SoundController sound, List<Enemy> enemies) {
+        super(sound, enemies);
 //        this.eggShellEnemies = new ArrayList<>();
         this.random = new Random();
 
         for(int i = 0; i < 2; i++){
             int posY = random.nextInt(100);
-            EnemyController controller = new EnemyControllerLevel4(1, EnemyController.EGG_SHELL, posY - 50, 0.0f + i * 2.0f, sound);
-            enemyControllers.add(controller);
-            enemies.addAll(controller.getEnemies());
+
+            addEnemyController(new EnemyControllerLevel4(1, EnemyController.EGG_SHELL, posY - 50, 0.0f + i * 2.0f, sound));
         }
+    }
+
+    public void addChickAfterEggShellDeath(int posX, int posY) {
+        // Tạo một đối tượng tạm thời để lấy kích thước
+        ChickEnemy tempChickEnemy = new ChickEnemy(-1, -1, null);
+        EggShellEnemy tempEggShellEnemy = new EggShellEnemy(-1, -1, null);
+
+        addEnemyController(new ChickEnemyControllerLevel4(1, EnemyController.CHICK,
+                posX + (tempEggShellEnemy.getMODEL_WIDTH() - tempChickEnemy.getMODEL_WIDTH()) / 2,
+                posY + (tempEggShellEnemy.getMODEL_HEIGHT() - tempChickEnemy.getMODEL_WIDTH()) / 2, 0.0f, sound));
     }
 
     private class EnemyControllerLevel4 extends EnemyController {
@@ -66,4 +77,31 @@ public class Level4Manager extends LevelManager{
             }
         }
     }
+
+    private class ChickEnemyControllerLevel4 extends EnemyController {
+        public ChickEnemyControllerLevel4(int numEnemies, int enemyType, int posX, int startY, float timeDelay, SoundController soundController) {
+            super(numEnemies, enemyType, startY, timeDelay, soundController);
+            Enemy enemy = createEnemy(posX, startY);
+            enemy.setInitialIndex(0);
+            enemies.add(enemy);
+        }
+
+        public void update(float deltaTime){
+            timeElapsed += deltaTime;
+            
+            if (!isActive && timeElapsed >= timeDelay) {
+                isActive = true;
+                //      System.out.println("Row at Y=" + startY + " is now active!");
+            }
+            
+            if (isActive) {
+                
+                for (Enemy enemy : enemies) {
+                    // Implement here
+                    
+                    enemy.nextFrame();
+                }
+            }
+        }
+    }    
 }

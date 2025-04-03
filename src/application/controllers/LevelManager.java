@@ -9,13 +9,19 @@ import application.models.Enemy;
 public abstract class LevelManager {
 
     protected final List<EnemyController> enemyControllers = new ArrayList<>();
-    protected final List<Enemy> enemies = new ArrayList<>();
+    protected final List<Enemy> enemies;
     protected SoundController soundController;
 
-    public LevelManager(SoundController soundController) {
+    public LevelManager(SoundController soundController, List<Enemy> enemies) {
         this.soundController = soundController;
+        this.enemies = enemies;
     }
 
+    public final void addEnemyController(EnemyController enemyController) {
+        enemyControllers.add(enemyController);
+        enemies.addAll(enemyController.getEnemies());
+    }
+    
     public final List<Enemy> getEnemies() {
         return enemies;
     }
