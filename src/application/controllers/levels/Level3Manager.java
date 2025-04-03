@@ -19,13 +19,13 @@ public class Level3Manager extends LevelManager {
         super(sound);
         this.random = new Random();
 
-        EnemyController controller1 = new ChickenEnemyControllerLevel3(8,"Chicken", 100, 0.0f,sound,3);
+        EnemyController controller1 = new ChickenEnemyControllerLevel3(8,"Chicken", 100, 0.0f,sound);
         enemyControllers.add(controller1);
         enemies.addAll(controller1.getEnemies());
 
         for(int i = 0; i < 10; i++){
             int posY = random.nextInt(100);
-            EnemyController controller = new ChickEnemyControllerLevel3(1,"Chick", posY - 50, 0.0f + i * 2.0f,sound,3);
+            EnemyController controller = new ChickEnemyControllerLevel3(1,"Chick", posY - 50, 0.0f + i * 2.0f,sound);
             enemyControllers.add(controller);
             enemies.addAll(controller.getEnemies());
         }
@@ -35,8 +35,8 @@ public class Level3Manager extends LevelManager {
     private class ChickenEnemyControllerLevel3 extends EnemyController {
 
         public ChickenEnemyControllerLevel3(int numEnemies, String enemyType, int startY, float timeDelay,
-                SoundController soundController, int level) {
-            super(numEnemies, enemyType, startY, timeDelay, soundController, level);
+                SoundController soundController) {
+            super(numEnemies, enemyType, startY, timeDelay, soundController);
             for (int i = 0; i < numEnemies; i++) {
                 Enemy enemy = new ChickEnemy(-50 - i * SPACING, startY, soundController);
                 enemy.setInitialIndex(i);
@@ -112,8 +112,8 @@ public class Level3Manager extends LevelManager {
 
     private class ChickEnemyControllerLevel3 extends EnemyController {
 
-        public ChickEnemyControllerLevel3(int numEnemies, String enemyType, int startY, float timeDelay, SoundController soundController, int level) {
-            super(numEnemies, enemyType, startY, timeDelay, soundController, level);
+        public ChickEnemyControllerLevel3(int numEnemies, String enemyType, int startY, float timeDelay, SoundController soundController) {
+            super(numEnemies, enemyType, startY, timeDelay, soundController);
             for (int i = 0; i < numEnemies; i++) {
                 int x = random.nextInt(SCREEN_WIDTH - 200);
                 for (int j = 0; j < 2; j++) {

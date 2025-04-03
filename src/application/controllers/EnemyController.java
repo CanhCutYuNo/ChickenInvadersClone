@@ -25,15 +25,13 @@ public class EnemyController {
     protected static final int SCREEN_LEFT = 0;
     protected static final int SCREEN_RIGHT = SCREEN_WIDTH;
     protected String enemyType;
-    protected int level;
 
-    public EnemyController(int numEnemies, String enemyType, int startY, float timeDelay, SoundController soundController, int level ) {
+    public EnemyController(int numEnemies, String enemyType, int startY, float timeDelay, SoundController soundController) {
         this.enemies = new ArrayList<>();
         this.startY = startY;
         this.timeDelay = timeDelay;
         this.enemyType = enemyType;
         this.soundController = soundController;
-        this.level = level;
 
     }
 

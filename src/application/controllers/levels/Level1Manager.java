@@ -15,9 +15,9 @@ public class Level1Manager extends LevelManager {
     public Level1Manager(SoundController soundController) {
         super(soundController);
 
-        enemyControllers.add(new EnemyControllerLevel1(10, "Chicken", 100, 0.0f, soundController,1));
-        enemyControllers.add(new EnemyControllerLevel1(10, "Chicken", 300, 0.0f, soundController,1));
-        enemyControllers.add(new EnemyControllerLevel1(10, "Chicken", 500, 0.0f, soundController,1));
+        enemyControllers.add(new EnemyControllerLevel1(10, "Chicken", 100, 0.0f, soundController));
+        enemyControllers.add(new EnemyControllerLevel1(10, "Chicken", 300, 0.0f, soundController));
+        enemyControllers.add(new EnemyControllerLevel1(10, "Chicken", 500, 0.0f, soundController));
 
         for(EnemyController controller : enemyControllers) {
             enemies.addAll(controller.getEnemies());
@@ -27,8 +27,8 @@ public class Level1Manager extends LevelManager {
 
     private class EnemyControllerLevel1 extends EnemyController {
 
-        public EnemyControllerLevel1(int numEnemies, String enemyType, int startY, float timeDelay, SoundController soundController, int level) {
-            super(numEnemies, enemyType, startY, timeDelay, soundController, level);
+        public EnemyControllerLevel1(int numEnemies, String enemyType, int startY, float timeDelay, SoundController soundController) {
+            super(numEnemies, enemyType, startY, timeDelay, soundController);
             for (int i = 0; i < numEnemies; i++) {
                 Enemy enemy = new ChickenEnemy(-50 - i * SPACING, startY, soundController);
                 enemy.setInitialIndex(i);

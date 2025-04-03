@@ -15,7 +15,7 @@ public class Level5Manager extends LevelManager {
     public Level5Manager(SoundController soundController) {
         super(soundController);
 
-        EnemyController bossController = new EnemyControllerLevel5(1, "Boss", 100, 0.0f, soundController,5);
+        EnemyController bossController = new EnemyControllerLevel5(1, "Boss", 100, 0.0f, soundController);
         enemyControllers.add(bossController);
 
         enemies.addAll(bossController.getEnemies());
@@ -24,8 +24,8 @@ public class Level5Manager extends LevelManager {
 
     private class EnemyControllerLevel5 extends EnemyController{
         
-        public EnemyControllerLevel5(int numEnemies, String enemyType, int startY, float timeDelay, SoundController soundController, int level) {
-            super(numEnemies, enemyType, startY, timeDelay, soundController, level);
+        public EnemyControllerLevel5(int numEnemies, String enemyType, int startY, float timeDelay, SoundController soundController) {
+            super(numEnemies, enemyType, startY, timeDelay, soundController);
             Enemy enemy = new ChickenBoss(SCREEN_WIDTH / 2 - 150, 100, soundController);
             enemy.setInitialIndex(0);
             enemies.add(enemy);
