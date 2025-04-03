@@ -23,9 +23,8 @@ public class Level4Manager extends LevelManager{
 
         for(int i = 0; i < 2; i++){
             int posY = random.nextInt(100);
-            EnemyController controller = new EnemyControllerLevel4(1, EnemyController.EGG_SHELL, posY - 50, 0.0f + i * 2.0f, sound);
-            enemyControllers.add(controller);
-            enemies.addAll(controller.getEnemies());
+
+            addEnemyController(new EnemyControllerLevel4(1, EnemyController.EGG_SHELL, posY - 50, 0.0f + i * 2.0f, sound));
         }
     }
 

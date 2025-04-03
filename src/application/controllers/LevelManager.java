@@ -17,6 +17,11 @@ public abstract class LevelManager {
         this.enemies = enemies;
     }
 
+    public final void addEnemyController(EnemyController enemyController) {
+        enemyControllers.add(enemyController);
+        enemies.addAll(enemyController.getEnemies());
+    }
+
     public final List<Enemy> getEnemies() {
         return enemies;
     }

@@ -21,18 +21,13 @@ public class Level3Manager extends LevelManager {
 
 
         for(int i = 0; i < 4; i++){
-            EnemyController controller1 = new ChickenEnemyControllerLevel3(5,EnemyController.CHICKEN, 100 * (i) + 100, 0.0f + i*20.f,sound);
-
-            enemyControllers.add(controller1);
-            enemies.addAll(controller1.getEnemies());
+            addEnemyController(new ChickenEnemyControllerLevel3(5,EnemyController.CHICKEN, 100 * (i) + 100, 0.0f + i*20.f,sound));
         }
 
 
         for(int i = 0; i < 10; i++){
             int posY = random.nextInt(100);
-            EnemyController controller = new ChickEnemyControllerLevel3(1, EnemyController.CHICK, posY - 50, 0.0f + i * 2.0f,sound);
-            enemyControllers.add(controller);
-            enemies.addAll(controller.getEnemies());
+            addEnemyController(new ChickEnemyControllerLevel3(1, EnemyController.CHICK, posY - 50, 0.0f + i * 2.0f,sound));
         }
 
     }
