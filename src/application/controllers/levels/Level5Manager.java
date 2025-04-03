@@ -1,9 +1,5 @@
 package application.controllers.levels;
 
-import java.awt.Graphics;
-import java.util.ArrayList;
-import java.util.List;
-
 import application.controllers.EnemyController;
 import application.controllers.LevelManager;
 import application.controllers.SoundController;
@@ -12,13 +8,10 @@ import application.models.types.ChickenBoss;
 import application.models.types.ChickenEnemy;
 
 public class Level5Manager extends LevelManager {
-    public Level5Manager(SoundController soundController) {
-        super(soundController);
+    public Level5Manager(SoundController soundController, List<Enemy> enemies) {
+        super(soundController, enemies);
 
-        EnemyController bossController = new EnemyControllerLevel5(1, EnemyController.BOSS, 100, 0.0f, soundController);
-        enemyControllers.add(bossController);
-
-        enemies.addAll(bossController.getEnemies());
+        addEnemyController(new EnemyControllerLevel5(1, EnemyController.BOSS, 100, 0.0f, soundController));
      //   System.out.println("Initialized " + boss.size() + " enemies in Level5Manager");
     }
 

@@ -67,8 +67,8 @@ public class EggShellEnemy extends Enemy {
 
     }
 
-	@Override
-	public EnemySkillsController getSkillsController() {
-		return null;
-	}
+//	@Override
+//	public EnemySkillsController getSkillsController() {
+//		return null;
+//	}
 }
