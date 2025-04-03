@@ -1,59 +1,54 @@
 package application.controllers;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 
+import application.models.Player;
 import application.views.PlayerView;
 
 public class PlayerController {
-
-    private double shootSpeed;
-    private int PosX;
-    private int PosY;
+	
     private long lastMoveTime = 0;
     private static final long MOVE_TIMEOUT = 200;
 
     private int initialPosX;
     private boolean moving = false;
-    private int HP;
     private PlayerView playerView;
+    private Player player;
 
     // Constructor
-    public PlayerController(double shootSpeed, PlayerView playerView) {
-        this.shootSpeed = shootSpeed;
-        this.PosX = 800;
-        this.PosY = 950;
-        this.initialPosX = PosX;
+    public PlayerController(PlayerView playerView) {
+        this.player = new Player(100, 50, 0.5, 800, 950);
         this.playerView = playerView; // Gán giá trị
-        this.HP = 100;
     }
 
     // Getter & Setter
     public double getShootSpeed() {
-        return shootSpeed;
+        return player.getShootSpeed();
     }
 
     public void setShootSpeed(double shootSpeed) {
-        this.shootSpeed = shootSpeed;
+        player.setShootSpeed(shootSpeed);
     }
 
     public int getPosX() {
-        return PosX;
+        return player.getPosX();
     }
 
     public void setPosX(int PosX) {
-        this.PosX = PosX;
+        player.setPosX(PosX);
     }
 
     public int getPosY() {
-        return PosY;
+        return player.getPosY();
     }
 
     public void setPosY(int PosY) {
-        this.PosY = PosY;
+        player.setPosY(PosY);
     }
 
     public Point getPosition() {
-        return new Point(PosX, PosY);
+        return new Point(player.getPosX(), player.getPosY());
     }
 
     public boolean getMoving() {
@@ -72,16 +67,16 @@ public class PlayerController {
         return playerView = _playerView;
     }
 
-    public int getHP() {
-        return HP;
-    }
-
     public void isDamaged(int damage){
-        this.HP+=damage;
+        player.setHp(player.getHp() - damage);
     }
 
     public boolean isDead(){
-        return HP<=0;
+       return player.getHp() <= 0;
+    }
+    
+    public Rectangle getHitbox() {
+        return new Rectangle((int) player.getPosX(), (int) player.getPosY(), 54, 50);
     }
 
     public void updateDirection(int newX) {
@@ -123,4 +118,8 @@ public class PlayerController {
             playerView.setExFrame(0);
         }
     }
+
+	public int getHP() {
+		return player.getHp();
+	}
 }

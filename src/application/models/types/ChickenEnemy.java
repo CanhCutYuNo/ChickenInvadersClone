@@ -176,7 +176,7 @@ public class ChickenEnemy extends Enemy {
 
         // Tạo EGG ngẫu nhiên
         if(rand.nextInt(1000) < 1) {
-            skillsController.addSkill(PosX + MODEL_WIDTH / 2, PosY, 5, 10, SkillType.EGG); // EGG rơi xuống(speedY = 5)
+            skillsController.addSkill(PosX + MODEL_WIDTH / 2, PosY, 5, 50, SkillType.EGG); // EGG rơi xuống(speedY = 5)
         }
 
         // Cập nhật các chiêu thức

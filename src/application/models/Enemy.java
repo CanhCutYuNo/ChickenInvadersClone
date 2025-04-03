@@ -88,8 +88,8 @@ public abstract class Enemy {
         return false;
     }
 
-    public Rectangle getBounds() {
-        return new Rectangle(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
+    public Rectangle getHitbox() {
+        return new Rectangle(PosX - 120, PosY + 220, MODEL_WIDTH, MODEL_HEIGHT);
     }
 
     public int getHp() {

@@ -6,17 +6,24 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+
 import javax.swing.JPanel;
 
-import application.controllers.levels.*;
+import application.controllers.levels.Level1Manager;
+import application.controllers.levels.Level2Manager;
+import application.controllers.levels.Level3Manager;
+import application.controllers.levels.Level4Manager;
+import application.controllers.levels.Level5Manager;
 import application.models.Bullet;
 import application.models.DeathEffect;
 import application.models.Enemy;
 import application.models.EnemySkills;
+import application.models.EnemySkills.SkillType;
 import application.models.Items;
 import application.models.types.ChickEnemy;
 import application.models.types.EggShellEnemy;
@@ -39,7 +46,7 @@ public class Manager {
     private JPanel mainPanel;
     private GameLoop gameLoop;
     private int frameDelay = 0;
-    private int level = 1;
+    private int level = 5;
     private boolean playerExploded = false;
     // Thêm các biến để lưu trữ LevelXManager
     private Level1Manager level1Manager;
@@ -52,7 +59,7 @@ public class Manager {
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
         deathEffectController = new DeathEffectController();
-        playerController = new PlayerController(0.5, null);
+        playerController = new PlayerController(null);
         playerView = new PlayerView(playerController);
         playerController.setPlayerView(playerView);
 
@@ -142,10 +149,9 @@ public class Manager {
         }
         deathEffectController.update();
 
-        //checkCollisions();
         checkBulletEnemyCollisions();
         checkPlayerCollisionsWithEnemies();
-        checkPlayerCollisionsWithEgg();
+        checkPlayerCollisionsWithSkills(); // Đổi tên để rõ ràng hơn
         checkPlayerCollisionsWithItems();
 
 
@@ -209,7 +215,7 @@ public class Manager {
             Items item = iterator.next();
 
             // Kiểm tra va chạm với người chơi
-            if (isColliding4(playerController,item)) {
+            if (isColliding(playerController,item)) {
                 System.out.println("Player picked up an item!");
 
                 // Gọi hàm xử lý khi nhặt item (tăng máu, đạn, điểm...)
@@ -268,9 +274,7 @@ public class Manager {
             }
         }
 
-        // Xóa và thông báo cho Level1Manager
-        int bulletsRemoved = bulletsToRemove.size();
-        int enemiesRemoved = enemiesToRemove.size();
+
         bullets.removeAll(bulletsToRemove);
         for (Enemy enemy : enemiesToRemove) {
             if (level == 1 && level1Manager != null) {
@@ -279,9 +283,9 @@ public class Manager {
             else if (level== 2 && level2Manager != null){
                 level2Manager.removeEnemy(enemy);
             }
-//            else if (level == 5 && level5Manager != null) {
-//                level5Manager.removeEnemy(enemy);
-//            }
+            else if (level == 5 && level5Manager != null) {
+                level5Manager.removeEnemy(enemy);
+            }
             else if (level == 3 && level3Manager != null) {
                 level3Manager.removeEnemy(enemy);
             }
@@ -299,7 +303,7 @@ public class Manager {
         while(enemyIterator.hasNext()) {
             Enemy enemy = enemyIterator.next();
 
-            if(isColliding2(playerController, enemy)) {
+            if(isColliding(playerController, enemy)) {
                 if(!playerExploded) {
                     playerController.getPlayerView().startExplosion();
                     soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/explosionPlayer.wav").getPath());
@@ -309,25 +313,24 @@ public class Manager {
         }
     }
     
-    private void checkPlayerCollisionsWithEgg() {
+    private void checkPlayerCollisionsWithSkills() {
         for (Enemy enemy : enemies) {
-            Iterator<EnemySkills> eggIterator = enemy.getSkillsController().getSkills().iterator();
-            while (eggIterator.hasNext()) {
-                EnemySkills egg = eggIterator.next();
-                if (isColliding3(playerController, egg)) {
-                    playerController.isDamaged(egg.getDamage());
+            Iterator<EnemySkills> skillIterator = enemy.getSkillsController().getSkills().iterator();
+            while(skillIterator.hasNext()) {
+                EnemySkills skill = skillIterator.next();
+                if (skill.isActive() && isColliding(playerController, skill)) {
+                    playerController.isDamaged(skill.getDamage());
+                    System.out.println("Player collides with skill: " + skill.getSkillType());
                     if (playerController.getHP() <= 0) {
                         playerController.getPlayerView().startExplosion();
                         soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/explosionPlayer.wav").getPath());
                         playerExploded = true;
                     }
-                    eggIterator.remove();
+                    if(skill.getSkillType() != SkillType.HOLE) skillIterator.remove(); // Xóa skill sau khi va chạm
                 }
             }
         }
     }
-
-
 
     public void spawnEnemiesAfterFade() {
 
@@ -368,9 +371,9 @@ public class Manager {
         else if(level == 2 && level2Manager != null){
             level2Manager.render(g);
         }
-//        else if(level == 5 && level5Manager != null) {
-//            level5Manager.render(g);
-//        }
+        else if(level == 5 && level5Manager != null) {
+            level5Manager.render(g);
+        }
         else if(level == 3 && level3Manager != null) {
             level3Manager.render(g);
         }
@@ -411,27 +414,22 @@ public class Manager {
     }
 
     private boolean isColliding(Bullet bullet, Enemy enemy) {
-        Rectangle bulletBounds = new Rectangle(bullet.getX(), bullet.getY(), 9, 52);
-        Rectangle enemyBounds = new Rectangle(enemy.getPosX(), enemy.getPosY(), enemy.getMODEL_WIDTH(), enemy.getMODEL_HEIGHT());
-       // //   System.out.println("Checking collision: Bullet (" + bullet.getX() + "," + bullet.getY() + ") vs Enemy (" + enemy.getPosX() + "," + enemy.getPosY() + ")");
-        return bulletBounds.intersects(enemyBounds);
-    }
-    
-    private boolean isColliding2(PlayerController player, Enemy enemy) {
-        Rectangle playerBounds = new Rectangle(player.getPosX(), player.getPosY(), 54, 50);
-        Rectangle enemyBounds = new Rectangle(enemy.getPosX(), enemy.getPosY(), enemy.getMODEL_WIDTH(), enemy.getMODEL_HEIGHT());
-        return playerBounds.intersects(enemyBounds);
-    }
-    
-    private boolean isColliding3(PlayerController player, EnemySkills egg) {
-        Rectangle playerBounds = new Rectangle(player.getPosX(), player.getPosY(), 54, 50);
-        Rectangle eggBounds = new Rectangle((int) egg.getPosX(), (int) egg.getPosY(), 5, 5);
-        return playerBounds.intersects(eggBounds);
+        Rectangle bulletBounds = new Rectangle(bullet.getX(), bullet.getY(), 9, 52); // Giữ nguyên kích thước của Bullet
+        return enemy.getHitbox().intersects(bulletBounds);
     }
 
-    private boolean isColliding4(PlayerController player, Items item){
-        Rectangle playerBounds = new Rectangle(player.getPosX(), player.getPosY(), 54, 50);
-        Rectangle itemBounds = new Rectangle(item.getPosX(), item.getPosY(), 4,4);
-        return playerBounds.intersects(itemBounds);
+    private boolean isColliding(PlayerController player, Enemy enemy) {
+        return player.getHitbox().intersects(enemy.getHitbox());
+    }
+
+    private boolean isColliding(PlayerController player, EnemySkills skill) {
+        Shape skillHitbox = skill.getHitbox();
+        Rectangle playerHitbox = player.getHitbox();
+        return skillHitbox.intersects(playerHitbox);
+    }
+
+    private boolean isColliding(PlayerController player, Items item) {
+        Rectangle itemBounds = new Rectangle(item.getPosX(), item.getPosY(), 4, 4); // Giữ nguyên kích thước của Item
+        return player.getHitbox().intersects(itemBounds);
     }
 }
