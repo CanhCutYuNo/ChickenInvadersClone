@@ -15,7 +15,7 @@ public class Level5Manager extends LevelManager {
     public Level5Manager(SoundController soundController) {
         super(soundController);
 
-        EnemyController bossController = new EnemyControllerLevel5(1, "Boss", 100, 0.0f, soundController);
+        EnemyController bossController = new EnemyControllerLevel5(1, EnemyController.BOSS, 100, 0.0f, soundController);
         enemyControllers.add(bossController);
 
         enemies.addAll(bossController.getEnemies());
@@ -24,9 +24,9 @@ public class Level5Manager extends LevelManager {
 
     private class EnemyControllerLevel5 extends EnemyController{
         
-        public EnemyControllerLevel5(int numEnemies, String enemyType, int startY, float timeDelay, SoundController soundController) {
+        public EnemyControllerLevel5(int numEnemies, int enemyType, int startY, float timeDelay, SoundController soundController) {
             super(numEnemies, enemyType, startY, timeDelay, soundController);
-            Enemy enemy = new ChickenBoss(SCREEN_WIDTH / 2 - 150, 100, soundController);
+            Enemy enemy = createEnemy(SCREEN_WIDTH / 2 - 150, 100);
             enemy.setInitialIndex(0);
             enemies.add(enemy);
         }
@@ -61,7 +61,7 @@ public class Level5Manager extends LevelManager {
                     enemy.nextFrame();
                 }
 
-                if (!enemies.isEmpty() && enemyType.equals("Chicken")) {
+                if (!enemies.isEmpty()) {
                     // Chỉ áp dụng logic di chuyển hàng cho ChickenEnemy
                     Enemy firstEnemy = enemies.get(0);
                     Enemy lastEnemy = enemies.get(enemies.size() - 1);

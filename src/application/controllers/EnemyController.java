@@ -9,6 +9,7 @@ import application.models.Enemy;
 import application.models.types.ChickEnemy;
 import application.models.types.ChickenBoss;
 import application.models.types.ChickenEnemy;
+import application.models.types.EggShellEnemy;
 
 public class EnemyController {
     protected List<Enemy> enemies;
@@ -24,15 +25,37 @@ public class EnemyController {
     protected static final int SCREEN_WIDTH = 1920;
     protected static final int SCREEN_LEFT = 0;
     protected static final int SCREEN_RIGHT = SCREEN_WIDTH;
-    protected String enemyType;
+    protected int enemyType;
 
-    public EnemyController(int numEnemies, String enemyType, int startY, float timeDelay, SoundController soundController) {
+    public static final int CHICKEN = 1;
+    public static final int CHICK = 2;
+    public static final int EGG_SHELL = 3;
+    public static final int BOSS = 4;
+
+    public EnemyController(int numEnemies, int enemyType, int startY, float timeDelay, SoundController soundController) {
         this.enemies = new ArrayList<>();
         this.startY = startY;
         this.timeDelay = timeDelay;
         this.enemyType = enemyType;
         this.soundController = soundController;
+    }
 
+    public Enemy createEnemy(int posX, int posY) {
+        // System.out.println("Creating enemy of type: " + enemyType + " at(" + posX +
+        // "," + posY + ")");
+        switch (enemyType) {
+            case CHICKEN:
+                return new ChickenEnemy(posX, posY, soundController);
+            case CHICK:
+                return new ChickEnemy(posX, posY, soundController);
+            case EGG_SHELL:
+                return new EggShellEnemy(posX, posY, soundController);
+            case BOSS:
+                // Đặt tọa độ cố định cho ChickenBoss(giữa màn hình)
+                return new ChickenBoss(posX, posY, soundController);
+            default:
+                throw new IllegalArgumentException("Unknown enemy type: " + enemyType);
+        }
     }
 
     public void update(float deltaTime) {

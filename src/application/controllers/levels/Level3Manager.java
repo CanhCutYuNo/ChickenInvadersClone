@@ -19,13 +19,13 @@ public class Level3Manager extends LevelManager {
         super(sound);
         this.random = new Random();
 
-        EnemyController controller1 = new ChickenEnemyControllerLevel3(8,"Chicken", 100, 0.0f,sound);
+        EnemyController controller1 = new ChickenEnemyControllerLevel3(8,EnemyController.CHICKEN, 100, 0.0f,sound);
         enemyControllers.add(controller1);
         enemies.addAll(controller1.getEnemies());
 
         for(int i = 0; i < 10; i++){
             int posY = random.nextInt(100);
-            EnemyController controller = new ChickEnemyControllerLevel3(1,"Chick", posY - 50, 0.0f + i * 2.0f,sound);
+            EnemyController controller = new ChickEnemyControllerLevel3(1, EnemyController.CHICK, posY - 50, 0.0f + i * 2.0f,sound);
             enemyControllers.add(controller);
             enemies.addAll(controller.getEnemies());
         }
@@ -34,11 +34,11 @@ public class Level3Manager extends LevelManager {
 
     private class ChickenEnemyControllerLevel3 extends EnemyController {
 
-        public ChickenEnemyControllerLevel3(int numEnemies, String enemyType, int startY, float timeDelay,
+        public ChickenEnemyControllerLevel3(int numEnemies, int enemyType, int startY, float timeDelay,
                 SoundController soundController) {
             super(numEnemies, enemyType, startY, timeDelay, soundController);
             for (int i = 0; i < numEnemies; i++) {
-                Enemy enemy = new ChickEnemy(-50 - i * SPACING, startY, soundController);
+                Enemy enemy = createEnemy(-50 - i * SPACING, startY);
                 enemy.setInitialIndex(i);
                 enemies.add(enemy);
             }
@@ -86,7 +86,7 @@ public class Level3Manager extends LevelManager {
                         }
 
                     } else if (enemy instanceof ChickenEnemy) {
-                        if (!enemies.isEmpty() && enemyType.equals("Chicken")) {
+                        if (!enemies.isEmpty()) {
                             // Chỉ áp dụng logic di chuyển hàng cho ChickenEnemy
                             Enemy firstEnemy = enemies.get(0);
                             Enemy lastEnemy = enemies.get(enemies.size() - 1);
@@ -112,12 +112,12 @@ public class Level3Manager extends LevelManager {
 
     private class ChickEnemyControllerLevel3 extends EnemyController {
 
-        public ChickEnemyControllerLevel3(int numEnemies, String enemyType, int startY, float timeDelay, SoundController soundController) {
+        public ChickEnemyControllerLevel3(int numEnemies, int enemyType, int startY, float timeDelay, SoundController soundController) {
             super(numEnemies, enemyType, startY, timeDelay, soundController);
             for (int i = 0; i < numEnemies; i++) {
                 int x = random.nextInt(SCREEN_WIDTH - 200);
                 for (int j = 0; j < 2; j++) {
-                    Enemy enemy = new ChickEnemy(x + j * 100, startY, soundController);
+                    Enemy enemy = createEnemy(x + j * 100, startY);
                     enemy.setInitialIndex(j);
                     enemies.add(enemy);
                 }
@@ -166,7 +166,7 @@ public class Level3Manager extends LevelManager {
                         }
 
                     } else if (enemy instanceof ChickenEnemy) {
-                        if (!enemies.isEmpty() && enemyType.equals("Chicken")) {
+                        if (!enemies.isEmpty()) {
                             // Chỉ áp dụng logic di chuyển hàng cho ChickenEnemy
                             Enemy firstEnemy = enemies.get(0);
                             Enemy lastEnemy = enemies.get(enemies.size() - 1);

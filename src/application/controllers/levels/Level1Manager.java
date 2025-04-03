@@ -15,9 +15,9 @@ public class Level1Manager extends LevelManager {
     public Level1Manager(SoundController soundController) {
         super(soundController);
 
-        enemyControllers.add(new EnemyControllerLevel1(10, "Chicken", 100, 0.0f, soundController));
-        enemyControllers.add(new EnemyControllerLevel1(10, "Chicken", 300, 0.0f, soundController));
-        enemyControllers.add(new EnemyControllerLevel1(10, "Chicken", 500, 0.0f, soundController));
+        enemyControllers.add(new EnemyControllerLevel1(10, EnemyController.CHICKEN, 100, 0.0f, soundController));
+        enemyControllers.add(new EnemyControllerLevel1(10, EnemyController.CHICKEN, 300, 0.0f, soundController));
+        enemyControllers.add(new EnemyControllerLevel1(10, EnemyController.CHICKEN, 500, 0.0f, soundController));
 
         for(EnemyController controller : enemyControllers) {
             enemies.addAll(controller.getEnemies());
@@ -27,10 +27,10 @@ public class Level1Manager extends LevelManager {
 
     private class EnemyControllerLevel1 extends EnemyController {
 
-        public EnemyControllerLevel1(int numEnemies, String enemyType, int startY, float timeDelay, SoundController soundController) {
+        public EnemyControllerLevel1(int numEnemies, int enemyType, int startY, float timeDelay, SoundController soundController) {
             super(numEnemies, enemyType, startY, timeDelay, soundController);
             for (int i = 0; i < numEnemies; i++) {
-                Enemy enemy = new ChickenEnemy(-50 - i * SPACING, startY, soundController);
+                Enemy enemy = createEnemy(-50 - i * SPACING, startY);
                 enemy.setInitialIndex(i);
                 enemies.add(enemy);
             }
@@ -63,7 +63,7 @@ public class Level1Manager extends LevelManager {
                     enemy.nextFrame();
                 }
 
-                if (!enemies.isEmpty() && enemyType.equals("Chicken")) {
+                if (!enemies.isEmpty()) {
                     // Chỉ áp dụng logic di chuyển hàng cho ChickenEnemy
                     Enemy firstEnemy = enemies.get(0);
                     Enemy lastEnemy = enemies.get(enemies.size() - 1);

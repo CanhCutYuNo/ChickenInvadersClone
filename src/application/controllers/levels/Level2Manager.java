@@ -22,7 +22,7 @@ public class Level2Manager extends LevelManager {
 
         for (int i = 0; i < 20; i++) {
             int posY = random.nextInt(100);
-            EnemyController controller = new EnemyControllerLevel2(1, "Chicken", posY - 100, 0.0f + i * 1.0f, sound);
+            EnemyController controller = new EnemyControllerLevel2(1, EnemyController.CHICKEN, posY - 100, 0.0f + i * 1.0f, sound);
 
             enemyControllers.add(controller);
             enemies.addAll(controller.getEnemies());
@@ -32,10 +32,10 @@ public class Level2Manager extends LevelManager {
 
     private class EnemyControllerLevel2 extends EnemyController {
 
-        public EnemyControllerLevel2(int numEnemies, String enemyType, int startY, float timeDelay, SoundController soundController) {
+        public EnemyControllerLevel2(int numEnemies, int enemyType, int startY, float timeDelay, SoundController soundController) {
             super(numEnemies, enemyType, startY, timeDelay, soundController);
             for (int i = 0; i < numEnemies; i++) {
-                Enemy enemy = new ChickenEnemy(random.nextInt(SCREEN_WIDTH - 200), startY, soundController);
+                Enemy enemy = createEnemy(random.nextInt(SCREEN_WIDTH - 200), startY);
                 enemy.setInitialIndex(i);
                 enemies.add(enemy);
             }
