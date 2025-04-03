@@ -107,7 +107,7 @@ public class EnemySkills {
 
     public boolean isOffScreen() {
         if (skillType == SkillType.EGG) {
-            return posY > 1080;
+            return posY > 1000;
         } else if (skillType == SkillType.FIREBALL) {
             return posX < -100 || posX > 2020 || posY < -100 || posY > 1180;
         }
@@ -120,7 +120,7 @@ public class EnemySkills {
 
     public void explode() {
         isExploding = true;
-        animationFrame = 0;
+        //animationFrame = 0;
     }
 
     public boolean isExploding() {

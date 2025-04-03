@@ -99,8 +99,8 @@ public class ChickEnemy extends Enemy {
         return new ChickDeathEffect(getCenterX(), getCenterY());
     }
 
-	@Override
-	public EnemySkillsController getSkillsController() {
-		return null;
-	}
+//	@Override
+//	public EnemySkillsController getSkillsController() {
+//		return null;
+//	}
 }
