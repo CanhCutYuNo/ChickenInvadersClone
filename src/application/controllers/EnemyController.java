@@ -98,9 +98,9 @@ public class EnemyController {
                     enemy.render(g);
                 }
             }
-            System.out.println("Rendering row at Y=" + startY + ", Active enemies: " + enemies.size());
+         //   System.out.println("Rendering row at Y=" + startY + ", Active enemies: " + enemies.size());
         } else {
-            System.out.println("Row at Y=" + startY + " not active yet");
+          //  System.out.println("Row at Y=" + startY + " not active yet");
         }
     }
 
@@ -114,6 +114,6 @@ public class EnemyController {
 
     public void removeEnemy(Enemy enemy) {
         enemies.remove(enemy);
-        System.out.println("Removed enemy from EnemyController at (" + enemy.getPosX() + "," + enemy.getPosY() + "). New size: " + enemies.size());
+     //   System.out.println("Removed enemy from EnemyController at (" + enemy.getPosX() + "," + enemy.getPosY() + "). New size: " + enemies.size());
     }
 }

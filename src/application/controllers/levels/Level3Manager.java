@@ -30,7 +30,7 @@ public class Level3Manager extends LevelManager {
 
         for(int i = 0; i < 10; i++){
             int posY = random.nextInt(100);
-            EnemyController controller = new ChickEnemyControllerLevel3(1, EnemyController.CHICK, posY - 50, 0.0f + i * 2.0f,sound);
+            EnemyController controller = new ChickEnemyControllerLevel3(1, EnemyController.CHICK, posY - 400, 0.0f + i * 2.0f,sound);
             enemyControllers.add(controller);
             enemies.addAll(controller.getEnemies());
         }

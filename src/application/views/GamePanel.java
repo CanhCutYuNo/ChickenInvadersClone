@@ -82,16 +82,18 @@ public class GamePanel extends JPanel {
                     }
                 }
             } else {
-                // Giai đoạn chờ và fade-out
                 if (fadeTime < WAIT_DURATION) {
-                    // Chờ, giữ alpha = 1.0
                     alpha = 1.0f;
                 } else {
-                    // Fade-out
                     alpha = Math.max(0.0f, 1.0f - ((fadeTime - WAIT_DURATION) / FADE_DURATION));
                     if (alpha <= 0.0f) {
                         showTransition = false;
                         transitionComplete = true;
+                        isTransitionTriggered = false;
+                        // Thông báo cho Manager rằng transition đã kết thúc
+                        if (gameManager != null) {
+                            gameManager.onTransitionComplete();
+                        }
                     }
                 }
             }
@@ -108,7 +110,6 @@ public class GamePanel extends JPanel {
 
         Graphics2D g2d = (Graphics2D) g;
 
-        // Vẽ levelImage với hiệu ứng fade-in/fade-out
         if (showTransition && isTransitionTriggered) {
             if (levelImage != null) {
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
@@ -117,14 +118,12 @@ public class GamePanel extends JPanel {
                 g2d.drawImage(levelImage, x, y, levelImage.getWidth(), levelImage.getHeight(), this);
             }
         }
-        
-        // Vẽ các thành phần khác của game khi transition hoàn tất
+
         if (transitionComplete && gameManager != null) {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
             gameManager.render(g);
         }
-        
-     // Đặt lại độ trong suốt về 1.0 trước khi vẽ Player
+
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
         gameManager.renderPlayer(g);
     }
@@ -137,6 +136,8 @@ public class GamePanel extends JPanel {
         this.alpha = 0f;
         this.enemiesPrepared = false;
         this.transitionComplete = false;
+
+        updateLevel();
     }
 
     public boolean isTransitionActive() {
@@ -146,7 +147,7 @@ public class GamePanel extends JPanel {
     public void updateLevel() {
         if (gameManager != null) {
             int newLevel = gameManager.getLevel();
-            if (newLevel != currentLevel && (newLevel == 1 || newLevel == 2 || newLevel == 3 || newLevel == 5)) {
+            if (newLevel != currentLevel) {
                 this.currentLevel = newLevel;
                 try {
                     File imageFile = new File("src/asset/resources/gfx/wave" + currentLevel + ".png");
@@ -159,12 +160,6 @@ public class GamePanel extends JPanel {
                     e.printStackTrace();
                     levelImage = new BufferedImage(400, 200, BufferedImage.TYPE_INT_ARGB);
                 }
-                fadeTime = 0f;
-                alpha = 0f;
-                fadeIn = true;
-                showTransition = true;
-                enemiesPrepared = false;
-                transitionComplete = false;
             }
         }
     }

@@ -28,6 +28,7 @@ import application.models.Items;
 import application.models.types.ChickEnemy;
 import application.models.types.EggShellEnemy;
 import application.views.BackgroundPanel;
+import application.views.GamePanel;
 import application.views.MenuPanel;
 import application.views.PlayerView;
 
@@ -54,8 +55,16 @@ public class Manager {
     private Level3Manager level3Manager;
     private Level4Manager level4Manager;
     private Level5Manager level5Manager;
+    
+    GamePanel gamePanel;
+    
+    private boolean levelTransitionTriggered = false;
+    
+    private boolean isDelaying = false;
+    private long delayStartTime = 0;
+    private static final long DELAY_DURATION = 2000;
 
-    public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController) {
+    public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController, GamePanel _gamePanel) {
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
         deathEffectController = new DeathEffectController();
@@ -70,6 +79,7 @@ public class Manager {
         Manager.backgroundPanel = _backgroundPanel;
         Manager.menuPanel = _menuPanel;
         this.gameLoop = _gameLoop;
+        this.gamePanel = _gamePanel;
         this.soundController = _soundController;
     }
 
@@ -104,6 +114,10 @@ public class Manager {
     public SoundController getSound() {
     	return soundController;
     }
+    
+    public void onTransitionComplete() {
+        levelTransitionTriggered = false;
+    }
 
     public void update(double deltaTime) {
 
@@ -114,6 +128,19 @@ public class Manager {
                 restartGame();
             }
             return;
+        }
+        
+        if (gamePanel.isTransitionActive()) {
+            return;
+        }
+        
+        if (isDelaying) {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - delayStartTime >= DELAY_DURATION) {
+                isDelaying = false;
+                levelTransitionTriggered = true;
+                gamePanel.triggerTransition();
+            }
         }
 
         updateBullets();
@@ -132,7 +159,7 @@ public class Manager {
 
         items.updateItems();
         
-        // Cập nhật LevelXManager thay vì updateEnemies() trực tiếp
+        // Cập nhật LevelXManager
         if(level == 1 && level1Manager != null) {
             level1Manager.update((float) deltaTime);
         }
@@ -141,7 +168,8 @@ public class Manager {
         }
         else if(level == 3 && level3Manager != null) {
             level3Manager.update((float) deltaTime);
-        } else if (level == 5 && level5Manager != null) {
+        } 
+        else if (level == 5 && level5Manager != null) {
             level5Manager.update((float) deltaTime);
         }
         else if(level == 4 && level4Manager != null){
@@ -151,33 +179,35 @@ public class Manager {
 
         checkBulletEnemyCollisions();
         checkPlayerCollisionsWithEnemies();
-        checkPlayerCollisionsWithSkills(); // Đổi tên để rõ ràng hơn
+        checkPlayerCollisionsWithSkills();
         checkPlayerCollisionsWithItems();
 
 
-        if (getEnemies().isEmpty() && level1Manager != null) {
-            level++;
-            spawnEnemiesAfterFade(); // Gọi lại để tạo kẻ địch mới cho level tiếp theo
-            System.out.println("Level Up! Chuyển sang Level " + level);
-        }
-        if (getEnemies().isEmpty() && level2Manager != null) {
-            level++;
-            spawnEnemiesAfterFade(); // Gọi lại để tạo kẻ địch mới cho level tiếp theo
-            System.out.println("Level Up! Chuyển sang Level " + level);
-        }
-        if (getEnemies().isEmpty() && level3Manager != null) {
-            level++;
-            spawnEnemiesAfterFade(); // Gọi lại để tạo kẻ địch mới cho level tiếp theo
-            System.out.println("Level Up! Chuyển sang Level " + level);
-        }
-        if(getEnemies().isEmpty() && level4Manager != null){
-            level++;
-            System.out.println("Level up! Chuyển sang level " + level);
+        if (getEnemies().isEmpty() && !levelTransitionTriggered && !isDelaying) {
+            if (level == 1 && level1Manager != null) {
+                level++;
+                isDelaying = true;
+                delayStartTime = System.currentTimeMillis();
+            } else if (level == 2 && level2Manager != null) {
+                level++;
+                isDelaying = true;
+                delayStartTime = System.currentTimeMillis();
+            } else if (level == 3 && level3Manager != null) {
+                level++;
+                isDelaying = true;
+                delayStartTime = System.currentTimeMillis();
+            } else if (level == 4 && level4Manager != null) {
+                level++;
+                isDelaying = true;
+                delayStartTime = System.currentTimeMillis();
+            } else if (level == 5 && level5Manager != null) {
+                level++;
+                isDelaying = true;
+                delayStartTime = System.currentTimeMillis();
+            }
         }
 
     }
-
-
 
     private void restartGame() {
         enemies.clear();
@@ -411,7 +441,7 @@ public class Manager {
     public void shoot() {
         bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 50, 1.0, 0.4));
         soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/bulletHenSolo.wav").getPath());
-         System.out.println("Bắn");
+      //   System.out.println("Bắn");
     }
 
     private boolean isColliding(Bullet bullet, Enemy enemy) {
@@ -433,4 +463,8 @@ public class Manager {
         Rectangle itemBounds = new Rectangle(item.getPosX(), item.getPosY(), 4, 4); // Giữ nguyên kích thước của Item
         return player.getHitbox().intersects(itemBounds);
     }
+
+	public void setGamePanel(GamePanel _gamePanel) {
+		this.gamePanel = _gamePanel;
+	}
 }

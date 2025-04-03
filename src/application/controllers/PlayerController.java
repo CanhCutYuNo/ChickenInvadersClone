@@ -18,7 +18,7 @@ public class PlayerController {
 
     // Constructor
     public PlayerController(PlayerView playerView) {
-        this.player = new Player(100, 50, 0.5, 800, 950);
+        this.player = new Player(10000, 50, 0.5, 800, 950);
         this.playerView = playerView; // Gán giá trị
     }
 

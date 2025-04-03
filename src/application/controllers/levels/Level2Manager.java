@@ -22,7 +22,7 @@ public class Level2Manager extends LevelManager {
 
         for (int i = 0; i < 20; i++) {
             int posY = random.nextInt(100);
-            EnemyController controller = new EnemyControllerLevel2(1, EnemyController.CHICKEN, posY - 100, 0.0f + i * 1.0f, sound);
+            EnemyController controller = new EnemyControllerLevel2(1, EnemyController.CHICKEN, posY - 400, 0.0f + i * 1.0f, sound);
 
             enemyControllers.add(controller);
             enemies.addAll(controller.getEnemies());
