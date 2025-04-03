@@ -242,9 +242,8 @@ public class Manager {
 
                     bulletsToRemove.add(bullet);
                     if (enemy.isDead()) {
-                        if(enemy instanceof EggShellEnemy){
-                            ChickEnemy chickEnemy = new ChickEnemy(enemy.getPosX(), enemy.getPosY(), soundController);
-                            enemiesToAdd.add(chickEnemy);
+                        if(enemy instanceof EggShellEnemy && level4Manager != null) {
+                            level4Manager.addChickAfterEggShellDeath((int) enemy.getPosX(), (int) enemy.getPosY());
                             enemiesToRemove.add(enemy);
                         }
                         else{
