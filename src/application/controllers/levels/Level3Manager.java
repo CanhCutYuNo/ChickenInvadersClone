@@ -1,6 +1,7 @@
 package application.controllers.levels;
 
 import application.controllers.EnemyController;
+import application.controllers.LevelManager;
 import application.controllers.SoundController;
 import application.models.Enemy;
 import application.models.types.ChickEnemy;
@@ -11,16 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Level3Manager {
-    SoundController sound;
-    List<EnemyController> enemyControllers;
-    List<Enemy> enemies;
+public class Level3Manager extends LevelManager {
     Random random;
 
     public Level3Manager(SoundController sound) {
-        this.sound = sound;
-        this.enemyControllers = new ArrayList<>();
-        this.enemies = new ArrayList<>();
+        super(sound);
         this.random = new Random();
 
         EnemyController controller1 = new ChickenEnemyControllerLevel3(8,"Chicken", 100, 0.0f,sound,3);
@@ -34,39 +30,6 @@ public class Level3Manager {
             enemies.addAll(controller.getEnemies());
         }
 
-    }
-
-    public void update(float deltaTime){
-
-        for(EnemyController controller: enemyControllers){
-
-            controller.update(deltaTime);
-        }
-    }
-
-    public List<Enemy> getEnemies(){return enemies;}
-//    public List<Enemy> getEnemies() {
-//        List<Enemy> allEnemies = new ArrayList<>();
-//        for (EnemyController controller : enemyControllers) {
-//            allEnemies.addAll(controller.getEnemies()); // ✅ Luôn cập nhật danh sách động
-//        }
-//        System.out.println("📋 Tổng số kẻ địch: " + allEnemies.size());
-//        return allEnemies;
-//    }
-    public void render(Graphics g){
-        for(EnemyController controller:enemyControllers){
-            controller.render(g);
-        }
-    }
-
-    public void removeEnemy(Enemy enemy){
-        for(EnemyController controller : enemyControllers){
-            if(controller.getEnemies().contains(enemy)){
-                controller.removeEnemy(enemy);
-                break;
-            }
-        }
-        enemies.remove(enemy);
     }
 
     private class ChickenEnemyControllerLevel3 extends EnemyController {

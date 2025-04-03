@@ -5,42 +5,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import application.controllers.EnemyController;
+import application.controllers.LevelManager;
 import application.controllers.SoundController;
 import application.models.Enemy;
 import application.models.types.ChickenBoss;
 import application.models.types.ChickenEnemy;
 
-public class Level5Manager {
-    private EnemyController bossController;
-    private List<Enemy> boss;
+public class Level5Manager extends LevelManager {
     public Level5Manager(SoundController soundController) {
-        this.boss = new ArrayList<>();
-        this.bossController = new EnemyControllerLevel5(1, "Boss", 100, 0.0f, soundController,5);
+        super(soundController);
 
-        boss.addAll(bossController.getEnemies());
+        EnemyController bossController = new EnemyControllerLevel5(1, "Boss", 100, 0.0f, soundController,5);
+        enemyControllers.add(bossController);
+
+        enemies.addAll(bossController.getEnemies());
      //   System.out.println("Initialized " + boss.size() + " enemies in Level5Manager");
     }
 
-    public void update(float deltaTime) {
-        bossController.update(deltaTime);
-    }
-
-    public void render(Graphics g) {
-        bossController.render(g);
-    }
-
-    public List<Enemy> getEnemies() {
-        return boss;
-    }
-
-    public void removeEnemy(Enemy enemy) {
-        if (bossController.getEnemies().contains(enemy)) {
-            bossController.removeEnemy(enemy);
-        }
-        boss.remove(enemy);
-    }
-    
-    
     private class EnemyControllerLevel5 extends EnemyController{
         
         public EnemyControllerLevel5(int numEnemies, String enemyType, int startY, float timeDelay, SoundController soundController, int level) {

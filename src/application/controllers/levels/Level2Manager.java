@@ -6,21 +6,18 @@ import java.util.List;
 import java.util.Random;
 
 import application.controllers.EnemyController;
+import application.controllers.LevelManager;
 import application.controllers.SoundController;
 import application.models.Enemy;
 import application.models.types.ChickenEnemy;
 
-public class Level2Manager {
+public class Level2Manager extends LevelManager {
 
-    SoundController sound;
-    List<EnemyController> enemyControllers;
-    List<Enemy> enemies;
     Random random;
 
     public Level2Manager(SoundController sound) {
-        this.sound = sound;
-        this.enemyControllers = new ArrayList<>();
-        this.enemies = new ArrayList<>();
+        super(sound);
+
         this.random = new Random();
 
         for (int i = 0; i < 20; i++) {
@@ -31,33 +28,6 @@ public class Level2Manager {
             enemies.addAll(controller.getEnemies());
         }
 
-    }
-
-    public void update(float deltaTime) {
-        for (EnemyController controller : enemyControllers) {
-
-            controller.update(deltaTime);
-        }
-    }
-
-    public List<Enemy> getEnemies() {
-        return enemies;
-    }
-
-    public void render(Graphics g) {
-        for (EnemyController controller : enemyControllers) {
-            controller.render(g);
-        }
-    }
-
-    public void removeEnemy(Enemy enemy) {
-        for (EnemyController controller : enemyControllers) {
-            if (controller.getEnemies().contains(enemy)) {
-                controller.removeEnemy((ChickenEnemy) enemy);
-                break;
-            }
-        }
-        enemies.remove(enemy);
     }
 
     private class EnemyControllerLevel2 extends EnemyController {
