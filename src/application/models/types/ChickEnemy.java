@@ -6,6 +6,7 @@ package application.models.types;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -97,6 +98,11 @@ public class ChickEnemy extends Enemy {
     @Override
     public DeathEffect getDeathEffect() {
         return new ChickDeathEffect(getCenterX(), getCenterY());
+    }
+    
+    @Override
+    public Rectangle getHitbox() {
+        return new Rectangle(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
     }
 
 //	@Override

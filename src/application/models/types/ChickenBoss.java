@@ -3,6 +3,7 @@ package application.models.types;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -116,6 +117,7 @@ public class ChickenBoss extends Enemy {
         BufferedImage currentFrameImage = gifFrames.get(currentFrame);
         g2d.drawImage(currentFrameImage, 0, PosY, 1920, PosY + 1080, null);
         
+        //draw hitbox
         g2d.setColor(Color.RED);
         Shape hitbox = getHitbox();
         g2d.draw(hitbox);
@@ -208,6 +210,11 @@ public class ChickenBoss extends Enemy {
             return;
         }
         this.PosY = posY;
+    }
+    
+    @Override
+    public Rectangle getHitbox() {
+        return new Rectangle(PosX - 120, PosY + 220, MODEL_WIDTH, MODEL_HEIGHT);
     }
 
     public int getInitialIndex() {

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -194,5 +195,10 @@ public class ChickenEnemy extends Enemy {
     @Override
     public DeathEffect getDeathEffect() {
         return new ChickenDeathEffect(getCenterX(), getCenterY());
+    }
+    
+    @Override
+    public Rectangle getHitbox() {
+        return new Rectangle(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
     }
 }

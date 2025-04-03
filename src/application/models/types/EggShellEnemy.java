@@ -3,6 +3,7 @@ package application.models.types;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,6 +66,11 @@ public class EggShellEnemy extends Enemy {
     @Override
     public void update() {
 
+    }
+    
+    @Override
+    public Rectangle getHitbox() {
+        return new Rectangle(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
     }
 
 //	@Override

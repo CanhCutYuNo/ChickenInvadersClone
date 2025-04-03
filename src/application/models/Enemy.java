@@ -46,6 +46,7 @@ public abstract class Enemy {
         "/asset/resources/sfx/chicken2b(die).wav",
         "/asset/resources/sfx/chicken3a(die).wav"
     };
+    
     String[] hitSounds = {
         "/asset/resources/sfx/chicken1b1(pluck).wav",
         "/asset/resources/sfx/chicken1b2(pluck).wav",
@@ -87,10 +88,8 @@ public abstract class Enemy {
         }
         return false;
     }
-
-    public Rectangle getHitbox() {
-        return new Rectangle(PosX - 120, PosY + 220, MODEL_WIDTH, MODEL_HEIGHT);
-    }
+    
+    public abstract Rectangle getHitbox();
 
     public int getHp() {
         return hp;
