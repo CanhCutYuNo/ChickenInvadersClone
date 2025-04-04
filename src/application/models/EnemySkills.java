@@ -28,8 +28,9 @@ public class EnemySkills {
     public enum SkillType {
         EGG,
         HOLE,
-        FIREBALL
+        FIREBALL;
     }
+    
     private SkillType skillType;
 
     public EnemySkills(double x, double y, double speedY, int damage, SkillType skillType) {
@@ -105,7 +106,6 @@ public class EnemySkills {
                         scale = 1.0;
                         isActive = false;
                         endTime = currentTime;
-                        System.out.println("EnemySkills (HOLE) disappeared at " + currentTime);
                         return;
                     }
                 }
@@ -115,7 +115,6 @@ public class EnemySkills {
             if (currentTime - startTime >= duration) {
                 isActive = false;
                 endTime = currentTime;
-       //         System.out.println("EnemySkills (HOLE) ended at " + currentTime);
             }
         } else if (skillType == SkillType.EGG) {
             if (!isExploding) {

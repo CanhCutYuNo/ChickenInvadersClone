@@ -13,6 +13,7 @@ import java.util.Random;
 
 import javax.swing.ImageIcon;
 
+import application.controllers.EnemySkillsController;
 import application.controllers.SoundController;
 import application.models.DeathEffect;
 import application.models.Enemy;
@@ -58,7 +59,7 @@ public class ChickenEnemy extends Enemy {
 
     public ChickenEnemy(int PosX, int PosY, SoundController sound) {
         // Gọi super() với các tham số phù hợp, phải là câu lệnh đầu tiên
-        super(100, 64, 64, PosX, PosY, sound, createSkillImagePaths());
+        super(100, 64, 64, PosX, PosY, sound);
         
         // Sau khi gọi super(), mới thực hiện các khởi tạo khác
         spriteBodySheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-body-stripes.png")).getImage();
@@ -155,9 +156,6 @@ public class ChickenEnemy extends Enemy {
             frameCount = 0;
         }
 
-        // Vẽ các chiêu thức(EGG)
-        skillsController.drawSkills(g);
-
         g2d.dispose();
     }
 
@@ -174,14 +172,12 @@ public class ChickenEnemy extends Enemy {
                 isForward = true; // Đổi hướng khi về đầu mảng
             }
         }
-
-        // Tạo EGG ngẫu nhiên
-        if(rand.nextInt(1000) < 1) {
-            skillsController.addSkill(PosX + MODEL_WIDTH / 2, PosY, 5, 50, SkillType.EGG); // EGG rơi xuống(speedY = 5)
+    }
+    
+    public void createEggs(EnemySkillsController skillManager) {
+    	if(rand.nextInt(1000) < 1) {
+    		skillManager.addSkill(PosX, PosY, 5, 50, SkillType.EGG); 
         }
-
-        // Cập nhật các chiêu thức
-        skillsController.updateSkills();
     }
 
     public int getInitialIndex() {
@@ -200,5 +196,15 @@ public class ChickenEnemy extends Enemy {
     @Override
     public Rectangle getHitbox() {
         return new Rectangle(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
+    }
+    
+    @Override
+    public Map<SkillType, String> getSkills() {
+    	return createSkillImagePaths();
+    }
+    
+    @Override
+    public void addSkills(SkillType skillType, String imagePath) {
+        skills.put(skillType, imagePath);
     }
 }
