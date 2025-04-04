@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 import application.models.Player;
+import application.util.ScreenUtil;
 import application.views.PlayerView;
 
 public class PlayerController {
@@ -15,11 +16,13 @@ public class PlayerController {
     private boolean moving = false;
     private PlayerView playerView;
     private Player player;
+    private ScreenUtil screenUtil;
 
     // Constructor
     public PlayerController(PlayerView playerView) {
         this.player = new Player(100, 50, 0.5, 800, 950);
         this.playerView = playerView; // Gán giá trị
+        screenUtil = ScreenUtil.getInstance();
     }
 
     // Getter & Setter
@@ -36,7 +39,8 @@ public class PlayerController {
     }
 
     public void setPosX(int PosX) {
-        player.setPosX(PosX);
+        //convert to screen coordinates
+        player.setPosX((int)(PosX / screenUtil.getWidth() * 1920f * screenUtil.getScaleX()));
     }
 
     public int getPosY() {
@@ -44,7 +48,8 @@ public class PlayerController {
     }
 
     public void setPosY(int PosY) {
-        player.setPosY(PosY);
+        //convert to screen coordinates
+        player.setPosY((int)(PosY / screenUtil.getHeight() * 1080f * screenUtil.getScaleY()));
     }
 
     public Point getPosition() {

@@ -4,6 +4,7 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -28,12 +29,14 @@ import application.models.Items;
 import application.models.types.ChickenBoss;
 import application.models.types.ChickenEnemy;
 import application.models.types.EggShellEnemy;
+import application.util.ScreenUtil;
 import application.views.BackgroundPanel;
 import application.views.GamePanel;
 import application.views.MenuPanel;
 import application.views.PlayerView;
 
 public class Manager {
+    private ScreenUtil screenUtil;
     private PlayerView playerView;
     private PlayerController playerController;
     private ArrayList<Bullet> bullets;
@@ -67,6 +70,7 @@ public class Manager {
     private static final long DELAY_DURATION = 2000;
 
     public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController, GamePanel _gamePanel) {
+        screenUtil = ScreenUtil.getInstance();
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
         skillsManager = new EnemySkillsController(new HashMap<>());
@@ -382,6 +386,10 @@ public class Manager {
     }
 
     public void render(Graphics g) {
+        Graphics2D g2D = (Graphics2D) g;
+        g2D.scale(screenUtil.getWidth() / 1920f / screenUtil.getScaleX(),
+                screenUtil.getHeight() / 1080f / screenUtil.getScaleY());
+
         for(Bullet bullet : bullets) bullet.render(g);
         
         skillsManager.drawSkills(g);
@@ -412,6 +420,10 @@ public class Manager {
         g.setColor(Color.GREEN);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("FPS: " + fps, 50, 50);
+        
+        renderPlayer(g);
+
+        g2D.dispose();
     }
     
     public void renderPlayer(Graphics g) {

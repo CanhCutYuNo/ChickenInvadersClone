@@ -19,6 +19,7 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import application.util.ScreenUtil;
 
 /**
  *
@@ -29,6 +30,7 @@ public class BackgroundPanel extends javax.swing.JPanel {
     /**
 	 * 
 	 */
+    private final ScreenUtil screenUtil;
 	private static final long serialVersionUID = 1L;
 	private final Thread updateThread;
     private Image backgroundImage;
@@ -39,6 +41,7 @@ public class BackgroundPanel extends javax.swing.JPanel {
     private boolean isRunning = true;
 
     public BackgroundPanel() {
+        screenUtil = ScreenUtil.getInstance();
         backgroundImage = new ImageIcon(getClass().getResource("/asset/resources/backgrounds/starfield5-ci5.png")).getImage();
         y = 0;
         updateThread = new Thread(() -> {
@@ -79,8 +82,15 @@ public class BackgroundPanel extends javax.swing.JPanel {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
+
+        Graphics2D g2D = (Graphics2D) g;
+        g2D.scale(screenUtil.getWidth() / 1920f / screenUtil.getScaleX(),
+                screenUtil.getHeight() / 1080f / screenUtil.getScaleY());
+
         g.drawImage(backgroundImage, 0, y, width, height, null);
         g.drawImage(backgroundImage, 0, y - height, width, height, null);
+
+        g2D.dispose();
     }
 
 }
