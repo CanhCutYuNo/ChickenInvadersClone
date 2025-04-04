@@ -2,55 +2,71 @@ package application.controllers;
 
 import javax.swing.JFrame;
 import javax.swing.Timer;
-
 import application.views.GamePanel;
 
 public class GameLoop {
 
-    private final Timer gameTimer;
+    private final Timer updateTimer;
+    private final Timer renderTimer;
+    
     private int frameCount = 0;
+    private int tickCount = 0;
     private int fps = 0;
-    private long lastTime = System.nanoTime();
+    private int tps = 0;
+
+    private long lastUpdateTime = System.nanoTime();
     private final Manager gameManager;
 
     public GameLoop(GamePanel gamePanel, JFrame frame) {
         this.gameManager = gamePanel.getGameManager();
 
-        gameTimer = new Timer(16, e -> {
+        // TPS Timer
+        updateTimer = new Timer(1000 / 60, e -> { 
             long currentTime = System.nanoTime();
-            double deltaTime = (currentTime - lastTime) / 1_000_000_000.0;
-            lastTime = currentTime;
+            double deltaTime = (currentTime - lastUpdateTime) / 1_000_000_000.0;
+            lastUpdateTime = currentTime;
 
             gamePanel.update(deltaTime);
             gameManager.update(deltaTime);
 
             if (gameManager.getEnemies().isEmpty() && !gamePanel.isTransitionActive()) {
-            //    gameManager.setLevel(gameManager.getLevel());
                 gamePanel.updateLevel();
             }
 
-            frame.repaint();
-         //   System.out.println("Đã gọi repaint, deltaTime: " + deltaTime); // Debug
+            tickCount++;
+        });
 
+        // FPS 
+        renderTimer = new Timer(1000 / 144, e -> { 
+            frame.repaint();
             frameCount++;
         });
 
-        new Timer(1000, e -> {
+        // TPS
+        new Timer(16, e -> {
             fps = frameCount;
+            tps = tickCount;
             frameCount = 0;
+            tickCount = 0;
         }).start();
     }
 
     public void start() {
-        lastTime = System.nanoTime();
-        gameTimer.start();
+        lastUpdateTime = System.nanoTime();
+        updateTimer.start();
+        renderTimer.start();
     }
 
     public void stop() {
-        gameTimer.stop();
+        updateTimer.stop();
+        renderTimer.stop();
     }
 
     public int getFPS() {
         return fps;
+    }
+
+    public int getTPS() {
+        return tps;
     }
 }
