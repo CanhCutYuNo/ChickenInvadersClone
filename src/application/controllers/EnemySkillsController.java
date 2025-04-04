@@ -53,12 +53,9 @@ public class EnemySkillsController {
     }
 
     public void drawSkills(Graphics g) {
-        System.out.println("Number of skills: " + skills.size());
         for(EnemySkills skill : skills) {
             view.draw(g, skill);
         }
-        g.setColor(Color.RED);
-        g.fillRect(100, 100, 50, 50);
     }
 
     public List<EnemySkills> getSkills() {
