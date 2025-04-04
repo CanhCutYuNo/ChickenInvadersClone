@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Random;
 
 public class Level4Manager extends LevelManager{
-    SoundController sound;
 //    List<EggShellEnemy> eggShellEnemies;
     Random random;
 
@@ -37,7 +36,7 @@ public class Level4Manager extends LevelManager{
 
         addEnemyController(new ChickEnemyControllerLevel4(1, EnemyController.CHICK,
                 posX + (tempEggShellEnemy.getMODEL_WIDTH() - tempChickEnemy.getMODEL_WIDTH()) / 2,
-                posY + (tempEggShellEnemy.getMODEL_HEIGHT() - tempChickEnemy.getMODEL_WIDTH()) / 2, 0.0f, sound));
+                posY + (tempEggShellEnemy.getMODEL_HEIGHT() - tempChickEnemy.getMODEL_WIDTH()) / 2, 0.0f, soundController));
     }
 
     private class EnemyControllerLevel4 extends EnemyController {
