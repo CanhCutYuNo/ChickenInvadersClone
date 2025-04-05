@@ -46,7 +46,7 @@ public class Manager {
     private JPanel mainPanel;
     private GameLoop gameLoop;
     private int frameDelay = 0;
-    private int level = 5;
+    private int level = 1;
     private boolean playerExploded = false;
     // Thêm các biến để lưu trữ LevelXManager
     private Level1Manager level1Manager;
@@ -141,7 +141,8 @@ public class Manager {
         }
         else if(level == 3 && level3Manager != null) {
             level3Manager.update((float) deltaTime);
-        } else if (level == 5 && level5Manager != null) {
+        }
+        else if (level == 5 && level5Manager != null) {
             level5Manager.update((float) deltaTime);
         }
         else if(level == 4 && level4Manager != null){
@@ -331,6 +332,8 @@ public class Manager {
             }
         }
     }
+
+
 
     public void spawnEnemiesAfterFade() {
 

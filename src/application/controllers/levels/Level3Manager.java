@@ -111,7 +111,6 @@ public class Level3Manager extends LevelManager {
     }
 
     private class ChickEnemyControllerLevel3 extends EnemyController {
-
         public ChickEnemyControllerLevel3(int numEnemies, int enemyType, int startY, float timeDelay, SoundController soundController) {
             super(numEnemies, enemyType, startY, timeDelay, soundController);
             for (int i = 0; i < numEnemies; i++) {

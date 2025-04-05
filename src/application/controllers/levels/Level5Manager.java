@@ -7,6 +7,8 @@ import application.models.Enemy;
 import application.models.types.ChickenBoss;
 import application.models.types.ChickenEnemy;
 
+import java.util.List;
+
 public class Level5Manager extends LevelManager {
     public Level5Manager(SoundController soundController, List<Enemy> enemies) {
         super(soundController, enemies);
