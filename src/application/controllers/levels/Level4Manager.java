@@ -34,6 +34,7 @@ public class Level4Manager extends LevelManager{
         ChickEnemy tempChickEnemy = new ChickEnemy(-1, -1, null);
         EggShellEnemy tempEggShellEnemy = new EggShellEnemy(-1, -1, null);
 
+        // Chuẩn hóa vị trí ChickEnemy sinh ra
         addEnemyController(new ChickEnemyControllerLevel4(1, EnemyController.CHICK,
                 posX + (tempEggShellEnemy.getMODEL_WIDTH() - tempChickEnemy.getMODEL_WIDTH()) / 2,
                 posY + (tempEggShellEnemy.getMODEL_HEIGHT() - tempChickEnemy.getMODEL_WIDTH()) / 2, 0.0f, soundController));
@@ -85,7 +86,7 @@ public class Level4Manager extends LevelManager{
     private class ChickEnemyControllerLevel4 extends EnemyController {
         public ChickEnemyControllerLevel4(int numEnemies, int enemyType, int posX, int startY, float timeDelay, SoundController soundController) {
             super(numEnemies, enemyType, startY, timeDelay, soundController);
-            Enemy enemy = createEnemy(posX + 30, startY - 80);
+            Enemy enemy = createEnemy(posX, startY);
             enemy.setInitialIndex(0);
             enemies.add(enemy);
         }
