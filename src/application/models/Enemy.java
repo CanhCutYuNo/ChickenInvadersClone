@@ -2,10 +2,10 @@ package application.models;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import application.controllers.EnemySkillsController;
 import application.controllers.SoundController;
 import application.models.EnemySkills.SkillType;
 
@@ -19,22 +19,22 @@ public abstract class Enemy {
     protected int speed;
     protected int initialIndex = 0;
     protected float rotate = 0f;
-    
-    protected SoundController sound;    
-    protected boolean isForward = true; // Biến để theo dõi hướng di chuyển của animation
+
+    protected SoundController sound;
+    protected boolean isForward = true;
     protected int MODEL_WIDTH;
     protected int MODEL_HEIGHT;
     protected static final int MAP_WIDTH = 1900;
-    protected EnemySkillsController skillsController;
+    protected Map<SkillType, String> skills; // Lưu trữ thông tin về kỹ năng
 
-    public Enemy(int hp, int MODEL_WIDTH, int MODEL_HEIGHT, int PosX, int PosY, SoundController sound, Map<SkillType, String> skillImagePaths) {
-        this.hp = hp;       
+    public Enemy(int hp, int MODEL_WIDTH, int MODEL_HEIGHT, int PosX, int PosY, SoundController sound) {
+        this.hp = hp;
         this.MODEL_WIDTH = MODEL_WIDTH;
         this.MODEL_HEIGHT = MODEL_HEIGHT;
         this.PosX = PosX;
         this.PosY = PosY;
         this.sound = sound;
-        this.skillsController = new EnemySkillsController(skillImagePaths);
+        this.skills = new HashMap<>(); // Khởi tạo Map để lưu trữ kỹ năng
     }
 
     String[] deathSounds = {
@@ -46,6 +46,7 @@ public abstract class Enemy {
         "/asset/resources/sfx/chicken2b(die).wav",
         "/asset/resources/sfx/chicken3a(die).wav"
     };
+
     String[] hitSounds = {
         "/asset/resources/sfx/chicken1b1(pluck).wav",
         "/asset/resources/sfx/chicken1b2(pluck).wav",
@@ -57,17 +58,16 @@ public abstract class Enemy {
 
     public abstract void render(Graphics g);
 
-    // Cập nhật animation frame
     public void nextFrame() {
-        if(isForward) {
+        if (isForward) {
             curFrame++;
             if (curFrame >= 48) {
-                isForward = false; // Đổi hướng khi đến cuối mảng
+                isForward = false;
             }
         } else {
             curFrame--;
             if (curFrame <= 0) {
-                isForward = true; // Đổi hướng khi về đầu mảng
+                isForward = true;
             }
         }
     }
@@ -82,15 +82,10 @@ public abstract class Enemy {
     }
 
     public boolean isDead() {
-        if (hp <= 0) {
-            return true;
-        }
-        return false;
+        return hp <= 0;
     }
 
-    public Rectangle getHitbox() {
-        return new Rectangle(PosX - 120, PosY + 220, MODEL_WIDTH, MODEL_HEIGHT);
-    }
+    public abstract Rectangle getHitbox();
 
     public int getHp() {
         return hp;
@@ -99,11 +94,11 @@ public abstract class Enemy {
     public int getPosX() {
         return PosX;
     }
-    
+
     public void setPosX(int posX) {
         this.PosX = posX;
     }
-    
+
     public void setPosY(int posY) {
         this.PosY = posY;
     }
@@ -119,20 +114,20 @@ public abstract class Enemy {
     public int getMODEL_HEIGHT() {
         return MODEL_HEIGHT;
     }
-    
-    public int getCenterX(){
+
+    public int getCenterX() {
         return (PosX + MODEL_WIDTH / 2);
     }
-    
-    public int getCenterY(){
+
+    public int getCenterY() {
         return (PosY + MODEL_HEIGHT / 2);
     }
-    
+
     public int getcurFrame() {
         return curFrame;
     }
-    
-    public DeathEffect getDeathEffect(){
+
+    public DeathEffect getDeathEffect() {
         return null;
     }
 
@@ -153,7 +148,9 @@ public abstract class Enemy {
         this.rotate = rotate;
     }
 
-    public EnemySkillsController getSkillsController() {
-        return skillsController;
+    public Map<SkillType, String> getSkills() {
+        return skills;
     }
+
+    public abstract void addSkills(SkillType skillType, String imagePath);
 }

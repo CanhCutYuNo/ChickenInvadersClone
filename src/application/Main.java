@@ -32,7 +32,7 @@ public class Main {
             mainPanel = new JPanel(cardLayout);
 
             soundController = new SoundController();
-            gameManager = new Manager(cardLayout, mainPanel, null, null, null, soundController);
+            gameManager = new Manager(cardLayout, mainPanel, null, null, null, soundController, null);
 
             backgroundPanel = new BackgroundPanel();
             gameManager.setBackgroundPanel(backgroundPanel);
@@ -44,6 +44,7 @@ public class Main {
             mouseController = new MouseController(gamePanel, soundController);
 
             gamePanel = new GamePanel(gameManager);
+            gameManager.setGamePanel(gamePanel);
             gameLoop = new GameLoop(gamePanel, frame);
             gameManager.setGameLoop(gameLoop);
 

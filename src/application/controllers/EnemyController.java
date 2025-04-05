@@ -3,7 +3,6 @@ package application.controllers;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import application.models.Enemy;
 import application.models.types.ChickEnemy;
@@ -41,8 +40,6 @@ public class EnemyController {
     }
 
     public Enemy createEnemy(int posX, int posY) {
-        // System.out.println("Creating enemy of type: " + enemyType + " at(" + posX +
-        // "," + posY + ")");
         switch (enemyType) {
             case CHICKEN:
                 return new ChickenEnemy(posX, posY, soundController);
@@ -72,8 +69,8 @@ public class EnemyController {
         if (isActive) {
             t += deltaTime * 100 * direction;
             // rotate = (float) (20 * Math.sin(0.05 * t));
-            Random random = new Random();
-            float gravity = 30.0f; // Tốc độ rơi
+//            Random random = new Random();
+//            float gravity = 30.0f; // Tốc độ rơi
 //            float oscillationSpeed = 0.5f; // Tốc độ lắc
 //            float oscillationAmplitude = 1.0f; // Biên độ lắc
             for (Enemy enemy : enemies) {
@@ -98,9 +95,9 @@ public class EnemyController {
                     enemy.render(g);
                 }
             }
-            System.out.println("Rendering row at Y=" + startY + ", Active enemies: " + enemies.size());
+         //   System.out.println("Rendering row at Y=" + startY + ", Active enemies: " + enemies.size());
         } else {
-            System.out.println("Row at Y=" + startY + " not active yet");
+          //  System.out.println("Row at Y=" + startY + " not active yet");
         }
     }
 
@@ -114,6 +111,6 @@ public class EnemyController {
 
     public void removeEnemy(Enemy enemy) {
         enemies.remove(enemy);
-        System.out.println("Removed enemy from EnemyController at (" + enemy.getPosX() + "," + enemy.getPosY() + "). New size: " + enemies.size());
+     //   System.out.println("Removed enemy from EnemyController at (" + enemy.getPosX() + "," + enemy.getPosY() + "). New size: " + enemies.size());
     }
 }

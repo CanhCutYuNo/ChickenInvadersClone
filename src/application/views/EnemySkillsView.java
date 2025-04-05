@@ -55,7 +55,7 @@ public class EnemySkillsView {
 
     public EnemySkillsView(Map<SkillType, String> skillImagePaths) {
         skillImages = new HashMap<>();
-        try {
+        try {     	
             for (Map.Entry<SkillType, String> entry : skillImagePaths.entrySet()) {
                 SkillType skillType = entry.getKey();
                 String path = entry.getValue();
@@ -230,9 +230,9 @@ public class EnemySkillsView {
         g2d.dispose();
     }
 
-    private int frameIndex = 0;
-
-    private void updateFrameIndex() {
-        frameIndex = (frameIndex + 1) % FireballSprites.size();
-    }
+//    private int frameIndex = 0;
+//
+//    private void updateFrameIndex() {
+//        frameIndex = (frameIndex + 1) % FireballSprites.size();
+//    }
 }

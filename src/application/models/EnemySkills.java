@@ -1,6 +1,5 @@
 package application.models;
 
-import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
@@ -29,8 +28,9 @@ public class EnemySkills {
     public enum SkillType {
         EGG,
         HOLE,
-        FIREBALL
+        FIREBALL;
     }
+    
     private SkillType skillType;
 
     public EnemySkills(double x, double y, double speedY, int damage, SkillType skillType) {
@@ -106,7 +106,6 @@ public class EnemySkills {
                         scale = 1.0;
                         isActive = false;
                         endTime = currentTime;
-                        System.out.println("EnemySkills (HOLE) disappeared at " + currentTime);
                         return;
                     }
                 }
@@ -116,7 +115,6 @@ public class EnemySkills {
             if (currentTime - startTime >= duration) {
                 isActive = false;
                 endTime = currentTime;
-                System.out.println("EnemySkills (HOLE) ended at " + currentTime);
             }
         } else if (skillType == SkillType.EGG) {
             if (!isExploding) {
@@ -133,7 +131,7 @@ public class EnemySkills {
             if (posX < -100 || posX > 2020 || posY < -100 || posY > 1180) {
                 isActive = false;
                 endTime = currentTime;
-                System.out.println("EnemySkills (FIREBALL) disappeared at " + currentTime);
+        //        System.out.println("EnemySkills (FIREBALL) disappeared at " + currentTime);
             }
         }
     }
@@ -148,7 +146,7 @@ public class EnemySkills {
     }
 
     public boolean removed() {
-        return (isExploding && animationFrame > 32) || !isActive;
+        return (isExploding && animationFrame > 32);
     }
 
     public void explode() {
