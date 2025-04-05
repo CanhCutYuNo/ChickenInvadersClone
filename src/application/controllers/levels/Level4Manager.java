@@ -22,7 +22,7 @@ public class Level4Manager extends LevelManager{
 //        this.eggShellEnemies = new ArrayList<>();
         this.random = new Random();
 
-        for(int i = 0; i < 2; i++){
+        for(int i = 0; i < 10; i++){
             int posY = random.nextInt(100);
 
             addEnemyController(new EnemyControllerLevel4(1, EnemyController.EGG_SHELL, posY - 50, 0.0f + i * 2.0f, sound));
@@ -58,16 +58,21 @@ public class Level4Manager extends LevelManager{
                 t += deltaTime * 100 * direction;
                 // rotate = (float) (20 * Math.sin(0.05 * t));
                 Random random = new Random();
-                float gravity = 30.0f; // Tốc độ rơi
+                float gravity = 5.0f; // Tốc độ rơi
     //            float oscillationSpeed = 0.5f; // Tốc độ lắc
     //            float oscillationAmplitude = 1.0f; // Biên độ lắc
                 for (Enemy enemy : enemies) {
                     if (enemy instanceof EggShellEnemy) {
-                        float posY = enemy.getPosY() + 2; // Gà rơi xuống
+                        float posY = enemy.getPosY() + 1; // Gà rơi xuống
     //                    float offsetX = (float) Math.sin(posY * 0.005) * oscillationAmplitude; // Lắc nhẹ
     //                    float posX = enemy.getPosX() + offsetX * deltaTime * oscillationSpeed; // Lắc mượt hơn
     
                         enemy.setPosY((int) posY);
+
+                        if(enemy.getPosY()>1000){
+                            enemy.setPosX(random.nextInt(1000)+20);
+                            enemy.setPosY(random.nextInt(50)+3);
+                        }
     
     //                    enemy.setPosX((int) posX);
     //                    ((EggShellEnemy) enemy).setRotate((float) (20 * Math.sin(0.05 * t))); // Xoay nhẹ
@@ -80,7 +85,7 @@ public class Level4Manager extends LevelManager{
     private class ChickEnemyControllerLevel4 extends EnemyController {
         public ChickEnemyControllerLevel4(int numEnemies, int enemyType, int posX, int startY, float timeDelay, SoundController soundController) {
             super(numEnemies, enemyType, startY, timeDelay, soundController);
-            Enemy enemy = createEnemy(posX, startY);
+            Enemy enemy = createEnemy(posX + 30, startY - 80);
             enemy.setInitialIndex(0);
             enemies.add(enemy);
         }
@@ -97,6 +102,14 @@ public class Level4Manager extends LevelManager{
                 
                 for (Enemy enemy : enemies) {
                     // Implement here
+                    float posY = enemy.getPosY() + 2;
+                    enemy.setPosY((int)posY);
+
+
+                    if(enemy.getPosY() > 1000){
+                        enemy.setPosX(random.nextInt(1000)+20);
+                        enemy.setPosY(random.nextInt(100));
+                    }
                     
                     enemy.nextFrame();
                 }
