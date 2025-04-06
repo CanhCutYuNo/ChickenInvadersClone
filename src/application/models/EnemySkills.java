@@ -71,8 +71,8 @@ public class EnemySkills {
             this.width = 15;
             this.height = 15;
         } else if (skillType == SkillType.HOLE) {
-            this.width = 330;
-            this.height = 330;
+            this.width = 230;
+            this.height = 230;
         } else if (skillType == SkillType.FIREBALL) {
             this.width = 153;
             this.height = 62;

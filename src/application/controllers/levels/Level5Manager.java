@@ -20,17 +20,17 @@ public class Level5Manager extends LevelManager {
     }
 
     private class EnemyControllerLevel5 extends EnemyController{
-        
+
         public EnemyControllerLevel5(int numEnemies, int enemyType, int startY, float timeDelay, SoundController soundController) {
             super(numEnemies, enemyType, startY, timeDelay, soundController);
             Enemy enemy = createEnemy(SCREEN_WIDTH / 2 - 150, 100);
             enemy.setInitialIndex(0);
             enemies.add(enemy);
         }
-        
+
         @Override
         public void update(float deltaTime) {
-            
+
             timeElapsed += deltaTime;
 
             if (!isActive && timeElapsed >= timeDelay) {
@@ -77,7 +77,58 @@ public class Level5Manager extends LevelManager {
 
 
         }
-        
-        
+
+
     }
+
+//    private class ChickenEnemyControllerLevel5 extends EnemyController{
+//
+//        public ChickenEnemyControllerLevel5(int numEnemies, int enemyType,int posX, int startY, float timeDelay, SoundController soundController){
+//            super(numEnemies, enemyType, startY, timeDelay, soundController);
+//            for(int i = 0; i < numEnemies; i++){
+//                Enemy enemy = createEnemy(posX, startY);
+//                enemy.setInitialIndex(i);
+//                enemies.add(enemy);
+//            }
+//        }
+//
+//        @Override
+//        public void update(float deltaTime){
+//            timeElapsed += deltaTime;
+//            if(!isActive && timeElapsed >= timeDelay){
+//                isActive = true;
+//            }
+//
+//            if(isActive){
+//                for (Enemy enemy: enemies){
+//                    if (enemy instanceof ChickenEnemy) {
+//                        int index = enemy.getInitialIndex();
+//                        float posX = -1800 + t + index * SPACING;
+//                        float posY = startY + 20 * (float) Math.sin(0.02 * posX);
+//                        enemy.setPosX((int) posX);
+//                        enemy.setPosY((int) posY);
+//                        ((ChickenEnemy) enemy).setRotate(rotate);
+//
+//                        enemy.nextFrame();
+//                    }
+//
+//                    if (!enemies.isEmpty()) {
+//                        // Chỉ áp dụng logic di chuyển hàng cho ChickenEnemy
+//                        Enemy firstEnemy = enemies.get(0);
+//                        Enemy lastEnemy = enemies.get(enemies.size() - 1);
+//
+//                        if (lastEnemy.getPosX() > SCREEN_RIGHT && direction == 1) {
+//                            direction = -1;
+//                            t -= 2 * (lastEnemy.getPosX() - SCREEN_RIGHT);
+//                            System.out.println("Row at Y=" + startY + " turning left at right edge");
+//                        } else if (firstEnemy.getPosX() < SCREEN_LEFT && direction == -1) {
+//                            direction = 1;
+//                            t += 2 * (SCREEN_LEFT - firstEnemy.getPosX());
+//                            System.out.println("Row at Y=" + startY + " turning right at left edge");
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 }

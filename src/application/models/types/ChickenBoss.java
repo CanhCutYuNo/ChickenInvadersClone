@@ -42,16 +42,26 @@ public class ChickenBoss extends Enemy {
     private boolean shouldCreateHole = false; // Cờ để thông báo tạo HOLE
     private boolean shouldCreateFireballBurst = false; // Cờ để thông báo tạo FIREBALL burst
 
+
     // Thêm biến để theo dõi trạng thái di chuyển
     private boolean isMovingToCenter = true;
     private static final int START_Y = 1400;
     private static final int TARGET_Y = 0;
     private static final int MOVE_SPEED = 2;
 
+
+    //Quan ly thoi gian BOSS an hien
+    private boolean isVisible = true;
+    private long lastTeleportTime = 0;
+    private long teleportInterval = 15000; // 15 giây giữa mỗi lần teleport
+    private long disappearDuration = 3000; // Biến mất trong 3 giây
+    private static final int SCREEN_WIDTH = 1920;
+    private static final int SCREEN_HEIGHT = 1080;
+
     private Random random = new Random();
 
     public ChickenBoss(int posX, int posY, SoundController sound) {
-        super(1000, 500, 600, posX, START_Y, sound);
+        super(1000, 500, 600, (1920- 500)/2, START_Y, sound);
         System.out.println("ChickenBoss created at (" + PosX + "," + PosY + ")");
 
         addSkills(SkillType.HOLE, "/asset/resources/gfx/hole.png");
@@ -101,6 +111,8 @@ public class ChickenBoss extends Enemy {
 
     @Override
     public void render(Graphics g) {
+
+        if(!isVisible) return;
         Graphics2D g2d = (Graphics2D) g.create();
 
         int centerX = PosX + MODEL_WIDTH / 2;
@@ -109,11 +121,11 @@ public class ChickenBoss extends Enemy {
 
         if (isGifLoaded && !gifFrames.isEmpty()) {
             BufferedImage currentFrameImage = gifFrames.get(currentFrame);
-            g2d.drawImage(currentFrameImage, 0, PosY, 1920, PosY + 1080, null);
+            g2d.drawImage(currentFrameImage, PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT, null);
         } else {
             // Vẽ placeholder nếu GIF chưa tải
             g2d.setColor(Color.RED);
-            g2d.fillRect(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
+            g2d.fillRect(PosX, PosY, MODEL_WIDTH-50, MODEL_HEIGHT-50);
         }
 
         // Vẽ hitbox để debug
@@ -165,18 +177,41 @@ public class ChickenBoss extends Enemy {
             // Kiểm tra nếu đã qua delay kể từ HOLE và qua cooldown của FIREBALL
             if (currentTime - lastHoleSkillTime >= skillsDelay &&
                 currentTime - lastFireballSkillTime >= fireballSkillCooldown) {
-                shouldCreateFireballBurst = true; // Đặt cờ để Manager tạo FIREBALL burst
-                lastFireballSkillTime = currentTime;
-                skillState = 0; // Chuyển sang trạng thái tạo HOLE
-                System.out.println("ChickenBoss requests new FIREBALL burst at " + currentTime);
+                if(isVisible){
+                    shouldCreateFireballBurst = true; // Đặt cờ để Manager tạo FIREBALL burst
+                    lastFireballSkillTime = currentTime;
+                    skillState = 0; // Chuyển sang trạng thái tạo HOLE
+                    System.out.println("ChickenBoss requests new FIREBALL burst at " + currentTime);
+
+                }
+
             }
         }
+
+        //Visible
+        if (isVisible && currentTime - lastTeleportTime >= teleportInterval) {
+            isVisible = false;
+            lastTeleportTime = currentTime; // Đánh dấu thời gian bắt đầu biến mất
+        } else if (!isVisible && currentTime - lastTeleportTime >= disappearDuration) {
+            teleportToRandomPosition();  // Xuất hiện ở vị trí ngẫu nhiên
+            isVisible = true;
+            lastTeleportTime = currentTime; // Đặt lại thời gian cho lần sau
+        }
+    }
+
+    //Phuong thuc dich chuyen
+    private void teleportToRandomPosition() {
+        int newX = random.nextInt(SCREEN_WIDTH - MODEL_WIDTH);
+        int newY = random.nextInt(SCREEN_HEIGHT - MODEL_HEIGHT);
+        this.PosX = newX;
+        this.PosY = newY;
+        System.out.println("ChickenBoss teleported to: (" + PosX + ", " + PosY + ")");
     }
 
     // Phương thức để Manager gọi khi cần tạo FIREBALL burst
     public void createFireballBurst(EnemySkillsController skillsManager) {
-        double centerX = 1920 / 2;
-        double centerY = 1080 / 2;
+        double centerX = PosX + MODEL_WIDTH / 2;
+        double centerY = PosY + MODEL_HEIGHT / 2;
         int damage = 1000;
         double speed = 5;
 
@@ -196,7 +231,7 @@ public class ChickenBoss extends Enemy {
 
     // Phương thức để Manager gọi khi cần tạo HOLE
     public void createHoleSkill(EnemySkillsController skillsManager) {
-        skillsManager.addSkill(1920 / 2, 1080 / 2, 0, 5000, SkillType.HOLE);
+        skillsManager.addSkill(PosX, PosY, 0, 5000, SkillType.HOLE);
         //skillsManager.addSkillImagePath(SkillType.HOLE, "/asset/resources/gfx/hole.png");
         shouldCreateHole = false; // Reset cờ sau khi tạo
     }
@@ -220,7 +255,7 @@ public class ChickenBoss extends Enemy {
 
     @Override
     public Rectangle getHitbox() {
-        return new Rectangle(PosX - 120, PosY + 220, MODEL_WIDTH, MODEL_HEIGHT);
+        return new Rectangle(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
     }
 
     @Override
