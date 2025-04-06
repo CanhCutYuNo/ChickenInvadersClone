@@ -249,6 +249,7 @@ public class Manager {
             while (eggIterator.hasNext()) {
                 EnemySkills egg = eggIterator.next();
                 if (isColliding3(playerController, egg)) {
+                	soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggshellCrack.wav").getPath());
                     playerController.isDamaged(egg.getDamage());
                     if (playerController.getHP() <= 0) {
                         playerController.getPlayerView().startExplosion();
