@@ -62,8 +62,6 @@ public class ViewController {
     public void switchToSettingPanel() {
         cardLayout.show(mainPanel, "Setting");
         settingPanel.setBackgroundPanel(backgroundPanel);
-        
-
     }
 
     public void switchToGameContainerPanel() {

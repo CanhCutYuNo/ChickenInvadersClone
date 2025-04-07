@@ -52,7 +52,7 @@ public class ChickenBoss extends Enemy {
 
     public ChickenBoss(int posX, int posY, SoundController sound) {
         super(1000, 500, 600, posX, START_Y, sound);
-        System.out.println("ChickenBoss created at (" + PosX + "," + PosY + ")");
+        System.out.println("ChickenBoss created at(" + PosX + "," + PosY + ")");
 
         addSkills(SkillType.HOLE, "/asset/resources/gfx/hole.png");
         addSkills(SkillType.FIREBALL, "/asset/resources/gfx/bullet-bolt1.png");
@@ -72,7 +72,7 @@ public class ChickenBoss extends Enemy {
         long startTime = System.currentTimeMillis();
         try {
             InputStream inputStream = getClass().getResourceAsStream(path);
-            if (inputStream == null) {
+            if(inputStream == null) {
                 throw new IOException("Cannot find GIF file at path: " + path);
             }
             ImageReader reader = ImageIO.getImageReadersByFormatName("gif").next();
@@ -80,34 +80,34 @@ public class ChickenBoss extends Enemy {
 
             int numFrames = reader.getNumImages(true);
             System.out.println("Loading GIF with " + numFrames + " frames...");
-            for (int i = 0; i < numFrames; i++) {
+            for(int i = 0; i < numFrames; i++) {
                 BufferedImage frame = reader.read(i);
                 gifFrames.add(frame);
 
                 IIOMetadata metadata = reader.getImageMetadata(i);
-                IIOMetadataNode root = (IIOMetadataNode) metadata.getAsTree("javax_imageio_gif_image_1.0");
-                IIOMetadataNode gce = (IIOMetadataNode) root.getElementsByTagName("GraphicControlExtension").item(0);
+                IIOMetadataNode root =(IIOMetadataNode) metadata.getAsTree("javax_imageio_gif_image_1.0");
+                IIOMetadataNode gce =(IIOMetadataNode) root.getElementsByTagName("GraphicControlExtension").item(0);
                 int delay = Math.min(Integer.parseInt(gce.getAttribute("delayTime")) * 10, 50);
                 frameDelays.add(delay);
                 System.out.println("Frame " + i + " delay: " + delay + " ms");
             }
-        } catch (IOException e) {
+        } catch(IOException e) {
             System.err.println("Error loading GIF: " + e.getMessage());
             e.printStackTrace();
         }
         long endTime = System.currentTimeMillis();
-        System.out.println("GIF loading took " + (endTime - startTime) + " ms");
+        System.out.println("GIF loading took " +(endTime - startTime) + " ms");
     }
 
     @Override
     public void render(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g.create();
+        Graphics2D g2d =(Graphics2D) g.create();
 
         int centerX = PosX + MODEL_WIDTH / 2;
         int centerY = PosY + MODEL_HEIGHT / 2;
         g2d.rotate(Math.toRadians(rotate), centerX, centerY);
 
-        if (isGifLoaded && !gifFrames.isEmpty()) {
+        if(isGifLoaded && !gifFrames.isEmpty()) {
             BufferedImage currentFrameImage = gifFrames.get(currentFrame);
             g2d.drawImage(currentFrameImage, 0, PosY, 1920, PosY + 1080, null);
         } else {
@@ -126,7 +126,7 @@ public class ChickenBoss extends Enemy {
 
     @Override
     public void nextFrame() {
-        if (!isGifLoaded || gifFrames.isEmpty()) {
+        if(!isGifLoaded || gifFrames.isEmpty()) {
             return;
         }
 
@@ -134,17 +134,17 @@ public class ChickenBoss extends Enemy {
         long elapsedTime = currentTime - lastFrameTime;
         int delay = frameDelays.get(currentFrame);
 
-        if (elapsedTime >= delay) {
+        if(elapsedTime >= delay) {
             currentFrame++;
-            if (currentFrame >= gifFrames.size()) {
+            if(currentFrame >= gifFrames.size()) {
                 currentFrame = 0;
             }
             lastFrameTime = currentTime;
         }
 
-        if (isMovingToCenter) {
+        if(isMovingToCenter) {
             PosY -= MOVE_SPEED;
-            if (PosY <= TARGET_Y) {
+            if(PosY <= TARGET_Y) {
                 PosY = TARGET_Y;
                 isMovingToCenter = false;
             } else {
@@ -153,22 +153,21 @@ public class ChickenBoss extends Enemy {
         }
 
         // Kiểm tra thời gian để thông báo tạo kỹ năng
-        if (skillState == 0) {
+        if(skillState == 0) {
             // Kiểm tra nếu đã qua cooldown để tạo HOLE
-            if (currentTime - lastHoleSkillTime >= holeSkillCooldown) {
+            if(currentTime - lastHoleSkillTime >= holeSkillCooldown) {
                 shouldCreateHole = true; // Đặt cờ để Manager tạo HOLE
                 lastHoleSkillTime = currentTime;
                 skillState = 1; // Chuyển sang trạng thái tạo FIREBALL
                 System.out.println("ChickenBoss requests new HOLE skill at " + currentTime);
             }
-        } else if (skillState == 1) {
+        } else if(skillState == 1) {
             // Kiểm tra nếu đã qua delay kể từ HOLE và qua cooldown của FIREBALL
-            if (currentTime - lastHoleSkillTime >= skillsDelay &&
+            if(currentTime - lastHoleSkillTime >= skillsDelay &&
                 currentTime - lastFireballSkillTime >= fireballSkillCooldown) {
                 shouldCreateFireballBurst = true; // Đặt cờ để Manager tạo FIREBALL burst
                 lastFireballSkillTime = currentTime;
                 skillState = 0; // Chuyển sang trạng thái tạo HOLE
-                System.out.println("ChickenBoss requests new FIREBALL burst at " + currentTime);
             }
         }
     }
@@ -180,12 +179,12 @@ public class ChickenBoss extends Enemy {
         int damage = 1000;
         double speed = 5;
 
-        for (int i = 0; i < 10; i++) {
+        for(int i = 0; i < 10; i++) {
             double angleStart = i * 36;
-            double angleEnd = (i + 1) * 36;
+            double angleEnd =(i + 1) * 36;
 
-            for (int j = 0; j < 2; j++) {
-                double angle = Math.toRadians(random.nextDouble() * (angleEnd - angleStart) + angleStart);
+            for(int j = 0; j < 2; j++) {
+                double angle = Math.toRadians(random.nextDouble() *(angleEnd - angleStart) + angleStart);
                 double speedX = speed * Math.cos(angle);
                 double speedY = speed * Math.sin(angle);
                 skillsManager.addSkill(centerX, centerY, speedX, speedY, damage, SkillType.FIREBALL);
@@ -194,25 +193,22 @@ public class ChickenBoss extends Enemy {
         shouldCreateFireballBurst = false; // Reset cờ sau khi tạo
     }
 
-    // Phương thức để Manager gọi khi cần tạo HOLE
     public void createHoleSkill(EnemySkillsController skillsManager) {
         skillsManager.addSkill(1920 / 2, 1080 / 2, 0, 5000, SkillType.HOLE);
-        //skillsManager.addSkillImagePath(SkillType.HOLE, "/asset/resources/gfx/hole.png");
-        shouldCreateHole = false; // Reset cờ sau khi tạo
+        shouldCreateHole = false;
     }
 
     @Override
     public void takeDamage(int damage) {
         hp -= damage;
-        if (hp <= 0) {
+        if(hp <= 0) {
             sound.playSoundEffect("/asset/resources/sfx/death1.wav");
         }
     }
 
     @Override
     public void setPosY(int posY) {
-        if (isMovingToCenter) {
-            System.out.println("Cannot set PosY while ChickenBoss is moving to center. Current Y: " + PosY);
+        if(isMovingToCenter) {
             return;
         }
         this.PosY = posY;

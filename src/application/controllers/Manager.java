@@ -8,7 +8,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -49,7 +48,7 @@ public class Manager {
     private JPanel mainPanel;
     private GameLoop gameLoop;
     private int frameDelay = 0;
-    private int level = 5;
+    private int level = 1;
     private boolean playerExploded = false;
     // Thêm các biến để lưu trữ LevelXManager
     private Level1Manager level1Manager;
@@ -69,7 +68,7 @@ public class Manager {
     public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController, GamePanel _gamePanel) {
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
-        skillsManager = new EnemySkillsController(new HashMap<>());
+        skillsManager = new EnemySkillsController();
         deathEffectController = new DeathEffectController();
         playerController = new PlayerController(null);
         playerView = new PlayerView(playerController);
@@ -141,7 +140,6 @@ public class Manager {
                 isDelaying = false;
                 levelTransitionTriggered = true;
                 gamePanel.triggerTransition();
-                System.out.println("Delay finished, triggering transition to Level " + level);
             }
         }
 
@@ -253,8 +251,6 @@ public class Manager {
 
             // Kiểm tra va chạm với người chơi
             if(isColliding(playerController,item)) {
-                System.out.println("Player picked up an item!");
-
                 // Gọi hàm xử lý khi nhặt item(tăng máu, đạn, điểm...)
                 playerController.isDamaged(item.getDamage());
 
@@ -348,7 +344,6 @@ public class Manager {
             EnemySkills skill = skillIterator.next();
             if(skill.isActive() && isColliding(playerController, skill)) {
                 playerController.isDamaged(skill.getDamage());
-                System.out.println("Player collides with skill: " + skill.getSkillType());
                 if(playerController.getHP() <= 0) {
                     playerController.getPlayerView().startExplosion();
                     soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/explosionPlayer.wav").getPath());
@@ -405,8 +400,6 @@ public class Manager {
         deathEffectController.render(g);
 
         items.drawItems(g);
-        
-      //  System.out.println(skillsManager.getSkills().size());
 
         int fps = gameLoop.getFPS();
         g.setColor(Color.GREEN);

@@ -91,7 +91,6 @@ public class EnemySkillsView {
                     g2d.dispose();
 
                     skillImages.put(skillType, resizedImage);
-                    System.out.println("Loaded " + skillType + " image from path: " + path);
                 }
             }
         } catch (Exception e) {

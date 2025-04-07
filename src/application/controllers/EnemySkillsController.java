@@ -1,8 +1,8 @@
 package application.controllers;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -16,14 +16,12 @@ public class EnemySkillsController {
     private EnemySkillsView view;
     Map<SkillType, String> skillImagePaths;
 
-    public EnemySkillsController(Map<SkillType, String> _skillImagePaths) {
+    public EnemySkillsController() {
         this.skills = new ArrayList<>();
-        skillImagePaths = _skillImagePaths;
-        // Thêm path thủ công để test
-        skillImagePaths.put(SkillType.HOLE, "/asset/resources/gfx/hole.png"); // Thay bằng path thật
-        skillImagePaths.put(SkillType.FIREBALL, "/asset/resources/gfx/fireball.png"); // Thay bằng path thật
-        skillImagePaths.put(SkillType.EGG, "/asset/resources/gfx/introEgg.png"); // Thay bằng path thật
-        System.out.println("Skill image paths: " + skillImagePaths);
+        skillImagePaths = new HashMap<>();
+        skillImagePaths.put(SkillType.HOLE, "/asset/resources/gfx/hole.png");
+        skillImagePaths.put(SkillType.FIREBALL, "/asset/resources/gfx/fireball.png");
+        skillImagePaths.put(SkillType.EGG, "/asset/resources/gfx/introEgg.png");
         this.view = new EnemySkillsView(skillImagePaths);
     }
 
