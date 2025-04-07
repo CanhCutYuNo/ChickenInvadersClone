@@ -4,6 +4,7 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -27,12 +28,14 @@ import application.models.Items;
 import application.models.types.ChickenBoss;
 import application.models.types.ChickenEnemy;
 import application.models.types.EggShellEnemy;
+import application.util.ScreenUtil;
 import application.views.BackgroundPanel;
 import application.views.GamePanel;
 import application.views.MenuPanel;
 import application.views.PlayerView;
 
 public class Manager {
+    private ScreenUtil screenUtil;
     private PlayerView playerView;
     private PlayerController playerController;
     private ArrayList<Bullet> bullets;
@@ -56,16 +59,17 @@ public class Manager {
     private Level3Manager level3Manager;
     private Level4Manager level4Manager;
     private Level5Manager level5Manager;
-    
+
     GamePanel gamePanel;
-    
+
     private boolean levelTransitionTriggered = false;
-    
+
     private boolean isDelaying = false;
     private long delayStartTime = 0;
     private static final long DELAY_DURATION = 2000;
 
     public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController, GamePanel _gamePanel) {
+        screenUtil = ScreenUtil.getInstance();
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
         skillsManager = new EnemySkillsController();
@@ -116,7 +120,7 @@ public class Manager {
     public SoundController getSound() {
     	return soundController;
     }
-    
+
     public void onTransitionComplete() {
         levelTransitionTriggered = false;
     }
@@ -211,7 +215,10 @@ public class Manager {
                 delayStartTime = System.currentTimeMillis();
             }
         }
+
     }
+
+
 
     private void restartGame() {
         enemies.clear();
@@ -259,7 +266,7 @@ public class Manager {
             }
         }
     }
-    
+
     private void checkBulletEnemyCollisions() {
         ArrayList<Bullet> bulletsToRemove = new ArrayList<>();
         ArrayList<Enemy> enemiesToRemove = new ArrayList<>();
@@ -285,8 +292,9 @@ public class Manager {
                                 deathEffectController.add(tempDeathEffect);
                             }
                             enemiesToRemove.add(enemy);
-                            
+
                             //Them item
+
                             Random random = new Random();
                             if(random.nextFloat() <  0.3){
                                 items.addItem((int)enemy.getPosX(),(int) enemy.getPosY()-15, 10);
@@ -321,6 +329,7 @@ public class Manager {
         }
         enemies.addAll(enemiesToAdd);
         enemies.removeAll(enemiesToRemove);
+        //   System.out.println("Removed " + bulletsRemoved + " bullets and " + enemiesRemoved + " enemies. Current enemies size: " + enemies.size());
     }
     
     private void checkPlayerCollisionsWithEnemies() {
@@ -377,10 +386,15 @@ public class Manager {
     }
 
     public void render(Graphics g) {
+        Graphics2D g2D = (Graphics2D) g;
+        g2D.scale(screenUtil.getWidth() / 1920f / screenUtil.getScaleX(),
+                screenUtil.getHeight() / 1080f / screenUtil.getScaleY());
+
         for(Bullet bullet : bullets) bullet.render(g);
-        
+
         skillsManager.drawSkills(g);
 
+        // Render thông qua LevelXManager thay vì render trực tiếp
         if(level == 1 && level1Manager != null) {
             level1Manager.render(g);
         }
@@ -405,6 +419,10 @@ public class Manager {
         g.setColor(Color.GREEN);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("FPS: " + fps, 50, 50);
+
+        renderPlayer(g);
+
+        g2D.dispose();
     }
     
     public void renderPlayer(Graphics g) {

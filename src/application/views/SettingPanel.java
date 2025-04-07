@@ -7,13 +7,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 
-import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.OverlayLayout;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 
 import application.controllers.GameSettings;
@@ -29,7 +28,6 @@ public class SettingPanel extends JPanel {
     private JPanel backgroundPanel;
     private Button buttonDifficulty, buttonDone;
     private JSlider backgroundMusicSlider, soundEffectSlider;
-    private JCheckBox muteAudioCheckBox;
     private JLabel backgroundMusicValueLabel, soundEffectValueLabel;
 
     public SettingPanel(ViewController viewController, SoundController soundClick) {
@@ -53,31 +51,31 @@ public class SettingPanel extends JPanel {
         setLayout(new GridLayout(1, 1));
         jLayeredPane.setLayout(new OverlayLayout(jLayeredPane));
 
-        // Sử dụng null layout để đặt tọa độ tuyệt đối
+        // Set null layout để đặt tọa độ
         JPanel containerPanel = new JPanel();
         containerPanel.setOpaque(false);
-        containerPanel.setLayout(null); // Tắt GridBagLayout
+        containerPanel.setLayout(null); 
 
-        // Header: Settings
+        // Header
         JLabel headerLabel = new JLabel("Settings");
         headerLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 40));
         headerLabel.setForeground(Color.WHITE);
-        headerLabel.setBounds(890, 50, 300, 50); // x=490, y=50, width=300, height=50
+        headerLabel.setBounds(890, 50, 300, 50); 
         containerPanel.add(headerLabel);
 
-        // Difficulty Section
+        // Difficulty
         JPanel difficultyPanel = new JPanel();
         difficultyPanel.setOpaque(false);
-        difficultyPanel.setLayout(null); // Tắt GridBagLayout cho panel con
-        difficultyPanel.setBounds(645, 400, 594, 200); // x=343, y=150, width=594, height=100
+        difficultyPanel.setLayout(null); 
+        difficultyPanel.setBounds(645, 400, 594, 200);
 
         JLabel difficultyLabel = new JLabel("Difficulty:");
         difficultyLabel.setForeground(Color.WHITE);
         difficultyLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-        difficultyLabel.setBounds(65, 15, 200, 60); // x=0, y=35 (căn giữa theo chiều dọc), width=200, height=30
+        difficultyLabel.setBounds(65, 30, 200, 60); 
         difficultyPanel.add(difficultyLabel);
 
-        buttonDifficulty = new Button(384, 100, "/asset/resources/gfx/editbox.png", "/asset/resources/gfx/editbox.png");
+        buttonDifficulty = new Button("/asset/resources/gfx/editbox.png", "/asset/resources/gfx/editbox_hover.png");
         buttonDifficulty.setText(getDifficultyString());
         buttonDifficulty.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
         buttonDifficulty.addActionListener(e -> {
@@ -86,7 +84,7 @@ public class SettingPanel extends JPanel {
             buttonDifficulty.setText(getDifficultyString());
             GameSettings.getInstance().saveSettings();
         });
-        buttonDifficulty.setBounds(210, 0, 384, 100); // x=210 (sau difficultyLabel), y=0, width=384, height=100
+        buttonDifficulty.setBounds(210, 0, 384, 120); 
         difficultyPanel.add(buttonDifficulty);
 
         containerPanel.add(difficultyPanel);
@@ -95,12 +93,12 @@ public class SettingPanel extends JPanel {
         JPanel soundEffectPanel = new JPanel();
         soundEffectPanel.setOpaque(false);
         soundEffectPanel.setLayout(null);
-        soundEffectPanel.setBounds(645, 480, 1094, 200); // x=343, y=300, width=594, height=100
+        soundEffectPanel.setBounds(645, 500, 1094, 200);
 
         JLabel soundEffectLabel = new JLabel("Sound volume:");
         soundEffectLabel.setForeground(Color.WHITE);
         soundEffectLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-        soundEffectLabel.setBounds(10, 15, 400, 60); // x=0, y=35, width=200, height=30
+        soundEffectLabel.setBounds(10, 30, 400, 60);
         soundEffectPanel.add(soundEffectLabel);
 
         soundEffectSlider = createCustomSlider((int) (GameSettings.getInstance().getSoundEffectVolume() * 100));
@@ -118,12 +116,32 @@ public class SettingPanel extends JPanel {
         };
         soundEffectSlider.addChangeListener(soundEffectChangeListener);
 
-        Button soundEffectButton = new Button(384, 100, "/asset/resources/gfx/editbox.png", "/asset/resources/gfx/editbox.png");
+        Button soundEffectButton = new Button("/asset/resources/gfx/editbox.png", "/asset/resources/gfx/editbox_hover.png");
         soundEffectButton.setLayout(null);
-        soundEffectSlider.setBounds(42, 40, 300, 20); // x=42, y=40 (căn giữa trong button), width=300, height=20
+        soundEffectSlider.setBounds(42, 50, 300, 20);
         soundEffectButton.add(soundEffectSlider);
-        soundEffectButton.setBounds(210, 0, 384, 100); // x=210, y=0, width=384, height=100
+        soundEffectButton.setBounds(210, 0, 384, 120);
         soundEffectPanel.add(soundEffectButton);
+        
+        // Thêm MouseListener cho JSlider
+        soundEffectSlider.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                soundEffectButton.enter(); // Kích hoạt hiệu ứng hover của Button
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                // Kiểm tra xem chuột có còn trong khu vực của Button không
+                java.awt.Point mousePos = evt.getPoint();
+                SwingUtilities.convertPointToScreen(mousePos, soundEffectSlider);
+                java.awt.Rectangle buttonBounds = soundEffectButton.getBounds();
+                buttonBounds.setLocation(soundEffectButton.getLocationOnScreen());
+                if (!buttonBounds.contains(mousePos)) {
+                    soundEffectButton.exit(); // Tắt hiệu ứng hover nếu chuột rời khỏi Button
+                }
+            }
+        });
 
         containerPanel.add(soundEffectPanel);
 
@@ -131,12 +149,12 @@ public class SettingPanel extends JPanel {
         JPanel bgMusicPanel = new JPanel();
         bgMusicPanel.setOpaque(false);
         bgMusicPanel.setLayout(null);
-        bgMusicPanel.setBounds(645, 560, 1094, 200); // x=343, y=450, width=594, height=100
+        bgMusicPanel.setBounds(645, 600, 1094, 200); // x=343, y=450, width=594, height=100
 
         JLabel bgMusicLabel = new JLabel("Music volume:");
         bgMusicLabel.setForeground(Color.WHITE);
         bgMusicLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-        bgMusicLabel.setBounds(15, 15, 400, 60); // x=0, y=35, width=200, height=30
+        bgMusicLabel.setBounds(15, 30, 400, 60); // x=0, y=35, width=200, height=30
         bgMusicPanel.add(bgMusicLabel);
 
         backgroundMusicSlider = createCustomSlider((int) (GameSettings.getInstance().getBackgroundMusicVolume() * 100));
@@ -154,12 +172,32 @@ public class SettingPanel extends JPanel {
         };
         backgroundMusicSlider.addChangeListener(bgMusicChangeListener);
 
-        Button bgMusicButton = new Button(384, 100, "/asset/resources/gfx/editbox.png", "/asset/resources/gfx/editbox.png");
+        Button bgMusicButton = new Button("/asset/resources/gfx/editbox.png", "/asset/resources/gfx/editbox_hover.png");
         bgMusicButton.setLayout(null);
-        backgroundMusicSlider.setBounds(42, 40, 300, 20); // x=42, y=40, width=300, height=20
+        backgroundMusicSlider.setBounds(42, 50, 300, 20); // x=42, y=40, width=300, height=20
         bgMusicButton.add(backgroundMusicSlider);
-        bgMusicButton.setBounds(210, 0, 384, 100); // x=210, y=0, width=384, height=100
+        bgMusicButton.setBounds(210, 0, 384, 120); // x=210, y=0, width=384, height=100
         bgMusicPanel.add(bgMusicButton);
+        
+     // Thêm MouseListener cho JSlider
+        backgroundMusicSlider.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                bgMusicButton.enter(); // Kích hoạt hiệu ứng hover của Button
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                // Kiểm tra xem chuột có còn trong khu vực của Button không
+                java.awt.Point mousePos = evt.getPoint();
+                SwingUtilities.convertPointToScreen(mousePos, soundEffectSlider);
+                java.awt.Rectangle buttonBounds = bgMusicButton.getBounds();
+                buttonBounds.setLocation(bgMusicButton.getLocationOnScreen());
+                if (!buttonBounds.contains(mousePos)) {
+                    bgMusicButton.exit(); // Tắt hiệu ứng hover nếu chuột rời khỏi Button
+                }
+            }
+        });
 
         containerPanel.add(bgMusicPanel);
 
@@ -167,58 +205,39 @@ public class SettingPanel extends JPanel {
         JPanel muteAudioPanel = new JPanel();
         muteAudioPanel.setOpaque(false);
         muteAudioPanel.setLayout(null);
-        muteAudioPanel.setBounds(645, 640, 200, 40); // Kích cỡ và vị trí giống trước
+        muteAudioPanel.setBounds(645, 700, 900, 400); // Kích cỡ và vị trí giống trước
 
         // Tạo JLabel cho chữ "Mute audio"
-        JLabel muteAudioLabel = new JLabel("Mute audio");
+        JLabel muteAudioLabel = new JLabel("Mute audio:");
         muteAudioLabel.setForeground(Color.WHITE);
         muteAudioLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-        muteAudioLabel.setBounds(0, 0, 150, 40); // x=0, y=0, width=150, height=40
+        muteAudioLabel.setBounds(42, 30, 400, 40);
         muteAudioPanel.add(muteAudioLabel);
 
-        // Tạo JCheckBox cho tick
-        muteAudioCheckBox = new JCheckBox("", GameSettings.getInstance().isMuteAudio());
-        muteAudioCheckBox.setOpaque(false);
-        java.net.URL uncheckedUrl = getClass().getResource("/asset/resources/gfx/checkbox_unchecked.png");
-        java.net.URL checkedUrl = getClass().getResource("/asset/resources/gfx/checkbox_checked.png");
-        if (uncheckedUrl != null && checkedUrl != null) {
-            muteAudioCheckBox.setIcon(new ImageIcon(uncheckedUrl));
-            muteAudioCheckBox.setSelectedIcon(new ImageIcon(checkedUrl));
-        } else {
-            System.err.println("Không tìm thấy hình ảnh checkbox: /asset/resources/gfx/checkbox_unchecked.png hoặc /asset/resources/gfx/checkbox_checked.png");
-        }
-        muteAudioCheckBox.setBounds(150, 5, 40, 30); // x=150 (sau JLabel), y=5 (căn giữa theo chiều dọc), width=40, height=30
-        muteAudioCheckBox.addActionListener(e -> {
-            GameSettings.getInstance().setMuteAudio(muteAudioCheckBox.isSelected());
+     // Tạo Button thay cho JCheckBox
+        Button muteAudioButton = new Button("/asset/resources/gfx/checkbox.png", "/asset/resources/gfx/checkbox_hover.png");
+        muteAudioButton.setCheckedImage("/asset/resources/gfx/tick.png"); // Đặt hình ảnh dấu tick
+        muteAudioButton.setChecked(GameSettings.getInstance().isMuteAudio()); // Khởi tạo trạng thái
+        muteAudioButton.setBounds(230, 5, 100, 100); 
+        muteAudioButton.addActionListener(e -> {
+            muteAudioButton.setChecked(!muteAudioButton.isChecked()); // Đảo trạng thái
+            GameSettings.getInstance().setMuteAudio(muteAudioButton.isChecked());
             GameSettings.getInstance().saveSettings();
             soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
         });
-        muteAudioPanel.add(muteAudioCheckBox);
-
-        // Thêm hiệu ứng hover
-        muteAudioPanel.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                muteAudioLabel.setForeground(Color.YELLOW); // Đổi màu chữ thành vàng khi hover
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                muteAudioLabel.setForeground(Color.WHITE); // Đổi màu chữ về trắng khi không hover
-            }
-        });
+        muteAudioPanel.add(muteAudioButton);
 
         containerPanel.add(muteAudioPanel);
 
         // Back Button
-        buttonDone = new Button(348, 70, "/asset/resources/gfx/button.png", "/asset/resources/gfx/button_hover.png");
+        buttonDone = new Button("/asset/resources/gfx/button.png", "/asset/resources/gfx/button_hover.png");
         buttonDone.setText("Back");
         buttonDone.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
         buttonDone.addActionListener(e -> {
             soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
             viewController.switchToMenuPanel();
         });
-        buttonDone.setBounds(466, 690, 348, 70); // x=466, y=690, width=348, height=70
+        buttonDone.setBounds(50, 950, 280, 110); // x=466, y=690, width=348, height=70
         containerPanel.add(buttonDone);
 
         jLayeredPane.setLayer(containerPanel, 1);
@@ -226,7 +245,6 @@ public class SettingPanel extends JPanel {
         add(jLayeredPane);
     }
 
-    // Phương thức tạo JSlider tùy chỉnh
     private JSlider createCustomSlider(int initialValue) {
         JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 100, initialValue);
         
@@ -250,6 +268,11 @@ public class SettingPanel extends JPanel {
                 Graphics2D g2d = (Graphics2D) g;
                 g2d.setColor(Color.WHITE);
                 g2d.fillOval(thumbRect.x, thumbRect.y, thumbRect.width - 2, thumbRect.height - 2);
+            }
+
+            @Override
+            public void paintFocus(Graphics g) {
+               
             }
         });
 

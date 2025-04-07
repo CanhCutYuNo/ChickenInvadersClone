@@ -59,7 +59,7 @@ public class MenuPanel extends JPanel {
         jLayeredPane.setLayout(new OverlayLayout(jLayeredPane));
 
         containerPanel.setOpaque(false);
-        containerPanel.setPreferredSize(new Dimension(485, 410));
+    //    containerPanel.setPreferredSize(new Dimension(485, 410));
         containerPanel.setLayout(new GridLayout(2, 1));
 
         symbolPanel.setOpaque(false);
@@ -118,9 +118,10 @@ public class MenuPanel extends JPanel {
     }
 
     private Button createMenuButton(String text, String imagePath, String hoverImagePath, Runnable action) {
-        Button button = new Button(384, 70, imagePath, hoverImagePath);
+        Button button = new Button(imagePath, hoverImagePath);
         button.setText(text);
         button.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+        button.setPreferredSize(new Dimension(384, 120));
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {

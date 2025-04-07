@@ -73,7 +73,6 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
                 synchronized (clips) {
                     clips.add(effectClip);
                 }
-                System.out.println("Phát âm thanh: " + path + " với âm lượng: " + GameSettings.getInstance().getSoundEffectVolume());
                 effectClip.start();
 
                 effectClip.addLineListener(event -> {
@@ -110,38 +109,26 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
     // Phương thức để áp dụng âm lượng cho backgroundClip
     private void applyVolumeToBackgroundClip() {
         if (backgroundClip != null && backgroundClip.isOpen()) {
-            try {
                 FloatControl volumeControl = (FloatControl) backgroundClip.getControl(FloatControl.Type.MASTER_GAIN);
                 float volume = GameSettings.getInstance().isMuteAudio() ? 0.0f : GameSettings.getInstance().getBackgroundMusicVolume();
                 float dB = (float) (Math.log(volume == 0.0 ? 0.0001 : volume) / Math.log(10.0) * 20.0);
                 volumeControl.setValue(dB);
-            } catch (IllegalArgumentException e) {
-                System.err.println("Không thể điều chỉnh âm lượng cho nhạc nền: " + e.getMessage());
-            }
         }
     }
 
     // Phương thức để áp dụng âm lượng cho một effectClip
     private void applyVolumeToEffectClip(Clip clip) {
-        try {
-            FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            float volume = GameSettings.getInstance().isMuteAudio() ? 0.0f : GameSettings.getInstance().getSoundEffectVolume();
-            float dB = (float) (Math.log(volume == 0.0 ? 0.0001 : volume) / Math.log(10.0) * 20.0);
-            volumeControl.setValue(dB);
-        } catch (IllegalArgumentException e) {
-            System.err.println("Không thể điều chỉnh âm lượng cho Clip: " + e.getMessage());
-        }
+        FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        float volume = GameSettings.getInstance().isMuteAudio() ? 0.0f : GameSettings.getInstance().getSoundEffectVolume();
+        float dB = (float) (Math.log(volume == 0.0 ? 0.0001 : volume) / Math.log(10.0) * 20.0);
+        volumeControl.setValue(dB);
     }
 
     // Phương thức để áp dụng âm lượng với giá trị đã tính toán sẵn
     private void applyVolumeToClip(Clip clip, float volume) {
-        try {
-            FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            float dB = (float) (Math.log(volume == 0.0 ? 0.0001 : volume) / Math.log(10.0) * 20.0);
-            volumeControl.setValue(dB);
-        } catch (IllegalArgumentException e) {
-            System.err.println("Không thể điều chỉnh âm lượng cho Clip: " + e.getMessage());
-        }
+        FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        float dB = (float) (Math.log(volume == 0.0 ? 0.0001 : volume) / Math.log(10.0) * 20.0);
+        volumeControl.setValue(dB);
     }
 
     @Override
@@ -165,7 +152,6 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
                     }
                 }
             }
-            System.out.println("muteAudio thay đổi: " + isMuted + " - Âm lượng được cập nhật cho tất cả các Clip.");
         });
     }
 
@@ -175,7 +161,6 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
         if (!GameSettings.getInstance().isMuteAudio()) {
             ex.submit(() -> {
                 applyVolumeToClip(backgroundClip, volume);
-                System.out.println("Cập nhật âm lượng nhạc nền: " + volume);
             });
         }
     }
@@ -189,7 +174,6 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
                     for (Clip clip : clips) {
                         if (clip.isOpen()) {
                             applyVolumeToClip(clip, volume);
-                            System.out.println("Cập nhật âm lượng cho Clip hiệu ứng: " + volume);
                         }
                     }
                 }
