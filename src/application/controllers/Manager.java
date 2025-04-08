@@ -198,9 +198,21 @@ public class Manager {
 
         if(getEnemies().isEmpty() && !levelTransitionTriggered && !isDelaying) {
             if(level == 1 && level1Manager != null) {
-                level++;
-                isDelaying = true;
-                delayStartTime = System.currentTimeMillis();
+                if(GameSettings.getInstance().getDifficulty() == GameSettings.Difficulty.HARD || GameSettings.getInstance().getDifficulty() == GameSettings.Difficulty.EXTREME){
+                    level1Manager.addWithDifficulty();
+                    if(level1Manager.isAllEnemiesDefeated()){
+                        level++;
+                        isDelaying = true;
+                        delayStartTime = System.currentTimeMillis();
+                    }
+                }
+                else {
+                    level++;
+                    isDelaying = true;
+                    delayStartTime = System.currentTimeMillis();
+
+                }
+
             } else if(level == 2 && level2Manager != null) {
                 level++;
                 isDelaying = true;
@@ -294,12 +306,35 @@ public class Manager {
                             enemiesToRemove.add(enemy);
 
                             //Them item
-
                             Random random = new Random();
-                            if(random.nextFloat() <  0.3){
-                                items.addItem((int)enemy.getPosX(),(int) enemy.getPosY()-15, 10);
+                            float chance = 0;
+                            int damageItem = 0;
+                            switch (GameSettings.getInstance().getDifficulty()) {
+                                case PEACEFUL:
+                                    chance = 0.6F;
+                                    damageItem = 15;
+                                    break;
+                                case EASY:
+                                    chance = 0.5F;
+                                    damageItem = 15;
+                                    break;
+                                case NORMAL:
+                                    chance = 0.3F;
+                                    damageItem = 10;
+                                    break;
+                                case HARD:
+                                    chance = 0.2F;
+                                    damageItem = 5;
+                                    break;
+                                case EXTREME:
+                                    chance = 0.15F;
+                                    damageItem = 5;
+                                    break;
                             }
 
+                            if(random.nextDouble() < chance){
+                                items.addItem((int) enemy.getPosX(), (int) enemy.getPosY()-15, damageItem);
+                            }
                         }
                     }
 
@@ -441,7 +476,23 @@ public class Manager {
     }
 
     public void shoot() {
-        bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 50, 1.0, 0.4));
+        switch (GameSettings.getInstance().getDifficulty()){
+            case PEACEFUL:
+                bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 50, 1.0, 0.4));
+                break;
+
+            case EASY:
+                bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 40, 1.0, 0.4));
+                break;
+
+            case NORMAL:
+                bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 30, 1.0, 0.4));
+                break;
+
+            case HARD,EXTREME:
+                bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 25, 1.0, 0.4));
+                break;
+        }
         soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/bulletHenSolo.wav").getPath());
     }
 
