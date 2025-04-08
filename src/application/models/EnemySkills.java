@@ -1,8 +1,12 @@
 package application.models;
 
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
+
 public class EnemySkills {
     private double posX, posY;
-    private double speedX, speedY; // Thay speedY thành speedX, speedY
+    private double speedX, speedY;
     private boolean isExploding = false;
     private int animationFrame = 0;
     private int damage;
@@ -16,15 +20,19 @@ public class EnemySkills {
     private boolean isActive = true;
     private long startTime = 0;
     private long duration = 10000;
-    private long endTime = 0; // Thời gian kết thúc của skill
+    private long endTime = 0;
+
+    private int width;
+    private int height;
 
     public enum SkillType {
         EGG,
         HOLE,
-        FIREBALL
+        FIREBALL;
     }
-    private SkillType skillType;
     
+    private SkillType skillType;
+
     public EnemySkills(double x, double y, double speedY, int damage, SkillType skillType) {
         this.posX = x;
         this.posY = y;
@@ -32,8 +40,9 @@ public class EnemySkills {
         this.damage = damage;
         this.skillType = skillType;
         this.startTime = System.currentTimeMillis();
+        setDefaultSize();
     }
-    
+
     public EnemySkills(double x, double y, double speedX, double speedY, int damage, SkillType skillType) {
         this.posX = x;
         this.posY = y;
@@ -42,6 +51,32 @@ public class EnemySkills {
         this.damage = damage;
         this.skillType = skillType;
         this.startTime = System.currentTimeMillis();
+        setDefaultSize();
+    }
+
+    public EnemySkills(double x, double y, double speedX, double speedY, int damage, SkillType skillType, int width, int height) {
+        this.posX = x;
+        this.posY = y;
+        this.speedX = speedX;
+        this.speedY = speedY;
+        this.damage = damage;
+        this.skillType = skillType;
+        this.width = width;
+        this.height = height;
+        this.startTime = System.currentTimeMillis();
+    }
+
+    private void setDefaultSize() {
+        if (skillType == SkillType.EGG) {
+            this.width = 15;
+            this.height = 15;
+        } else if (skillType == SkillType.HOLE) {
+            this.width = 330;
+            this.height = 330;
+        } else if (skillType == SkillType.FIREBALL) {
+            this.width = 153;
+            this.height = 62;
+        }
     }
 
     public void update() {
@@ -71,7 +106,6 @@ public class EnemySkills {
                         scale = 1.0;
                         isActive = false;
                         endTime = currentTime;
-                        System.out.println("EnemySkills (HOLE) disappeared at " + currentTime);
                         return;
                     }
                 }
@@ -81,7 +115,6 @@ public class EnemySkills {
             if (currentTime - startTime >= duration) {
                 isActive = false;
                 endTime = currentTime;
-                System.out.println("EnemySkills (HOLE) ended at " + currentTime);
             }
         } else if (skillType == SkillType.EGG) {
             if (!isExploding) {
@@ -90,24 +123,22 @@ public class EnemySkills {
                 animationFrame++;
             }
         } else if (skillType == SkillType.FIREBALL) {
-            // Cập nhật vị trí của FIREBALL dựa trên speedX và speedY
             posX += speedX;
             posY += speedY;
             animationFrame++;
-            angle += Math.toRadians(5); // Xoay nhanh hơn cho FIREBALL
+            angle += Math.toRadians(5);
 
-            // Kiểm tra nếu FIREBALL ra ngoài màn hình
             if (posX < -100 || posX > 2020 || posY < -100 || posY > 1180) {
                 isActive = false;
                 endTime = currentTime;
-                System.out.println("EnemySkills (FIREBALL) disappeared at " + currentTime);
+        //        System.out.println("EnemySkills (FIREBALL) disappeared at " + currentTime);
             }
         }
     }
 
     public boolean isOffScreen() {
         if (skillType == SkillType.EGG) {
-            return posY > 1080;
+            return posY > 1000;
         } else if (skillType == SkillType.FIREBALL) {
             return posX < -100 || posX > 2020 || posY < -100 || posY > 1180;
         }
@@ -115,12 +146,11 @@ public class EnemySkills {
     }
 
     public boolean removed() {
-        return (isExploding && animationFrame > 32) || !isActive;
+        return (isExploding && animationFrame > 32);
     }
 
     public void explode() {
         isExploding = true;
-        animationFrame = 0;
     }
 
     public boolean isExploding() {
@@ -163,13 +193,45 @@ public class EnemySkills {
         return endTime;
     }
 
-	public double getSpeedX() {
-		// TODO Auto-generated method stub
-		return speedX;
-	}
+    public double getSpeedX() {
+        return speedX;
+    }
 
-	public double getSpeedY() {
-		// TODO Auto-generated method stub
-		return speedY;
-	}
+    public double getSpeedY() {
+        return speedY;
+    }
+
+    public Shape getHitbox() {
+        int scaledWidth = (int) (width * (skillType == SkillType.HOLE ? scale : 1.0));
+        int scaledHeight = (int) (height * (skillType == SkillType.HOLE ? scale : 1.0));
+
+        int hitboxX, hitboxY;
+        if (skillType == SkillType.HOLE) {
+            hitboxX = (int) posX - (scaledWidth - width) / 2 - 150;
+            hitboxY = (int) posY - (scaledHeight - height) / 2 - 150;
+        } else {
+            hitboxX = (int) posX - scaledWidth / 2;
+            hitboxY = (int) posY - scaledHeight / 2;
+        }
+
+        Rectangle2D rect = new Rectangle2D.Double(hitboxX, hitboxY, scaledWidth, scaledHeight);
+
+        if (skillType == SkillType.FIREBALL) {
+            // Tính góc xoay dựa trên speedX và speedY (giống cách vẽ trong EnemySkillsView)
+            double angle = Math.atan2(speedY, speedX);
+            AffineTransform transform = new AffineTransform();
+            transform.rotate(angle, posX, posY);
+            return transform.createTransformedShape(rect);
+        }
+
+        return rect;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
 }

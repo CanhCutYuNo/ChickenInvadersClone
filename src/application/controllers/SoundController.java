@@ -58,7 +58,7 @@ public class SoundController {
             try {
                 File file = new File(path);
                 if (!file.exists()) {
-                    System.out.println("Không tìm thấy file: " + path);
+       //             System.out.println("Không tìm thấy file: " + path);
                     return;
                 }
 
@@ -70,7 +70,7 @@ public class SoundController {
                 synchronized (clips) {
                     clips.add(effectClip);
                 }
-                System.out.println("tìm thấy file: " + path);
+     //           System.out.println("tìm thấy file: " + path);
                 effectClip.start();
 
                 // Khi phát xong, tự động xóa khỏi danh sách

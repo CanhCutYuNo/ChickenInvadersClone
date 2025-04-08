@@ -1,12 +1,14 @@
 package application.models.types;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -30,12 +32,15 @@ public class ChickenBoss extends Enemy {
     private int initialIndex;
     private boolean isGifLoaded = false;
 
-    // Quản lý chiêu thức
+    // Quản lý thời gian và trạng thái để thông báo khi tạo kỹ năng
     private long lastHoleSkillTime = 0;
     private long lastFireballSkillTime = 0;
     private long holeSkillCooldown = 15000; // 15 giây cho HOLE
     private long fireballSkillCooldown = 5000; // 5 giây cho FIREBALL
-    private long skillsDelay = 2000; // Delay 2 giây giữa HOLE và FIREBALL
+    private long skillsDelay = 5000; // Delay 5 giây giữa HOLE và FIREBALL
+    private int skillState = 0; // 0: Tạo HOLE, 1: Tạo FIREBALL
+    private boolean shouldCreateHole = false; // Cờ để thông báo tạo HOLE
+    private boolean shouldCreateFireballBurst = false; // Cờ để thông báo tạo FIREBALL burst
 
     // Thêm biến để theo dõi trạng thái di chuyển
     private boolean isMovingToCenter = true;
@@ -46,9 +51,12 @@ public class ChickenBoss extends Enemy {
     private Random random = new Random();
 
     public ChickenBoss(int posX, int posY, SoundController sound) {
-        super(1000, 500, 600, posX, START_Y, sound, createSkillImagePaths());
-        System.out.println("ChickenBoss created at(" + PosX + "," + PosY + ")");
-        
+        super(1000, 500, 600, posX, START_Y, sound);
+        System.out.println("ChickenBoss created at (" + PosX + "," + PosY + ")");
+
+        addSkills(SkillType.HOLE, "/asset/resources/gfx/hole.png");
+        addSkills(SkillType.FIREBALL, "/asset/resources/gfx/bullet-bolt1.png");
+
         gifFrames = new ArrayList<>();
         frameDelays = new ArrayList<>();
         lastHoleSkillTime = System.currentTimeMillis();
@@ -60,166 +68,170 @@ public class ChickenBoss extends Enemy {
         }).start();
     }
 
-    private static Map<SkillType, String> createSkillImagePaths() {
-        Map<SkillType, String> skillImagePaths = new HashMap<>();
-        skillImagePaths.put(SkillType.HOLE, "/asset/resources/gfx/hole.png");
-        skillImagePaths.put(SkillType.FIREBALL, "/asset/resources/gfx/bullet-bolt1.png");
-        return skillImagePaths;
-    }
-
     private void loadGif(String path) {
         long startTime = System.currentTimeMillis();
         try {
             InputStream inputStream = getClass().getResourceAsStream(path);
-            if(inputStream == null) {
+            if (inputStream == null) {
                 throw new IOException("Cannot find GIF file at path: " + path);
             }
             ImageReader reader = ImageIO.getImageReadersByFormatName("gif").next();
             reader.setInput(ImageIO.createImageInputStream(inputStream));
-            
+
             int numFrames = reader.getNumImages(true);
             System.out.println("Loading GIF with " + numFrames + " frames...");
-            for(int i = 0; i < numFrames; i++) {
+            for (int i = 0; i < numFrames; i++) {
                 BufferedImage frame = reader.read(i);
                 gifFrames.add(frame);
 
                 IIOMetadata metadata = reader.getImageMetadata(i);
-                IIOMetadataNode root =(IIOMetadataNode) metadata.getAsTree("javax_imageio_gif_image_1.0");
-                IIOMetadataNode gce =(IIOMetadataNode) root.getElementsByTagName("GraphicControlExtension").item(0);
+                IIOMetadataNode root = (IIOMetadataNode) metadata.getAsTree("javax_imageio_gif_image_1.0");
+                IIOMetadataNode gce = (IIOMetadataNode) root.getElementsByTagName("GraphicControlExtension").item(0);
                 int delay = Math.min(Integer.parseInt(gce.getAttribute("delayTime")) * 10, 50);
                 frameDelays.add(delay);
                 System.out.println("Frame " + i + " delay: " + delay + " ms");
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             System.err.println("Error loading GIF: " + e.getMessage());
             e.printStackTrace();
         }
         long endTime = System.currentTimeMillis();
-        System.out.println("GIF loading took " +(endTime - startTime) + " ms");
+        System.out.println("GIF loading took " + (endTime - startTime) + " ms");
     }
 
     @Override
     public void render(Graphics g) {
-        Graphics2D g2d =(Graphics2D) g.create();
-        
-        if(!isMovingToCenter) {
-            skillsController.drawSkills(g);
-        }
-        
+        Graphics2D g2d = (Graphics2D) g.create();
+
         int centerX = PosX + MODEL_WIDTH / 2;
         int centerY = PosY + MODEL_HEIGHT / 2;
         g2d.rotate(Math.toRadians(rotate), centerX, centerY);
-        
-        BufferedImage currentFrameImage = gifFrames.get(currentFrame);
-        g2d.drawImage(currentFrameImage, 0, PosY, 1920, PosY + 1080, null);
-        
+
+        if (isGifLoaded && !gifFrames.isEmpty()) {
+            BufferedImage currentFrameImage = gifFrames.get(currentFrame);
+            g2d.drawImage(currentFrameImage, 0, PosY, 1920, PosY + 1080, null);
+        } else {
+            // Vẽ placeholder nếu GIF chưa tải
+            g2d.setColor(Color.RED);
+            g2d.fillRect(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
+        }
+
+        // Vẽ hitbox để debug
+        g2d.setColor(Color.RED);
+        Shape hitbox = getHitbox();
+        g2d.draw(hitbox);
+
         g2d.dispose();
     }
 
     @Override
     public void nextFrame() {
-        if(!isGifLoaded || gifFrames.isEmpty()) {
+        if (!isGifLoaded || gifFrames.isEmpty()) {
             return;
         }
-        
+
         long currentTime = System.currentTimeMillis();
         long elapsedTime = currentTime - lastFrameTime;
         int delay = frameDelays.get(currentFrame);
 
-        if(elapsedTime >= delay) {
+        if (elapsedTime >= delay) {
             currentFrame++;
-            if(currentFrame >= gifFrames.size()) {
+            if (currentFrame >= gifFrames.size()) {
                 currentFrame = 0;
             }
             lastFrameTime = currentTime;
         }
-        
-        if(isMovingToCenter) {
+
+        if (isMovingToCenter) {
             PosY -= MOVE_SPEED;
-            if(PosY <= TARGET_Y) {
+            if (PosY <= TARGET_Y) {
                 PosY = TARGET_Y;
                 isMovingToCenter = false;
-            } else return;
-        }
-
-        // Kiểm tra trạng thái của HOLE và FIREBALL
-        boolean hasActiveHole = false;
-        boolean hasActiveFireball = false;
-        long lastHoleEndTime = 1;
-        long lastFireballEndTime = 0;
-
-        for(var skill : skillsController.getSkills()) {
-            if(skill.getSkillType() == SkillType.HOLE) {
-                if(skill.isActive()) {
-                    hasActiveHole = true;
-                } else {
-                    lastHoleEndTime = Math.max(lastHoleEndTime, skill.getEndTime());
-                }
-            } else if(skill.getSkillType() == SkillType.FIREBALL) {
-                if(skill.isActive()) {
-                    hasActiveFireball = true;
-                } else {
-                    lastFireballEndTime = Math.max(lastFireballEndTime, skill.getEndTime());
-                }
+            } else {
+                return;
             }
         }
 
-        // Tạo HOLE nếu không có HOLE đang hoạt động và FIREBALL vừa kết thúc
-        if(!hasActiveHole && !hasActiveFireball && lastFireballEndTime > 0 && 
-           (currentTime - lastFireballEndTime >= skillsDelay) && 
-           (currentTime - lastHoleSkillTime >= holeSkillCooldown)) {
-            skillsController.addSkill(1920 / 2, 1080 / 2, 0, 50, SkillType.HOLE);
-            lastHoleSkillTime = currentTime;
-            System.out.println("New HOLE skill created at " + currentTime);
+        // Kiểm tra thời gian để thông báo tạo kỹ năng
+        if (skillState == 0) {
+            // Kiểm tra nếu đã qua cooldown để tạo HOLE
+            if (currentTime - lastHoleSkillTime >= holeSkillCooldown) {
+                shouldCreateHole = true; // Đặt cờ để Manager tạo HOLE
+                lastHoleSkillTime = currentTime;
+                skillState = 1; // Chuyển sang trạng thái tạo FIREBALL
+                System.out.println("ChickenBoss requests new HOLE skill at " + currentTime);
+            }
+        } else if (skillState == 1) {
+            // Kiểm tra nếu đã qua delay kể từ HOLE và qua cooldown của FIREBALL
+            if (currentTime - lastHoleSkillTime >= skillsDelay &&
+                currentTime - lastFireballSkillTime >= fireballSkillCooldown) {
+                shouldCreateFireballBurst = true; // Đặt cờ để Manager tạo FIREBALL burst
+                lastFireballSkillTime = currentTime;
+                skillState = 0; // Chuyển sang trạng thái tạo HOLE
+                System.out.println("ChickenBoss requests new FIREBALL burst at " + currentTime);
+            }
         }
-
-        // Tạo FIREBALL nếu không có FIREBALL đang hoạt động và HOLE vừa kết thúc
-        if(!hasActiveFireball && !hasActiveHole && lastHoleEndTime > 0 && 
-           (currentTime - lastHoleEndTime >= skillsDelay) && 
-           (currentTime - lastFireballSkillTime >= fireballSkillCooldown)) {
-            createFireballBurst();
-            lastFireballSkillTime = currentTime;
-            System.out.println("New FIREBALL burst created at " + currentTime);
-        }
-
-        skillsController.updateSkills();
     }
 
-    private void createFireballBurst() {
+    // Phương thức để Manager gọi khi cần tạo FIREBALL burst
+    public void createFireballBurst(EnemySkillsController skillsManager) {
         double centerX = 1920 / 2;
         double centerY = 1080 / 2;
         int damage = 1000;
         double speed = 5;
 
-        for(int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {
             double angleStart = i * 36;
-            double angleEnd =(i + 1) * 36;
+            double angleEnd = (i + 1) * 36;
 
-            for(int j = 0; j < 2; j++) {
-                double angle = Math.toRadians(random.nextDouble() *(angleEnd - angleStart) + angleStart);
+            for (int j = 0; j < 2; j++) {
+                double angle = Math.toRadians(random.nextDouble() * (angleEnd - angleStart) + angleStart);
                 double speedX = speed * Math.cos(angle);
                 double speedY = speed * Math.sin(angle);
-                skillsController.addSkill(centerX, centerY, speedX, speedY, damage, SkillType.FIREBALL);
+                skillsManager.addSkill(centerX, centerY, speedX, speedY, damage, SkillType.FIREBALL);
             }
         }
+        shouldCreateFireballBurst = false; // Reset cờ sau khi tạo
+    }
+
+    // Phương thức để Manager gọi khi cần tạo HOLE
+    public void createHoleSkill(EnemySkillsController skillsManager) {
+        skillsManager.addSkill(1920 / 2, 1080 / 2, 0, 5000, SkillType.HOLE);
+        //skillsManager.addSkillImagePath(SkillType.HOLE, "/asset/resources/gfx/hole.png");
+        shouldCreateHole = false; // Reset cờ sau khi tạo
     }
 
     @Override
     public void takeDamage(int damage) {
         hp -= damage;
-        if(hp <= 0) {
+        if (hp <= 0) {
             sound.playSoundEffect("/asset/resources/sfx/death1.wav");
         }
     }
 
     @Override
     public void setPosY(int posY) {
-        if(isMovingToCenter) {
+        if (isMovingToCenter) {
             System.out.println("Cannot set PosY while ChickenBoss is moving to center. Current Y: " + PosY);
             return;
         }
         this.PosY = posY;
     }
+
+    @Override
+    public Rectangle getHitbox() {
+        return new Rectangle(PosX - 120, PosY + 220, MODEL_WIDTH, MODEL_HEIGHT);
+    }
+
+    @Override
+    public Map<SkillType, String> getSkills() {
+        return super.getSkills();
+    }
+
+//    @Override
+//    public DeathEffect getDeathEffect() {
+//        return new DeathEffect(PosX, PosY, "/asset/resources/gfx/explosion.png", 5);
+//    }
 
     public int getInitialIndex() {
         return initialIndex;
@@ -237,7 +249,20 @@ public class ChickenBoss extends Enemy {
         return isGifLoaded;
     }
 
-    public EnemySkillsController getSkillsController() {
-        return skillsController;
+    public boolean shouldCreateHole() {
+        return shouldCreateHole;
+    }
+
+    public boolean shouldCreateFireballBurst() {
+        return shouldCreateFireballBurst;
+    }
+
+    public boolean isMovingToCenter() {
+        return isMovingToCenter;
+    }
+    
+    @Override
+    public void addSkills(SkillType skillType, String imagePath) {
+        skills.put(skillType, imagePath);
     }
 }

@@ -1,14 +1,13 @@
 package application.models.types;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import application.controllers.EnemySkillsController;
 import application.controllers.SoundController;
 import application.models.Enemy;
 import application.models.EnemySkills.SkillType;
@@ -18,10 +17,12 @@ public class EggShellEnemy extends Enemy {
     protected Image spriteSheet;
 
     public EggShellEnemy(int PosX, int PosY, SoundController sound) {
-        super(400, SPRITE_SIZE[0], SPRITE_SIZE[1], PosX, PosY, sound, createSkillImagePaths());
+        super(400, SPRITE_SIZE[0], SPRITE_SIZE[1], PosX, PosY, sound);
         curFrame = 0;
         frameCount = 0;
         spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/eggShell.png")).getImage();
+        MODEL_HEIGHT = 97;
+        MODEL_WIDTH = 75;
     }
 
     protected static final int[][] SPRITE = {
@@ -47,12 +48,12 @@ public class EggShellEnemy extends Enemy {
             state = 3;
         }
         g.drawImage(spriteSheet,
-                PosX, PosY, PosX + SPRITE_SIZE[0], PosY + SPRITE_SIZE[1],
+                PosX, PosY, PosX + MODEL_WIDTH, PosY + MODEL_HEIGHT,
                 SPRITE[state][0], SPRITE[state][1], SPRITE[state][0] + SPRITE_SIZE[0], SPRITE[state][1] + SPRITE_SIZE[1], null);
 
         //Hitbox
-        g.setColor(Color.WHITE);
-        g.drawRect(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
+//        g.setColor(Color.WHITE);
+//        g.drawRect(PosX, PosY, 75, 97);
     }
 
     @Override
@@ -64,9 +65,23 @@ public class EggShellEnemy extends Enemy {
     public void update() {
 
     }
-
-	@Override
-	public EnemySkillsController getSkillsController() {
-		return null;
-	}
+    
+    @Override
+    public Rectangle getHitbox() {
+        return new Rectangle(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
+    }
+    
+    @Override
+    public Map<SkillType, String> getSkills() {
+    	return createSkillImagePaths();
+    }
+    
+    @Override
+    public void addSkills(SkillType skillType, String imagePath) {
+        skills.put(skillType, imagePath);
+    }
+//	@Override
+//	public EnemySkillsController getSkillsController() {
+//		return null;
+//	}
 }
