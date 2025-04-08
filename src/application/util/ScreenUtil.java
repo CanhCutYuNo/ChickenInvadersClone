@@ -43,13 +43,22 @@ public final class ScreenUtil {
         return instance;
     }
 
-    public double getScaleX() {
+    public double getScreenScaleX() {
         return screenWidth / 1920.0;
     }
 
-    public double getScaleY() {
+    public double getScreenScaleY() {
         return screenHeight / 1080.0;
     }
+    
+    public double getScaleX() {
+        return at.getScaleX();
+    }
+
+    public double getScaleY() {
+        return at.getScaleY();
+    }
+
 
     public double getWidth() {
         return (double)gd.getDisplayMode().getWidth();

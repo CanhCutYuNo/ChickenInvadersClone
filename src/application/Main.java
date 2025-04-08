@@ -48,7 +48,6 @@ public class Main {
             gameLoop = new GameLoop(gamePanel, frame);
             gameManager.setGameLoop(gameLoop);
 
-
             menuPanel = new MenuPanel(viewController, mouseController, gamePanel);
             gameManager.setMenuPanel(menuPanel);
 
@@ -68,7 +67,7 @@ public class Main {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
 
-            frame.addKeyListener(new Controller(frame, cardLayout, mainPanel, viewController));
+            gamePanel.addKeyListener(new Controller(null, viewController));
             frame.setFocusable(true);
             frame.requestFocus();
         });

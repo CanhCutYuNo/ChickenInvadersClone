@@ -38,8 +38,8 @@ public class MenuPanel extends JPanel {
     private JLabel icon;
     private Button button1, button2, button3;
     
-    private final double scaleX = ScreenUtil.getInstance().getScaleX();
-    private final double scaleY = ScreenUtil.getInstance().getScaleY();
+    private final double scaleX = ScreenUtil.getInstance().getScreenScaleX();
+    private final double scaleY = ScreenUtil.getInstance().getScreenScaleY();
 
     public MenuPanel(ViewController viewController, MouseController mouseController, GamePanel gamePanel) {
         this.viewController = viewController;

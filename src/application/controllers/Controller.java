@@ -1,19 +1,16 @@
 package application.controllers;
-
-import java.awt.CardLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 public class Controller extends KeyAdapter {
 
     private JFrame main;
     private ViewController viewController;
 
-    public Controller(JFrame _main, CardLayout _cardLayout, JPanel _mainPanel, ViewController _viewController) {
+    public Controller(JFrame _main, ViewController _viewController) {
         this.main = _main;
         this.viewController = _viewController;
     }

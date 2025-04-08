@@ -60,7 +60,7 @@ public class Manager {
     private Level4Manager level4Manager;
     private Level5Manager level5Manager;
 
-    GamePanel gamePanel;
+    private GamePanel gamePanel;
 
     private boolean levelTransitionTriggered = false;
 

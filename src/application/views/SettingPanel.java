@@ -30,8 +30,9 @@ public class SettingPanel extends JPanel {
     private Button buttonDifficulty, buttonDone;
     private JSlider backgroundMusicSlider, soundEffectSlider;
     private JLabel backgroundMusicValueLabel, soundEffectValueLabel;
-    private final double scaleX = ScreenUtil.getInstance().getScaleX();
-    private final double scaleY = ScreenUtil.getInstance().getScaleY();
+
+    private final double scaleX = ScreenUtil.getInstance().getScreenScaleX();
+    private final double scaleY = ScreenUtil.getInstance().getScreenScaleY();
 
     public SettingPanel(ViewController viewController, SoundController soundClick) {
         this.viewController = viewController;
