@@ -15,6 +15,7 @@ public class GameSettings {
     private float backgroundMusicVolume;
     private float soundEffectVolume;
     private boolean muteAudio;
+    private int continueLevel;
 
     private final String SETTINGS_FILE = "settings.properties";
 
@@ -63,6 +64,7 @@ public class GameSettings {
         backgroundMusicVolume = 1.0f;
         soundEffectVolume = 1.0f;
         muteAudio = false;
+        continueLevel = 1;
     }
 
     public void loadSettings() {
@@ -73,6 +75,7 @@ public class GameSettings {
             backgroundMusicVolume = Float.parseFloat(props.getProperty("backgroundMusicVolume", "1.0"));
             soundEffectVolume = Float.parseFloat(props.getProperty("soundEffectVolume", "1.0"));
             muteAudio = Boolean.parseBoolean(props.getProperty("muteAudio", "false"));
+            continueLevel = Integer.parseInt(props.getProperty("continueLevel", "1"));
         } catch (IOException e) {
             System.err.println("Error loading settings: " + e.getMessage());
             resetToDefault();
@@ -88,6 +91,7 @@ public class GameSettings {
         props.setProperty("backgroundMusicVolume", String.valueOf(backgroundMusicVolume));
         props.setProperty("soundEffectVolume", String.valueOf(soundEffectVolume));
         props.setProperty("muteAudio", String.valueOf(muteAudio));
+        props.setProperty("continueLevel", String.valueOf(continueLevel));
 
         try (FileOutputStream fos = new FileOutputStream(SETTINGS_FILE)) {
             props.store(fos, "Game Settings");
@@ -136,5 +140,13 @@ public class GameSettings {
         for (MuteAudioListener listener : muteAudioListeners) {
             listener.onMuteAudioChanged(muteAudio);
         }
+    }
+
+    public int getcontinueLevel(){
+        return continueLevel;
+    }
+
+    public void setcontinueLevel(int continueLevel){
+        this.continueLevel = continueLevel;
     }
 }
