@@ -67,7 +67,6 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
                 Clip effectClip = AudioSystem.getClip();
                 effectClip.open(audioStream);
 
-                // Áp dụng âm lượng cho effectClip
                 applyVolumeToEffectClip(effectClip);
 
                 synchronized (clips) {

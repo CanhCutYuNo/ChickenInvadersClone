@@ -1,13 +1,27 @@
 package application.views;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.*;
 
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+import javax.swing.OverlayLayout;
+import javax.swing.SwingConstants;
+
+import application.controllers.MouseController;
 import application.controllers.SoundController;
 import application.controllers.ViewController;
-import application.controllers.MouseController;
+import application.util.ScreenUtil;
 
 
 public class MenuPanel extends JPanel {
@@ -23,6 +37,9 @@ public class MenuPanel extends JPanel {
     private JPanel containerPanel, symbolPanel, buttonPanel;
     private JLabel icon;
     private Button button1, button2, button3;
+    
+    private final double scaleX = ScreenUtil.getInstance().getScaleX();
+    private final double scaleY = ScreenUtil.getInstance().getScaleY();
 
     public MenuPanel(ViewController viewController, MouseController mouseController, GamePanel gamePanel) {
         this.viewController = viewController;
@@ -30,16 +47,8 @@ public class MenuPanel extends JPanel {
         this.mouseController = mouseController;
         this.gamePanel = gamePanel;
         initComponents();
-
-
-        this.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
-            }
-        });
     }
-
+    
     public void setBackgroundPanel(JPanel backgroundPanel) {
         if (this.backgroundPanel != null) {
             jLayeredPane.remove(this.backgroundPanel);
@@ -59,22 +68,30 @@ public class MenuPanel extends JPanel {
         jLayeredPane.setLayout(new OverlayLayout(jLayeredPane));
 
         containerPanel.setOpaque(false);
-    //    containerPanel.setPreferredSize(new Dimension(485, 410));
+        //containerPanel.setPreferredSize(new Dimension(985, 1110));
         containerPanel.setLayout(new GridLayout(2, 1));
 
         symbolPanel.setOpaque(false);
         symbolPanel.setLayout(new GridBagLayout());
 
-        ImageIcon gameIcon = new ImageIcon(getClass().getResource("/asset/resources/gfx/logo5.png"));
+        ImageIcon rawIcon = new ImageIcon(getClass().getResource("/asset/resources/gfx/logo5.png"));
+        Image rawImage = rawIcon.getImage();
+
+        int newWidth = (int)(rawIcon.getIconWidth() * scaleX);
+        int newHeight = (int)(rawIcon.getIconHeight() * scaleY);
+
+        Image scaledImage = rawImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
         icon = new JLabel();
-        icon.setIcon(gameIcon);
+        icon.setIcon(scaledIcon);
         icon.setHorizontalTextPosition(SwingConstants.CENTER);
         icon.setVerticalTextPosition(SwingConstants.BOTTOM);
 
         GridBagConstraints gbcIcon = new GridBagConstraints();
         gbcIcon.gridx = 0;
         gbcIcon.gridy = 0;
-        gbcIcon.insets = new Insets(20, 155, 20, 0);
+        gbcIcon.insets = new Insets((int)(20 * scaleY), (int)(155 * scaleX), (int)(20 * scaleY), (int)(0 * scaleX));
         gbcIcon.anchor = GridBagConstraints.CENTER;
         symbolPanel.add(icon, gbcIcon);
 
@@ -120,8 +137,8 @@ public class MenuPanel extends JPanel {
     private Button createMenuButton(String text, String imagePath, String hoverImagePath, Runnable action) {
         Button button = new Button(imagePath, hoverImagePath);
         button.setText(text);
-        button.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-        button.setPreferredSize(new Dimension(384, 120));
+        button.setFont(new Font("Comic Sans MS", Font.BOLD, (int)(30 * scaleY)));
+        button.setPreferredSize(new Dimension((int)(384 * scaleX), (int)(120 * scaleY)));
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {

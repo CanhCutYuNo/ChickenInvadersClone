@@ -19,6 +19,7 @@ import application.controllers.GameSettings;
 import application.controllers.GameSettings.Difficulty;
 import application.controllers.SoundController;
 import application.controllers.ViewController;
+import application.util.ScreenUtil;
 
 public class SettingPanel extends JPanel {
     private static final long serialVersionUID = 1L;
@@ -29,6 +30,8 @@ public class SettingPanel extends JPanel {
     private Button buttonDifficulty, buttonDone;
     private JSlider backgroundMusicSlider, soundEffectSlider;
     private JLabel backgroundMusicValueLabel, soundEffectValueLabel;
+    private final double scaleX = ScreenUtil.getInstance().getScaleX();
+    private final double scaleY = ScreenUtil.getInstance().getScaleY();
 
     public SettingPanel(ViewController viewController, SoundController soundClick) {
         this.viewController = viewController;
@@ -45,6 +48,16 @@ public class SettingPanel extends JPanel {
         jLayeredPane.setLayer(this.backgroundPanel, 0);
         jLayeredPane.add(this.backgroundPanel);
     }
+    
+    private java.awt.Rectangle scaledBounds(int x, int y, int width, int height) {
+        return new java.awt.Rectangle(
+            (int)(x * scaleX),
+            (int)(y * scaleY),
+            (int)(width * scaleX),
+            (int)(height * scaleY)
+        );
+    }
+
 
     private void initComponents() {
         jLayeredPane = new JLayeredPane();
@@ -58,33 +71,33 @@ public class SettingPanel extends JPanel {
 
         // Header
         JLabel headerLabel = new JLabel("Settings");
-        headerLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 40));
+        headerLabel.setFont(new Font("Comic Sans MS", Font.BOLD, (int)(40 * scaleX)));
         headerLabel.setForeground(Color.WHITE);
-        headerLabel.setBounds(890, 50, 300, 50); 
+        headerLabel.setBounds(scaledBounds(890, 50, 300, 50)); 
         containerPanel.add(headerLabel);
 
         // Difficulty
         JPanel difficultyPanel = new JPanel();
         difficultyPanel.setOpaque(false);
         difficultyPanel.setLayout(null); 
-        difficultyPanel.setBounds(645, 400, 594, 200);
+        difficultyPanel.setBounds(scaledBounds(645, 400, 594, 200));
 
         JLabel difficultyLabel = new JLabel("Difficulty:");
         difficultyLabel.setForeground(Color.WHITE);
-        difficultyLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-        difficultyLabel.setBounds(65, 30, 200, 60); 
+        difficultyLabel.setFont(new Font("Comic Sans MS", Font.BOLD, (int)(30 * scaleX)));
+        difficultyLabel.setBounds(scaledBounds(65, 30, 200, 60)); 
         difficultyPanel.add(difficultyLabel);
 
         buttonDifficulty = new Button("/asset/resources/gfx/editbox.png", "/asset/resources/gfx/editbox_hover.png");
         buttonDifficulty.setText(getDifficultyString());
-        buttonDifficulty.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+        buttonDifficulty.setFont(new Font("Comic Sans MS", Font.BOLD, (int)(30 * scaleX)));
         buttonDifficulty.addActionListener(e -> {
             soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
             incrementDifficulty();
             buttonDifficulty.setText(getDifficultyString());
             GameSettings.getInstance().saveSettings();
         });
-        buttonDifficulty.setBounds(210, 0, 384, 120); 
+        buttonDifficulty.setBounds(scaledBounds(210, 0, 384, 120)); 
         difficultyPanel.add(buttonDifficulty);
 
         containerPanel.add(difficultyPanel);
@@ -93,12 +106,12 @@ public class SettingPanel extends JPanel {
         JPanel soundEffectPanel = new JPanel();
         soundEffectPanel.setOpaque(false);
         soundEffectPanel.setLayout(null);
-        soundEffectPanel.setBounds(645, 500, 1094, 200);
+        soundEffectPanel.setBounds(scaledBounds(645, 500, 1094, 200));
 
         JLabel soundEffectLabel = new JLabel("Sound volume:");
         soundEffectLabel.setForeground(Color.WHITE);
-        soundEffectLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-        soundEffectLabel.setBounds(10, 30, 400, 60);
+        soundEffectLabel.setFont(new Font("Comic Sans MS", Font.BOLD, (int)(30 * scaleX)));
+        soundEffectLabel.setBounds(scaledBounds(10, 30, 400, 60));
         soundEffectPanel.add(soundEffectLabel);
 
         soundEffectSlider = createCustomSlider((int) (GameSettings.getInstance().getSoundEffectVolume() * 100));
@@ -118,9 +131,9 @@ public class SettingPanel extends JPanel {
 
         Button soundEffectButton = new Button("/asset/resources/gfx/editbox.png", "/asset/resources/gfx/editbox_hover.png");
         soundEffectButton.setLayout(null);
-        soundEffectSlider.setBounds(42, 50, 300, 20);
+        soundEffectSlider.setBounds(scaledBounds(42, 50, 300, 20));
         soundEffectButton.add(soundEffectSlider);
-        soundEffectButton.setBounds(210, 0, 384, 120);
+        soundEffectButton.setBounds(scaledBounds(210, 0, 384, 120));
         soundEffectPanel.add(soundEffectButton);
         
         // Thêm MouseListener cho JSlider
@@ -149,12 +162,12 @@ public class SettingPanel extends JPanel {
         JPanel bgMusicPanel = new JPanel();
         bgMusicPanel.setOpaque(false);
         bgMusicPanel.setLayout(null);
-        bgMusicPanel.setBounds(645, 600, 1094, 200); // x=343, y=450, width=594, height=100
+        bgMusicPanel.setBounds(scaledBounds(645, 600, 1094, 200)); // x=343, y=450, width=594, height=100
 
         JLabel bgMusicLabel = new JLabel("Music volume:");
         bgMusicLabel.setForeground(Color.WHITE);
-        bgMusicLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-        bgMusicLabel.setBounds(15, 30, 400, 60); // x=0, y=35, width=200, height=30
+        bgMusicLabel.setFont(new Font("Comic Sans MS", Font.BOLD, (int)(30 * scaleX)));
+        bgMusicLabel.setBounds(scaledBounds(15, 30, 400, 60)); // x=0, y=35, width=200, height=30
         bgMusicPanel.add(bgMusicLabel);
 
         backgroundMusicSlider = createCustomSlider((int) (GameSettings.getInstance().getBackgroundMusicVolume() * 100));
@@ -174,9 +187,9 @@ public class SettingPanel extends JPanel {
 
         Button bgMusicButton = new Button("/asset/resources/gfx/editbox.png", "/asset/resources/gfx/editbox_hover.png");
         bgMusicButton.setLayout(null);
-        backgroundMusicSlider.setBounds(42, 50, 300, 20); // x=42, y=40, width=300, height=20
+        backgroundMusicSlider.setBounds(scaledBounds(42, 50, 300, 20)); // x=42, y=40, width=300, height=20
         bgMusicButton.add(backgroundMusicSlider);
-        bgMusicButton.setBounds(210, 0, 384, 120); // x=210, y=0, width=384, height=100
+        bgMusicButton.setBounds(scaledBounds(210, 0, 384, 120)); // x=210, y=0, width=384, height=100
         bgMusicPanel.add(bgMusicButton);
         
      // Thêm MouseListener cho JSlider
@@ -205,20 +218,20 @@ public class SettingPanel extends JPanel {
         JPanel muteAudioPanel = new JPanel();
         muteAudioPanel.setOpaque(false);
         muteAudioPanel.setLayout(null);
-        muteAudioPanel.setBounds(645, 700, 900, 400); // Kích cỡ và vị trí giống trước
+        muteAudioPanel.setBounds(scaledBounds(645, 700, 900, 400)); // Kích cỡ và vị trí giống trước
 
         // Tạo JLabel cho chữ "Mute audio"
         JLabel muteAudioLabel = new JLabel("Mute audio:");
         muteAudioLabel.setForeground(Color.WHITE);
-        muteAudioLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-        muteAudioLabel.setBounds(42, 30, 400, 40);
+        muteAudioLabel.setFont(new Font("Comic Sans MS", Font.BOLD, (int)(30 * scaleX)));
+        muteAudioLabel.setBounds(scaledBounds(42, 30, 400, 40));
         muteAudioPanel.add(muteAudioLabel);
 
      // Tạo Button thay cho JCheckBox
         Button muteAudioButton = new Button("/asset/resources/gfx/checkbox.png", "/asset/resources/gfx/checkbox_hover.png");
         muteAudioButton.setCheckedImage("/asset/resources/gfx/tick.png"); // Đặt hình ảnh dấu tick
         muteAudioButton.setChecked(GameSettings.getInstance().isMuteAudio()); // Khởi tạo trạng thái
-        muteAudioButton.setBounds(230, 5, 100, 100); 
+        muteAudioButton.setBounds(scaledBounds(230, 5, 100, 100)); 
         muteAudioButton.addActionListener(e -> {
             muteAudioButton.setChecked(!muteAudioButton.isChecked()); // Đảo trạng thái
             GameSettings.getInstance().setMuteAudio(muteAudioButton.isChecked());
@@ -232,12 +245,12 @@ public class SettingPanel extends JPanel {
         // Back Button
         buttonDone = new Button("/asset/resources/gfx/button.png", "/asset/resources/gfx/button_hover.png");
         buttonDone.setText("Back");
-        buttonDone.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+        buttonDone.setFont(new Font("Comic Sans MS", Font.BOLD, (int)(30 * scaleX)));
         buttonDone.addActionListener(e -> {
             soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
             viewController.switchToMenuPanel();
         });
-        buttonDone.setBounds(50, 950, 280, 110); // x=466, y=690, width=348, height=70
+        buttonDone.setBounds(scaledBounds(50, 950, 280, 110)); // x=466, y=690, width=348, height=70
         containerPanel.add(buttonDone);
 
         jLayeredPane.setLayer(containerPanel, 1);
