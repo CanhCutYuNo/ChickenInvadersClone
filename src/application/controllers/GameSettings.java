@@ -9,6 +9,7 @@ import java.util.Properties;
 
 public class GameSettings {
     private static GameSettings instance;
+    private static final Object lock = new Object(); 
 
     private Difficulty difficulty;
     private float backgroundMusicVolume;
@@ -48,7 +49,11 @@ public class GameSettings {
 
     public static GameSettings getInstance() {
         if (instance == null) {
-            instance = new GameSettings();
+            synchronized (lock) { 
+                if (instance == null) {
+                    instance = new GameSettings();
+                }
+            }
         }
         return instance;
     }
