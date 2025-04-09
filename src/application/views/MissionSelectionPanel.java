@@ -108,8 +108,8 @@ public class MissionSelectionPanel extends JPanel {
         nextButton.setFont(new Font("Comic Sans MS", Font.BOLD, (int) (30 * scaleX)));
         nextButton.addActionListener(e -> {
             soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
-            System.err.println("Not implement");
-            // viewController.switchToGameContainerPanel();
+            
+            viewController.switchToGameContainerPanel();
         });
         nextButton.setBounds(scaledBounds(1590, 950, 280, 110)); // x=466, y=690, width=348, height=70
         containerPanel.add(nextButton);
