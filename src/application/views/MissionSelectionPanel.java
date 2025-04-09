@@ -179,6 +179,10 @@ public class MissionSelectionPanel extends JPanel {
         containerPanel.add(startNewMissionPanel);
     }    
 
+    public void refresh(){
+        
+    }
+
     @Override
     public void paint(Graphics g) {
         paintChildren(g);

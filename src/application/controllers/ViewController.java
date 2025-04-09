@@ -11,6 +11,7 @@ import application.views.BackgroundPanel;
 import application.views.GameContainerPanel;
 import application.views.GamePanel;
 import application.views.MenuPanel;
+import application.views.MissionSelectionPanel;
 import application.views.SettingPanel;
 
 public class ViewController {
@@ -21,6 +22,7 @@ public class ViewController {
     private GameContainerPanel gameContainerPanel;
     private BackgroundPanel backgroundPanel;
     private GamePanel gamePanel;
+    private MissionSelectionPanel missionSelectionPanel;
 
     private SoundController soundController;
 
@@ -44,11 +46,12 @@ public class ViewController {
     }
 
     public void setPanels(MenuPanel menuPanel, SettingPanel settingPanel, 
-                          GameContainerPanel gameContainerPanel, GamePanel gamePanel) {
+                          GameContainerPanel gameContainerPanel, GamePanel gamePanel, MissionSelectionPanel missionSelectionPanel) { 
         this.menuPanel = menuPanel;
         this.settingPanel = settingPanel;
         this.gameContainerPanel = gameContainerPanel;
         this.gamePanel = gamePanel;
+        this.missionSelectionPanel = missionSelectionPanel;
     }
 
     public void switchToMenuPanel() {
@@ -73,10 +76,16 @@ public class ViewController {
 //         Phát nhạc nền khi vào game
         soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4Ingame2.wav").getPath());
 
-        
+
         // Phát nhạc nền khi vào game
         //soundController.switchTrack("assets/sounds/game_music.wav");
 
+    }
+
+    public void switchToMissionSelectionPanel() {
+        cardLayout.show(mainPanel, "MissionSelection");
+        missionSelectionPanel.setBackgroundPanel(backgroundPanel);
+        missionSelectionPanel.refresh();
     }
 
     private void centerMouseOnPlayer() {
