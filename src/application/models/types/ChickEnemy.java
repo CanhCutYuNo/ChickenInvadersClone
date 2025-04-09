@@ -91,8 +91,6 @@ public class ChickEnemy extends Enemy {
 
     private static int getHpByDifficulty() {
         switch (GameSettings.getInstance().getDifficulty()) {
-            case PEACEFUL:
-                return 30;
             case EASY:
                 return 40;
             case NORMAL:

@@ -298,10 +298,6 @@ public class Manager {
                             float chance = 0;
                             int damageItem = 0;
                             switch (GameSettings.getInstance().getDifficulty()) {
-                                case PEACEFUL:
-                                    chance = 0.6F;
-                                    damageItem = 15;
-                                    break;
                                 case EASY:
                                     chance = 0.5F;
                                     damageItem = 15;
@@ -465,10 +461,6 @@ public class Manager {
 
     public void shoot() {
         switch (GameSettings.getInstance().getDifficulty()){
-            case PEACEFUL:
-                bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 50, 1.0, 0.4));
-                break;
-
             case EASY:
                 bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 40, 1.0, 0.4));
                 break;

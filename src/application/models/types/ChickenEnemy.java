@@ -95,8 +95,6 @@ public class ChickenEnemy extends Enemy {
 
     private static int getHpByDifficulty() {
         switch (GameSettings.getInstance().getDifficulty()) {
-            case PEACEFUL:
-                return 80;
             case EASY:
                 return 90;
             case NORMAL:
@@ -197,10 +195,6 @@ public class ChickenEnemy extends Enemy {
         float r = 0;
         int dame = 0;
         switch (GameSettings.getInstance().getDifficulty()){
-            case PEACEFUL:
-                r = 0.0001f;
-                dame = 20;
-                break;
             case EASY:
                 r = 0.0002f;
                 dame = 30;
