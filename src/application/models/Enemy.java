@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import application.controllers.GameSettings;
 import application.controllers.SoundController;
 import application.models.EnemySkills.SkillType;
 
@@ -153,4 +154,6 @@ public abstract class Enemy {
     }
 
     public abstract void addSkills(SkillType skillType, String imagePath);
+
+
 }

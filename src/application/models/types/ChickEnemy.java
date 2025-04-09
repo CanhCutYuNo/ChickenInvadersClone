@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import javax.swing.ImageIcon;
 
+import application.controllers.GameSettings;
 import application.controllers.SoundController;
 import application.models.DeathEffect;
 import application.models.Enemy;
@@ -19,7 +20,7 @@ public class ChickEnemy extends Enemy {
     protected Image spriteSheet;
 
     public ChickEnemy(int PosX, int PosY, SoundController sound) {
-        super(50, 46, 54, PosX, PosY, sound);
+        super(getHpByDifficulty(), 46, 54, PosX, PosY, sound);
         curFrame = (int) (Math.random() % 26);
         frameCount = 0;
         spriteSheet = new ImageIcon(Objects.requireNonNull(getClass().getResource("/asset/resources/gfx/chick.png"))).getImage();
@@ -86,5 +87,22 @@ public class ChickEnemy extends Enemy {
     @Override
     public void addSkills(SkillType skillType, String imagePath) {
         skills.put(skillType, imagePath);
+    }
+
+    private static int getHpByDifficulty() {
+        switch (GameSettings.getInstance().getDifficulty()) {
+            case PEACEFUL:
+                return 30;
+            case EASY:
+                return 40;
+            case NORMAL:
+                return 50;
+            case HARD:
+                return 60;
+            case EXTREME:
+                return 65;
+            default:
+                return 50;
+        }
     }
 }

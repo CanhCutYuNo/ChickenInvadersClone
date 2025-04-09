@@ -198,21 +198,9 @@ public class Manager {
 
         if(getEnemies().isEmpty() && !levelTransitionTriggered && !isDelaying) {
             if(level == 1 && level1Manager != null) {
-                if(GameSettings.getInstance().getDifficulty() == GameSettings.Difficulty.HARD || GameSettings.getInstance().getDifficulty() == GameSettings.Difficulty.EXTREME){
-                    level1Manager.addWithDifficulty();
-                    if(level1Manager.isAllEnemiesDefeated()){
-                        level++;
-                        isDelaying = true;
-                        delayStartTime = System.currentTimeMillis();
-                    }
-                }
-                else {
-                    level++;
-                    isDelaying = true;
-                    delayStartTime = System.currentTimeMillis();
-
-                }
-
+                level++;
+                isDelaying = true;
+                delayStartTime = System.currentTimeMillis();
             } else if(level == 2 && level2Manager != null) {
                 level++;
                 isDelaying = true;

@@ -14,6 +14,7 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 
 import application.controllers.EnemySkillsController;
+import application.controllers.GameSettings;
 import application.controllers.SoundController;
 import application.models.DeathEffect;
 import application.models.Enemy;
@@ -59,7 +60,8 @@ public class ChickenEnemy extends Enemy {
 
     public ChickenEnemy(int PosX, int PosY, SoundController sound) {
         // Gọi super() với các tham số phù hợp, phải là câu lệnh đầu tiên
-        super(100, 64, 64, PosX, PosY, sound);
+        super(getHpByDifficulty(), 64, 64, PosX, PosY, sound);
+
         
         // Sau khi gọi super(), mới thực hiện các khởi tạo khác
         spriteBodySheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-body-stripes.png")).getImage();
@@ -89,6 +91,23 @@ public class ChickenEnemy extends Enemy {
         }
 
         rand = new Random();
+    }
+
+    private static int getHpByDifficulty() {
+        switch (GameSettings.getInstance().getDifficulty()) {
+            case PEACEFUL:
+                return 80;
+            case EASY:
+                return 90;
+            case NORMAL:
+                return 100;
+            case HARD:
+                return 120;
+            case EXTREME:
+                return 130;
+            default:
+                return 100;
+        }
     }
 
     // Phương thức hỗ trợ để tạo Map<SkillType, String>
@@ -175,8 +194,32 @@ public class ChickenEnemy extends Enemy {
     }
     
     public void createEggs(EnemySkillsController skillManager) {
-    	if(rand.nextInt(1000) < 1) {
-    		skillManager.addSkill(PosX, PosY, 5, 50, SkillType.EGG); 
+        float r = 0;
+        int dame = 0;
+        switch (GameSettings.getInstance().getDifficulty()){
+            case PEACEFUL:
+                r = 0.0001f;
+                dame = 20;
+                break;
+            case EASY:
+                r = 0.0002f;
+                dame = 30;
+                break;
+            case NORMAL:
+                r = 0.0003f;
+                dame = 40;
+                break;
+            case HARD:
+                r = 0.0006f;
+                dame = 50;
+                break;
+            case EXTREME:
+                r = 0.0008f;
+                dame = 60;
+                break;
+        }
+    	if(rand.nextDouble() < r) {
+    		skillManager.addSkill(PosX, PosY, 5, dame, SkillType.EGG);
         }
     }
 

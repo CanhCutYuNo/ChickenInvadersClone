@@ -22,18 +22,7 @@ public class Level1Manager extends LevelManager {
         // System.out.println("Initialized " + enemies.size() + " enemies in Level1Manager");
     }
 
-    public void addWithDifficulty(){
-        if(!hardWaveTriggered){
-            addEnemyController(new EnemyControllerLevel1(10, EnemyController.CHICKEN, 100, 0.0f, soundController));
-            addEnemyController(new EnemyControllerLevel1(10, EnemyController.CHICKEN, 300, 0.0f, soundController));
-            addEnemyController(new EnemyControllerLevel1(10, EnemyController.CHICKEN, 500, 0.0f, soundController));
-            hardWaveTriggered = true;
-        }
-    }
 
-    public boolean isAllEnemiesDefeated() {
-        return enemies.isEmpty(); // hoặc enemies.size() == 0
-    }
 
     private class EnemyControllerLevel1 extends EnemyController {
 
