@@ -79,12 +79,11 @@ public class ViewController {
 //         Phát nhạc nền khi vào game
         soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4Ingame2.wav").getPath());
 
+        manager.load();
+        
         if (gamePanel != null) {
             gamePanel.triggerTransition();
         }
-
-        manager.load();
-        
 
         // Phát nhạc nền khi vào game
         //soundController.switchTrack("assets/sounds/game_music.wav");
