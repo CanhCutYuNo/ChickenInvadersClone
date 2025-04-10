@@ -1,6 +1,7 @@
 package application.controllers.levels;
 
 import application.controllers.EnemyController;
+import application.controllers.GameSettings;
 import application.controllers.LevelManager;
 import application.models.Enemy;
 import application.models.types.ChickenEnemy;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Level1Manager extends LevelManager {
-    
+    private boolean hardWaveTriggered = false;
     public Level1Manager(SoundController soundController, List<Enemy> enemies) {
         super(soundController, enemies);
 
@@ -20,6 +21,8 @@ public class Level1Manager extends LevelManager {
         addEnemyController(new EnemyControllerLevel1(10, EnemyController.CHICKEN, 500, 0.0f, soundController));
         // System.out.println("Initialized " + enemies.size() + " enemies in Level1Manager");
     }
+
+
 
     private class EnemyControllerLevel1 extends EnemyController {
 
