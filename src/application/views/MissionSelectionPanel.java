@@ -104,6 +104,7 @@ public class MissionSelectionPanel extends JPanel {
         backButton.setFont(new Font("Comic Sans MS", Font.BOLD, (int)(30 * scaleX)));
         backButton.addActionListener(e -> {
             soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+
             viewController.switchToMenuPanel();
         });
         backButton.setBounds(scaledBounds(50, 950, 280, 110)); // x=466, y=690, width=348, height=70
@@ -117,6 +118,13 @@ public class MissionSelectionPanel extends JPanel {
         nextButton.setFont(new Font("Comic Sans MS", Font.BOLD, (int) (30 * scaleX)));
         nextButton.addActionListener(e -> {
             soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+
+            if(continueButton.isSelected()) {
+                gameSettings.setContinueLevel(gameSettings.getContinueLevel());
+            } else if (startNewMissionButton.isSelected()) {
+                gameSettings.setContinueLevel(1);
+            }
+            gameSettings.saveSettings();
             
             viewController.switchToGameContainerPanel();
         });
@@ -137,7 +145,8 @@ public class MissionSelectionPanel extends JPanel {
         // tạo trạng thái
         continueButton.setBounds(scaledBounds(230, 5, 100, 100));
         continueButton.addActionListener(e -> {
-            System.err.println("Not implement");
+            soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+
             continueButton.setSelected(true);
         });
         continuePanel.add(continueButton);
@@ -165,7 +174,8 @@ public class MissionSelectionPanel extends JPanel {
         // tạo trạng thái
         startNewMissionButton.setBounds(scaledBounds(230, 5, 100, 100));
         startNewMissionButton.addActionListener(e -> {
-            System.err.println("Not implement");
+            soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+
             startNewMissionButton.setSelected(true);
         });
         startNewMissionPanel.add(startNewMissionButton);

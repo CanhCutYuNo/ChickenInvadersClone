@@ -40,7 +40,7 @@ public class Main {
 
             viewController = new ViewController(cardLayout, mainPanel,
                     null, null, null,
-                    backgroundPanel, null, soundController);
+                    backgroundPanel, null, soundController, gameManager);
 
             mouseController = new MouseController(gamePanel, soundController);
 

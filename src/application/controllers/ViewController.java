@@ -26,12 +26,14 @@ public class ViewController {
 
     private SoundController soundController;
 
+    private Manager manager;
+
 
     public ViewController(CardLayout cardLayout, JPanel mainPanel, 
                           MenuPanel menuPanel, SettingPanel settingPanel, 
                           GameContainerPanel gameContainerPanel, 
                           BackgroundPanel backgroundPanel,
-                          GamePanel gamePanel, SoundController soundController) {
+                          GamePanel gamePanel, SoundController soundController, Manager manager) {
 
         this.cardLayout = cardLayout;
         this.mainPanel = mainPanel;
@@ -40,6 +42,7 @@ public class ViewController {
         this.gameContainerPanel = gameContainerPanel;
         this.backgroundPanel = backgroundPanel;
         this.gamePanel = gamePanel;
+        this.manager = manager;
 
         this.soundController = soundController;
 
@@ -79,6 +82,9 @@ public class ViewController {
         if (gamePanel != null) {
             gamePanel.triggerTransition();
         }
+
+        manager.load();
+        
 
         // Phát nhạc nền khi vào game
         //soundController.switchTrack("assets/sounds/game_music.wav");
