@@ -142,11 +142,11 @@ public class GameSettings {
         }
     }
 
-    public int getcontinueLevel(){
+    public int getContinueLevel(){
         return continueLevel;
     }
 
-    public void setcontinueLevel(int continueLevel){
+    public void setContinueLevel(int continueLevel){
         this.continueLevel = continueLevel;
     }
 }

@@ -189,7 +189,7 @@ public class MissionSelectionPanel extends JPanel {
     }    
 
     public void refresh(){
-        if(gameSettings.getcontinueLevel() == 1){
+        if(gameSettings.getContinueLevel() == 1){
             // Trường hợp chưa có màn chơi tiếp theo
 
             startNewMissionButton.setSelected(true);
