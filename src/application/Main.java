@@ -40,7 +40,7 @@ public class Main {
 
             viewController = new ViewController(cardLayout, mainPanel,
                     null, null, null,
-                    backgroundPanel, null, soundController);
+                    backgroundPanel, null, soundController, gameManager);
 
             mouseController = new MouseController(gamePanel, soundController);
 
@@ -61,9 +61,9 @@ public class Main {
             mainPanel.add(gameContainerPanel, "Game");
             mainPanel.add(missionSelectionPanel, "MissionSelection");
 
-            viewController.setPanels(menuPanel, settingPanel, gameContainerPanel, gamePanel);
+            viewController.setPanels(menuPanel, settingPanel, gameContainerPanel, gamePanel, missionSelectionPanel);
 
-            viewController.switchToMenuPanel();
+            viewController.switchToMissionSelectionPanel();
             gameLoop.start();
 
             frame.add(mainPanel);

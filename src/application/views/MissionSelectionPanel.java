@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -29,6 +30,10 @@ public class MissionSelectionPanel extends JPanel {
     private JLayeredPane jLayeredPane;
     private JPanel backgroundPanel;
     private Button backButton, nextButton;
+    private RadioButton continueButton, startNewMissionButton;
+    private ButtonGroup buttonGroup;
+    private final GameSettings gameSettings = GameSettings.getInstance();
+    private JLabel continueLabel;
 
     private final double scaleX = ScreenUtil.getInstance().getScreenScaleX();
     private final double scaleY = ScreenUtil.getInstance().getScreenScaleY();
@@ -83,6 +88,10 @@ public class MissionSelectionPanel extends JPanel {
 
         createNextButton(containerPanel);
 
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(continueButton);
+        buttonGroup.add(startNewMissionButton);
+
         jLayeredPane.setLayer(containerPanel, 1);
         jLayeredPane.add(containerPanel);
         add(jLayeredPane);
@@ -95,6 +104,7 @@ public class MissionSelectionPanel extends JPanel {
         backButton.setFont(new Font("Comic Sans MS", Font.BOLD, (int)(30 * scaleX)));
         backButton.addActionListener(e -> {
             soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+
             viewController.switchToMenuPanel();
         });
         backButton.setBounds(scaledBounds(50, 950, 280, 110)); // x=466, y=690, width=348, height=70
@@ -108,8 +118,15 @@ public class MissionSelectionPanel extends JPanel {
         nextButton.setFont(new Font("Comic Sans MS", Font.BOLD, (int) (30 * scaleX)));
         nextButton.addActionListener(e -> {
             soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
-            System.err.println("Not implement");
-            // viewController.switchToGameContainerPanel();
+
+            if(continueButton.isSelected()) {
+                gameSettings.setContinueLevel(gameSettings.getContinueLevel());
+            } else if (startNewMissionButton.isSelected()) {
+                gameSettings.setContinueLevel(1);
+            }
+            gameSettings.saveSettings();
+            
+            viewController.switchToGameContainerPanel();
         });
         nextButton.setBounds(scaledBounds(1590, 950, 280, 110)); // x=466, y=690, width=348, height=70
         containerPanel.add(nextButton);
@@ -122,23 +139,20 @@ public class MissionSelectionPanel extends JPanel {
         continuePanel.setBounds(scaledBounds(550, 500, 900, 100)); // Kích cỡ và vị trí giống trước
 
         // Tạo Button thay cho JCheckBox
-        Button continueButton = new Button("/asset/resources/gfx/checkbox.png",
+        continueButton = new RadioButton("/asset/resources/gfx/checkbox.png",
                 "/asset/resources/gfx/checkbox_hover.png");
         continueButton.setCheckedImage("/asset/resources/gfx/tick.png"); // Đặt hình ảnh dấu tick
-        // continueButton.setChecked(GameSettings.getInstance().isMuteAudio()); // Khởi
         // tạo trạng thái
         continueButton.setBounds(scaledBounds(230, 5, 100, 100));
         continueButton.addActionListener(e -> {
-            System.err.println("Not implement");
-            continueButton.setChecked(!continueButton.isChecked()); // Đảo trạng thái
-            // GameSettings.getInstance().setMuteAudio(muteAudioButton.isChecked());
-            // GameSettings.getInstance().saveSettings();
-            // soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+            soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+
+            continueButton.setSelected(true);
         });
         continuePanel.add(continueButton);
 
         // Tạo JLabel cho chữ "Continue"
-        JLabel continueLabel = new JLabel("Continue");
+        continueLabel = new JLabel("Continue");
         continueLabel.setForeground(Color.WHITE);
         continueLabel.setFont(new Font("Comic Sans MS", Font.BOLD, (int) (30 * scaleX)));
         continueLabel.setBounds(scaledBounds(380, 30, 400, 40));
@@ -154,22 +168,19 @@ public class MissionSelectionPanel extends JPanel {
         startNewMissionPanel.setBounds(scaledBounds(550, 650, 900, 100)); // Kích cỡ và vị trí giống trước
 
         // Tạo Button thay cho JCheckBox
-        Button startNewMissionButton = new Button("/asset/resources/gfx/checkbox.png",
+        startNewMissionButton = new RadioButton("/asset/resources/gfx/checkbox.png",
                 "/asset/resources/gfx/checkbox_hover.png");
                 startNewMissionButton.setCheckedImage("/asset/resources/gfx/tick.png"); // Đặt hình ảnh dấu tick
-        // continueButton.setChecked(GameSettings.getInstance().isMuteAudio()); // Khởi
         // tạo trạng thái
         startNewMissionButton.setBounds(scaledBounds(230, 5, 100, 100));
         startNewMissionButton.addActionListener(e -> {
-            System.err.println("Not implement");
-            startNewMissionButton.setChecked(!startNewMissionButton.isChecked()); // Đảo trạng thái
-            // GameSettings.getInstance().setMuteAudio(muteAudioButton.isChecked());
-            // GameSettings.getInstance().saveSettings();
-            // soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+            soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+
+            startNewMissionButton.setSelected(true);
         });
         startNewMissionPanel.add(startNewMissionButton);
 
-        // Tạo JLabel cho chữ "Continue"
+        // Tạo JLabel cho chữ "Start new mission"
         JLabel startNewMissionLabel = new JLabel("Start new mission");
         startNewMissionLabel.setForeground(Color.WHITE);
         startNewMissionLabel.setFont(new Font("Comic Sans MS", Font.BOLD, (int) (30 * scaleX)));
@@ -178,6 +189,21 @@ public class MissionSelectionPanel extends JPanel {
 
         containerPanel.add(startNewMissionPanel);
     }    
+
+    public void refresh(){
+        if(gameSettings.getContinueLevel() == 1){
+            // Trường hợp chưa có màn chơi tiếp theo
+
+            startNewMissionButton.setSelected(true);
+            continueButton.setEnabled(false);
+            continueLabel.setForeground(new Color(1f, 1f, 1f, 0.2f));
+        }
+        else{
+            continueButton.setEnabled(true);
+            continueButton.setSelected(true);
+            continueLabel.setForeground(Color.WHITE);
+        }
+    }
 
     @Override
     public void paint(Graphics g) {

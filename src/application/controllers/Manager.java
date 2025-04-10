@@ -42,6 +42,7 @@ public class Manager {
     private List<Enemy> enemies;
     private EnemySkillsController skillsManager;
     private DeathEffectController deathEffectController;
+    private GameSettings gameSettings;
 //    private EnemyProjectilesController eggs;
     private ItemsController items;
     private static BackgroundPanel backgroundPanel;
@@ -70,6 +71,7 @@ public class Manager {
 
     public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController, GamePanel _gamePanel) {
         screenUtil = ScreenUtil.getInstance();
+        gameSettings = GameSettings.getInstance();
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
         skillsManager = new EnemySkillsController();
@@ -201,18 +203,30 @@ public class Manager {
                 level++;
                 isDelaying = true;
                 delayStartTime = System.currentTimeMillis();
+
+                gameSettings.setContinueLevel(level);
+                gameSettings.saveSettings();
             } else if(level == 2 && level2Manager != null) {
                 level++;
                 isDelaying = true;
                 delayStartTime = System.currentTimeMillis();
+
+                gameSettings.setContinueLevel(level);
+                gameSettings.saveSettings();                
             } else if(level == 3 && level3Manager != null) {
                 level++;
                 isDelaying = true;
                 delayStartTime = System.currentTimeMillis();
+
+                gameSettings.setContinueLevel(level);
+                gameSettings.saveSettings();                
             } else if(level == 4 && level4Manager != null) {
                 level++;
                 isDelaying = true;
                 delayStartTime = System.currentTimeMillis();
+                
+                gameSettings.setContinueLevel(level);
+                gameSettings.saveSettings();                
             }
         }
 
@@ -499,4 +513,8 @@ public class Manager {
 	public void setGamePanel(GamePanel _gamePanel) {
 		this.gamePanel = _gamePanel;
 	}
+
+    public void load(){
+        level = gameSettings.getContinueLevel();
+    }
 }
