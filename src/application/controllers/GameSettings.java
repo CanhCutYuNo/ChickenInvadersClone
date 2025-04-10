@@ -34,7 +34,7 @@ public class GameSettings {
         void onSoundEffectVolumeChanged(float volume);
     }
     
-    public enum Difficulty { PEACEFUL, EASY, NORMAL, HARD, EXTREME; }
+    public enum Difficulty { EASY, NORMAL, HARD, EXTREME; }
 
     public void addMuteAudioListener(MuteAudioListener listener) {
         muteAudioListeners.add(listener);
@@ -60,7 +60,7 @@ public class GameSettings {
     }
 
     public void resetToDefault() {
-        difficulty = Difficulty.PEACEFUL;
+        difficulty = Difficulty.EASY;
         backgroundMusicVolume = 1.0f;
         soundEffectVolume = 1.0f;
         muteAudio = false;
