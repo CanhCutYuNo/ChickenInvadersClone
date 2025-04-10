@@ -46,6 +46,7 @@ public class Level4Manager extends LevelManager{
             Enemy enemy = createEnemy(random.nextInt(SCREEN_WIDTH-200), startY);
             enemy.setInitialIndex(0);
             enemies.add(enemy);
+            
         }
 
         public void update(float deltaTime){

@@ -1,5 +1,6 @@
 package application.models.types;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -46,6 +47,11 @@ public class ChickEnemy extends Enemy {
         g.drawImage(spriteSheet,
                 PosX - offsetX[curFrame] - 15, PosY - 15, PosX + SPRITE[curFrame][2] - offsetX[curFrame] - 15, PosY + SPRITE[curFrame][3] - 15,
                 SPRITE[curFrame][0], SPRITE[curFrame][1], SPRITE[curFrame][0] + SPRITE[curFrame][2], SPRITE[curFrame][1] + SPRITE[curFrame][3], null);
+
+        // Vẽ hitbox để kiểm tra
+//        g.setColor(Color.RED);
+//        Rectangle hitbox = getHitbox();
+//        g.drawRect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
     }
 
     @Override
@@ -75,6 +81,8 @@ public class ChickEnemy extends Enemy {
 
     @Override
     public Rectangle getHitbox() {
+        // Hiện tại hitbox đang có kích thước bằng với MODEL_WIDTH và MODEL_HEIGHT
+        // là 46 và 54. Bạn có thể điều chỉnh nó tại đây nếu cần.
         return new Rectangle(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
     }
 

@@ -3,6 +3,7 @@ package application.views;
 import javax.swing.*;
 
 import application.controllers.*;
+import application.models.EnemySkills;
 
 import java.awt.*;
 
@@ -12,8 +13,7 @@ public class PlayerView {
     private Image exhaustImage;
     private Image explosionSheet;
     private PlayerController playerController;
-
-
+  
 
     private int[][] spriteData = {
         {1, 1135, 104, 114}, {1, 1019, 104, 114}, {1, 903, 104, 114},
@@ -28,6 +28,7 @@ public class PlayerView {
         {235, 342, 106, 113}, {235, 225, 105, 114}, {235, 109, 104, 114},
         {351, 1135, 104, 114}, {351, 1019, 104, 114}
     };
+    
 
     private int[][] explosionData = {
         {1, 1, 21, 21}, {25, 1, 29, 32}, {57, 1, 38, 38}, {97, 1, 45, 42}, {145, 1, 52, 49}, {199, 1, 55, 54},
@@ -45,10 +46,8 @@ public class PlayerView {
     private int exFrame = 0;
     private boolean exploding = false;
 
-    // Constructor
     public PlayerView(PlayerController _playerController) {
         this.playerController = _playerController;
-  
 
         try {
             spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/spaceship.png")).getImage();
@@ -60,7 +59,6 @@ public class PlayerView {
         }
     }
 
-    // Getter & Setter
     public int getCurFrame() {
         return curFrame;
     }
@@ -82,7 +80,6 @@ public class PlayerView {
             int[] data = spriteData[curFrame];
             int sx = data[0], sy = data[1], sw = data[2], sh = data[3];
 
-            // Danh sách offset cho từng frame
             int[][] Offsets = {
                 {-15, -3}, {-15, -3}, {-15, -3}, {-15, -3}, {-15, -4},
                 {-15, -4}, {-13, -4}, {-13, -4}, {-13, -4}, {-12, -4},
@@ -93,49 +90,49 @@ public class PlayerView {
                 {-0, -4}, {0, -4}, {-5, 3}
             };
 
-            // Lấy offset của frame hiện tại
             int offsetX = Offsets[curFrame][0];
             int offsetY = Offsets[curFrame][1];
 
-            // Vẽ tàu vũ trụ(có offset)
-            g.drawImage(spriteSheet, playerController.getPosX() + offsetX, playerController.getPosY() + offsetY, playerController.getPosX() + offsetX + 100, playerController.getPosY() + offsetY + 100,
+            g.drawImage(spriteSheet,
+                    playerController.getPosX() + offsetX, playerController.getPosY() + offsetY,
+                    playerController.getPosX() + offsetX + 100, playerController.getPosY() + offsetY + 100,
                     sx, sy, sx + sw, sy + sh, null);
 
-            // Hiệu ứng lửa 
             if (exhaustImage != null) {
-                int[] exhaustData = {1, 271, 80, 240}; // Khung lửa cố định
+                int[] exhaustData = {1, 271, 80, 240};
                 int ex_sx = exhaustData[0], ex_sy = exhaustData[1];
                 int ex_sw = exhaustData[2], ex_sh = exhaustData[3];
 
-                // rung lắc
-                int jitterX = (int) (Math.random() * 6) - 3; // -3 đến +3 px
+                int jitterX = (int) (Math.random() * 6) - 3;
                 int jitterY = (int) (Math.random() * 6) - 3;
 
-                // nhấp nháy
-                float alpha = (float) (Math.random() * 0.5 + 0.5); // 0.5 - 1.0
+                float alpha = (float) (Math.random() * 0.5 + 0.5);
                 Graphics2D g2d = (Graphics2D) g;
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 
-                // co giãn
-                double scale = 1 + (Math.random() * 0.2); // 1.0x - 1.3x
+                double scale = 1 + (Math.random() * 0.2);
                 int scaledWidth = (int) (ex_sw * scale);
                 int scaledHeight = (int) (ex_sh * scale);
 
-                // Vẽ lửa
                 g2d.drawImage(exhaustImage,
                         playerController.getPosX() + 22 + jitterX, playerController.getPosY() + 70 + jitterY,
                         playerController.getPosX() + 22 + scaledWidth / 2 + jitterX, playerController.getPosY() + 70 + scaledHeight / 2 + jitterY,
                         ex_sx, ex_sy, ex_sx + ex_sw, ex_sy + ex_sh, null);
 
-                // Reset độ trong suốt
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-
             }
 
         } else {
             g.setColor(Color.RED);
             g.fillRect(playerController.getPosX(), playerController.getPosY(), 64, 64);
         }
+//        // Vẽ hitbox
+//        Graphics2D g2d = (Graphics2D) g;
+//        g2d.setColor(Color.RED);
+//        Rectangle hitbox = playerController.getHitbox();
+//        g2d.draw(hitbox);
+
+     
     }
 
     public boolean isExploding() {
@@ -157,11 +154,10 @@ public class PlayerView {
     }
 
     public void explosionRender(Graphics g) {
-        //Hiệu ứng nổ
         if (explosionSheet != null) {
             int[] eData = explosionData[exFrame];
             int ex = eData[0], ey = eData[1], ew = eData[2], eh = eData[3];
-            //992 579
+
             int[][] eOffsets = {
                 {0, -3}, {-16, -25}, {-34, -37}, {-48, -45}, {-62, -59}, {-68, -69}, {-72, -81},
                 {-88, -89}, {-96, -95}, {-106, -105}, {-110, -115}, {-116, -121}, {-120, -125},
@@ -174,14 +170,13 @@ public class PlayerView {
                 {-214, -209}, {-214, -207}, {-214, -205}, {-214, -199}
             };
 
-            // Lấy offset của frame hiện tại
             int eOffsetX = eOffsets[exFrame][0];
             int eOffsetY = eOffsets[exFrame][1];
 
             Graphics2D g2d = (Graphics2D) g;
             g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
-            double scale = 8.0; // Hệ số phóng to
+            double scale = 8.0;
 
             g2d.drawImage(explosionSheet,
                     (int) (playerController.getPosX() + eOffsetX), (int) (playerController.getPosY() + eOffsetY),
@@ -189,6 +184,5 @@ public class PlayerView {
                     ex, ey, ex + ew, ey + eh,
                     null);
         }
-
     }
 }

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import application.controllers.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -26,6 +27,7 @@ public class EnemySkillsView {
     private BufferedImage fireballSheet;
     private List<int[]> EggSprites = new ArrayList<>();
     private List<int[]> FireballSprites = new ArrayList<>();
+    private SoundController soundController;
 
     private static final int[][] EggBrokenSprite = {
             {1, 1, 31, 20}, {35, 1, 32, 21}, {69, 1, 34, 22},
@@ -53,7 +55,8 @@ public class EnemySkillsView {
             {202, 6, 173, 74}, {19, 357, 161, 70}
     };
 
-    public EnemySkillsView(Map<SkillType, String> skillImagePaths) {
+    public EnemySkillsView(Map<SkillType, String> skillImagePaths, SoundController soundController) {
+    	this.soundController = soundController;
         skillImages = new HashMap<>();
         try {     	
             for (Map.Entry<SkillType, String> entry : skillImagePaths.entrySet()) {
@@ -64,6 +67,7 @@ public class EnemySkillsView {
                     Image image = new ImageIcon(getClass().getResource(path)).getImage();
                     skillImages.put(skillType, image);
                     eggSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/eggbreak~1.png")).getImage();
+                    
                 } else if (skillType == SkillType.FIREBALL) {
                     InputStream inputStream = getClass().getResourceAsStream("/asset/resources/gfx/bullet-bolt1.png");
                     if (inputStream == null) {
@@ -91,7 +95,6 @@ public class EnemySkillsView {
                     g2d.dispose();
 
                     skillImages.put(skillType, resizedImage);
-                    System.out.println("Loaded " + skillType + " image from path: " + path);
                 }
             }
         } catch (Exception e) {
@@ -120,6 +123,9 @@ public class EnemySkillsView {
                     g.drawImage(eggImage, (int) skill.getPosX(), (int) skill.getPosY(), 40, 80, null);
                 }
             } else {
+            	 if (skill.getAnimationFrame() == 0) {
+            		 soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggSplat.wav").getPath());	
+                 }
                 drawEggBroken(g, skill, skill.getAnimationFrame());
             }
         } else if (skill.getSkillType() == SkillType.FIREBALL) {
@@ -131,11 +137,11 @@ public class EnemySkillsView {
             }
         }
 
-        // Vẽ hitbox
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.RED);
-        Shape hitbox = skill.getHitbox();
-        g2d.draw(hitbox);
+//        // Vẽ hitbox
+//        Graphics2D g2d = (Graphics2D) g;
+//        g2d.setColor(Color.RED);
+//        Shape hitbox = skill.getHitbox();
+//        g2d.draw(hitbox);
     }
 
     private void drawSkill(Graphics g, double posX, double posY, double scale, double angle, Image skillImage) {
@@ -166,8 +172,11 @@ public class EnemySkillsView {
         for (int[] frame : EggBrokenSprite) {
             EggSprites.add(frame);
         }
-
+        
+           
+        
         if (eggSheet != null) {
+      
             int[] eggFrame = EggSprites.get(eFrame);
             int ex = eggFrame[0], ey = eggFrame[1], ew = eggFrame[2], eh = eggFrame[3];
 

@@ -1,5 +1,6 @@
 package application.controllers;
-	
+
+import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,43 +8,44 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-
-public class SoundController {
+public class SoundController implements GameSettings.MuteAudioListener, GameSettings.VolumeChangeListener {
     private final ExecutorService ex = Executors.newCachedThreadPool();
     private final List<Clip> clips = new ArrayList<>(); // Lưu danh sách Clip cho hiệu ứng âm thanh
     private Clip backgroundClip; // Clip riêng cho nhạc nền
 
-    public void playBackgroundMusic(String path) {
+    public SoundController() {
+        // Đăng ký SoundController làm listener cho GameSettings
+        GameSettings.getInstance().addMuteAudioListener(this);
+        GameSettings.getInstance().addVolumeChangeListener(this);
+    }
 
+    public void playBackgroundMusic(String path) {
         ex.submit(() -> {
             try {
                 stopBackgroundMusic(); // Dừng nhạc nền cũ trước khi phát bài mới
 
                 File file = new File(path);
                 if (!file.exists()) {
-                  //  System.out.println("Không tìm thấy file: " + path);
+                    System.err.println("Không tìm thấy file âm thanh: " + path);
                     return;
                 }
 
                 AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
                 backgroundClip = AudioSystem.getClip();
                 backgroundClip.open(audioStream);
+
+                // Áp dụng âm lượng cho backgroundClip
+                applyVolumeToBackgroundClip();
+
                 backgroundClip.loop(Clip.LOOP_CONTINUOUSLY); // Lặp vô hạn
                 backgroundClip.start();
-                
+
             } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-                e.printStackTrace();
+                System.err.println("Lỗi khi phát nhạc nền từ file " + path + ": " + e.getMessage());
             }
         });
     }
 
-    // 🛑 Dừng nhạc nền
     public void stopBackgroundMusic() {
         if (backgroundClip != null && backgroundClip.isRunning()) {
             backgroundClip.stop();
@@ -52,28 +54,26 @@ public class SoundController {
         }
     }
 
-    // 🔊 Phát hiệu ứng âm thanh (không ảnh hưởng đến nhạc nền)
     public void playSoundEffect(String path) {
         ex.submit(() -> {
             try {
                 File file = new File(path);
                 if (!file.exists()) {
-       //             System.out.println("Không tìm thấy file: " + path);
+                    System.err.println("Không tìm thấy file âm thanh: " + path);
                     return;
                 }
 
                 AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
                 Clip effectClip = AudioSystem.getClip();
                 effectClip.open(audioStream);
-                
-                // Thêm Clip vào danh sách để quản lý
+
+                applyVolumeToEffectClip(effectClip);
+
                 synchronized (clips) {
                     clips.add(effectClip);
                 }
-     //           System.out.println("tìm thấy file: " + path);
                 effectClip.start();
 
-                // Khi phát xong, tự động xóa khỏi danh sách
                 effectClip.addLineListener(event -> {
                     if (event.getType() == LineEvent.Type.STOP) {
                         effectClip.close();
@@ -84,12 +84,11 @@ public class SoundController {
                 });
 
             } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-                e.printStackTrace();
+                System.err.println("Lỗi khi phát âm thanh từ file " + path + ": " + e.getMessage());
             }
         });
     }
 
-    // 🛑 Dừng tất cả âm thanh (hiệu ứng + nhạc nền)
     public void stopAll() {
         stopBackgroundMusic();
         synchronized (clips) {
@@ -101,9 +100,83 @@ public class SoundController {
         }
     }
 
-    // 🧹 Dọn dẹp tài nguyên khi đóng ứng dụng
     public void shutdown() {
         stopAll();
         ex.shutdown();
+    }
+
+    // Phương thức để áp dụng âm lượng cho backgroundClip
+    private void applyVolumeToBackgroundClip() {
+        if (backgroundClip != null && backgroundClip.isOpen()) {
+                FloatControl volumeControl = (FloatControl) backgroundClip.getControl(FloatControl.Type.MASTER_GAIN);
+                float volume = GameSettings.getInstance().isMuteAudio() ? 0.0f : GameSettings.getInstance().getBackgroundMusicVolume();
+                float dB = (float) (Math.log(volume == 0.0 ? 0.0001 : volume) / Math.log(10.0) * 20.0);
+                volumeControl.setValue(dB);
+        }
+    }
+
+    // Phương thức để áp dụng âm lượng cho một effectClip
+    private void applyVolumeToEffectClip(Clip clip) {
+        FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        float volume = GameSettings.getInstance().isMuteAudio() ? 0.0f : GameSettings.getInstance().getSoundEffectVolume();
+        float dB = (float) (Math.log(volume == 0.0 ? 0.0001 : volume) / Math.log(10.0) * 20.0);
+        volumeControl.setValue(dB);
+    }
+
+    // Phương thức để áp dụng âm lượng với giá trị đã tính toán sẵn
+    private void applyVolumeToClip(Clip clip, float volume) {
+        FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        float dB = (float) (Math.log(volume == 0.0 ? 0.0001 : volume) / Math.log(10.0) * 20.0);
+        volumeControl.setValue(dB);
+    }
+
+    @Override
+    public void onMuteAudioChanged(boolean isMuted) {
+        // Lấy giá trị âm lượng một lần duy nhất
+        float backgroundVolume = isMuted ? 0.0f : GameSettings.getInstance().getBackgroundMusicVolume();
+        float effectVolume = isMuted ? 0.0f : GameSettings.getInstance().getSoundEffectVolume();
+
+        // Chuyển tác vụ cập nhật âm lượng sang luồng riêng
+        ex.submit(() -> {
+            // Cập nhật âm lượng cho backgroundClip
+            if (backgroundClip != null && backgroundClip.isOpen()) {
+                applyVolumeToClip(backgroundClip, backgroundVolume);
+            }
+
+            // Cập nhật âm lượng cho tất cả các Clip trong clips
+            synchronized (clips) {
+                for (Clip clip : clips) {
+                    if (clip.isOpen()) {
+                        applyVolumeToClip(clip, effectVolume);
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onBackgroundMusicVolumeChanged(float volume) {
+        // Chỉ cập nhật nếu không bị mute
+        if (!GameSettings.getInstance().isMuteAudio()) {
+            ex.submit(() -> {
+                applyVolumeToClip(backgroundClip, volume);
+            });
+        }
+    }
+
+    @Override
+    public void onSoundEffectVolumeChanged(float volume) {
+        // Chỉ cập nhật nếu không bị mute
+        if (!GameSettings.getInstance().isMuteAudio()) {
+            ex.submit(() -> {
+                synchronized (clips) {
+                    for (Clip clip : clips) {
+                        if (clip.isOpen()) {
+                            applyVolumeToClip(clip, volume);
+                        }
+                    }
+                }
+            });
+        }
     }
 }

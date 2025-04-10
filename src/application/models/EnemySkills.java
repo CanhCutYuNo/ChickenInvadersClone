@@ -67,12 +67,12 @@ public class EnemySkills {
     }
 
     private void setDefaultSize() {
-        if (skillType == SkillType.EGG) {
-            this.width = 15;
-            this.height = 15;
+        if(skillType == SkillType.EGG) {
+            this.width = 31;
+            this.height = 45;
         } else if (skillType == SkillType.HOLE) {
-            this.width = 330;
-            this.height = 330;
+            this.width = 300;
+            this.height = 300;
         } else if (skillType == SkillType.FIREBALL) {
             this.width = 153;
             this.height = 62;
@@ -202,22 +202,17 @@ public class EnemySkills {
     }
 
     public Shape getHitbox() {
-        int scaledWidth = (int) (width * (skillType == SkillType.HOLE ? scale : 1.0));
-        int scaledHeight = (int) (height * (skillType == SkillType.HOLE ? scale : 1.0));
+        double scaleFactor = (skillType == SkillType.HOLE) ? scale : 1.0;
 
-        int hitboxX, hitboxY;
-        if (skillType == SkillType.HOLE) {
-            hitboxX = (int) posX - (scaledWidth - width) / 2 - 150;
-            hitboxY = (int) posY - (scaledHeight - height) / 2 - 150;
-        } else {
-            hitboxX = (int) posX - scaledWidth / 2;
-            hitboxY = (int) posY - scaledHeight / 2;
-        }
+        int scaledWidth = (int) (width * scaleFactor);
+        int scaledHeight = (int) (height * scaleFactor);
+
+        int hitboxX = (int) (posX - scaledWidth / 2 + 15); 
+        int hitboxY = (int) (posY - scaledHeight / 2 + 20);
 
         Rectangle2D rect = new Rectangle2D.Double(hitboxX, hitboxY, scaledWidth, scaledHeight);
 
         if (skillType == SkillType.FIREBALL) {
-            // Tính góc xoay dựa trên speedX và speedY (giống cách vẽ trong EnemySkillsView)
             double angle = Math.atan2(speedY, speedX);
             AffineTransform transform = new AffineTransform();
             transform.rotate(angle, posX, posY);
@@ -226,6 +221,7 @@ public class EnemySkills {
 
         return rect;
     }
+
 
     public int getWidth() {
         return width;

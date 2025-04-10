@@ -81,7 +81,7 @@ public class PlayerController {
     }
     
     public Rectangle getHitbox() {
-        return new Rectangle((int) player.getPosX(), (int) player.getPosY(), 54, 50);
+        return new Rectangle((int) player.getPosX()+9, (int) player.getPosY()+5, 68, 70);
     }
 
     public void updateDirection(int newX) {

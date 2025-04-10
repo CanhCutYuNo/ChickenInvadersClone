@@ -9,7 +9,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -52,7 +51,7 @@ public class Manager {
     private JPanel mainPanel;
     private GameLoop gameLoop;
     private int frameDelay = 0;
-    private int level = 5;
+    private int level = 1;
     private boolean playerExploded = false;
     // Thêm các biến để lưu trữ LevelXManager
     private Level1Manager level1Manager;
@@ -61,7 +60,7 @@ public class Manager {
     private Level4Manager level4Manager;
     private Level5Manager level5Manager;
 
-    GamePanel gamePanel;
+    private GamePanel gamePanel;
 
     private boolean levelTransitionTriggered = false;
 
@@ -73,7 +72,8 @@ public class Manager {
         screenUtil = ScreenUtil.getInstance();
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
-        skillsManager = new EnemySkillsController(new HashMap<>());
+        this.soundController = _soundController;
+        skillsManager = new EnemySkillsController(soundController);
         deathEffectController = new DeathEffectController();
         playerController = new PlayerController(null);
         playerView = new PlayerView(playerController);
@@ -87,7 +87,7 @@ public class Manager {
         Manager.menuPanel = _menuPanel;
         this.gameLoop = _gameLoop;
         this.gamePanel = _gamePanel;
-        this.soundController = _soundController;
+      
     }
 
     public void setBackgroundPanel(BackgroundPanel _backgroundPanel) {
@@ -145,7 +145,6 @@ public class Manager {
                 isDelaying = false;
                 levelTransitionTriggered = true;
                 gamePanel.triggerTransition();
-                System.out.println("Delay finished, triggering transition to Level " + level);
             }
         }
 
@@ -260,8 +259,6 @@ public class Manager {
 
             // Kiểm tra va chạm với người chơi
             if(isColliding(playerController,item)) {
-                System.out.println("Player picked up an item!");
-
                 // Gọi hàm xử lý khi nhặt item(tăng máu, đạn, điểm...)
                 playerController.isDamaged(item.getDamage());
 
@@ -357,8 +354,10 @@ public class Manager {
         while(skillIterator.hasNext()) {
             EnemySkills skill = skillIterator.next();
             if(skill.isActive() && isColliding(playerController, skill)) {
+
                 playerController.isDamaged(skill.getDamage());
-                System.out.println("Player collides with skill: " + skill.getSkillType());
+                soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggshellCrack.wav").getPath());
+
                 if(playerController.getHP() <= 0) {
                     playerController.getPlayerView().startExplosion();
                     soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/explosionPlayer.wav").getPath());
@@ -421,8 +420,6 @@ public class Manager {
 
         items.drawItems(g);
 
-      //  System.out.println(skillsManager.getSkills().size());
-
         int fps = gameLoop.getFPS();
         g.setColor(Color.GREEN);
         g.setFont(new Font("Arial", Font.BOLD, 20));
@@ -451,7 +448,6 @@ public class Manager {
     public void shoot() {
         bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 50, 1.0, 0.4));
         soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/bulletHenSolo.wav").getPath());
-         System.out.println("Bắn");
     }
 
     private boolean isColliding(Bullet bullet, Enemy enemy) {

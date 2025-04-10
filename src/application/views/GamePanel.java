@@ -125,7 +125,7 @@ public class GamePanel extends JPanel {
         }
 
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-        // gameManager.renderPlayer(g);
+        gameManager.renderPlayer(g);
     }
 
     public void triggerTransition() {

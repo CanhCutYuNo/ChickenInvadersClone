@@ -12,15 +12,16 @@ public class Button extends JButton {
     private boolean isEntered = false;
     private BufferedImage buttonImage;
     private BufferedImage buttonHoverImage;
+    private boolean isChecked = false; // Thêm biến trạng thái checked
+    private BufferedImage checkedImage; // Hình ảnh dấu tick
 
-    public Button(int width, int height, String normalImagePath, String hoverImagePath) {
+    public Button(String normalImagePath, String hoverImagePath) {
         setContentAreaFilled(false);
         setBorderPainted(false);
         setFocusPainted(false);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
         setForeground(Color.WHITE);
         setFont(new Font(Font.SANS_SERIF, Font.BOLD, 24));
-        setPreferredSize(new Dimension(width, height));
 
         // Load ảnh mặc định
         buttonImage = loadImage(normalImagePath);
@@ -57,6 +58,21 @@ public class Button extends JButton {
         return null;
     }
 
+    public void setCheckedImage(String checkedImagePath) {
+        BufferedImage image = loadImage(checkedImagePath);
+        checkedImage = image;
+    }
+
+    // Thêm getter và setter cho trạng thái checked
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.isChecked = checked;
+        repaint();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2D = (Graphics2D) g.create();
@@ -74,6 +90,13 @@ public class Button extends JButton {
             g2D.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
         }
 
+        // Vẽ hình ảnh dấu tick nếu trạng thái là checked
+        if (isChecked && checkedImage != null) {
+            int x = (getWidth() - checkedImage.getWidth()) / 2;
+            int y = (getHeight() - checkedImage.getHeight()) / 2;
+            g2D.drawImage(checkedImage, x, y, this);
+        }
+
         // Vẽ text căn giữa
         String text = getText();
         if (text != null && !text.isEmpty()) {
@@ -88,5 +111,19 @@ public class Button extends JButton {
         }
 
         g2D.dispose();
+    }
+
+    public void enter() {
+        isEntered = true;
+        repaint();
+    }
+
+    public void exit() {
+        isEntered = false;
+        repaint();
+    }
+
+    public boolean isEntered() {
+        return isEntered;
     }
 }
