@@ -63,7 +63,7 @@ public class Main {
 
             viewController.setPanels(menuPanel, settingPanel, gameContainerPanel, gamePanel, missionSelectionPanel);
 
-            viewController.switchToMenuPanel();
+            viewController.switchToMissionSelectionPanel();
             gameLoop.start();
 
             frame.add(mainPanel);
