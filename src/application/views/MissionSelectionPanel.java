@@ -134,15 +134,11 @@ public class MissionSelectionPanel extends JPanel {
         continueButton = new RadioButton("/asset/resources/gfx/checkbox.png",
                 "/asset/resources/gfx/checkbox_hover.png");
         continueButton.setCheckedImage("/asset/resources/gfx/tick.png"); // Đặt hình ảnh dấu tick
-        // continueButton.setChecked(GameSettings.getInstance().isMuteAudio()); // Khởi
         // tạo trạng thái
         continueButton.setBounds(scaledBounds(230, 5, 100, 100));
         continueButton.addActionListener(e -> {
             System.err.println("Not implement");
             continueButton.setSelected(true);
-            // GameSettings.getInstance().setMuteAudio(muteAudioButton.isChecked());
-            // GameSettings.getInstance().saveSettings();
-            // soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
         });
         continuePanel.add(continueButton);
 
@@ -166,15 +162,11 @@ public class MissionSelectionPanel extends JPanel {
         startNewMissionButton = new RadioButton("/asset/resources/gfx/checkbox.png",
                 "/asset/resources/gfx/checkbox_hover.png");
                 startNewMissionButton.setCheckedImage("/asset/resources/gfx/tick.png"); // Đặt hình ảnh dấu tick
-        // continueButton.setChecked(GameSettings.getInstance().isMuteAudio()); // Khởi
         // tạo trạng thái
         startNewMissionButton.setBounds(scaledBounds(230, 5, 100, 100));
         startNewMissionButton.addActionListener(e -> {
             System.err.println("Not implement");
             startNewMissionButton.setSelected(true);
-            // GameSettings.getInstance().setMuteAudio(muteAudioButton.isChecked());
-            // GameSettings.getInstance().saveSettings();
-            // soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
         });
         startNewMissionPanel.add(startNewMissionButton);
 
