@@ -66,6 +66,7 @@ public class ChickenBoss extends Enemy {
             loadGif("/asset/resources/gfx/boss.gif");
             isGifLoaded = true;
         }).start();
+
     }
 
     private void loadGif(String path) {
@@ -191,6 +192,8 @@ public class ChickenBoss extends Enemy {
                 skillsManager.addSkill(centerX, centerY, speedX, speedY, damage, SkillType.FIREBALL);
             }
         }
+        sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/cannonFire.wav").getPath());
+
         shouldCreateFireballBurst = false; // Reset cờ sau khi tạo
     }
 
@@ -198,6 +201,8 @@ public class ChickenBoss extends Enemy {
     public void createHoleSkill(EnemySkillsController skillsManager) {
         skillsManager.addSkill(1920 / 2, 1080 / 2, 0, 5000, SkillType.HOLE);
         //skillsManager.addSkillImagePath(SkillType.HOLE, "/asset/resources/gfx/hole.png");
+        sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/engineCrab.wav").getPath());
+    
         shouldCreateHole = false; // Reset cờ sau khi tạo
     }
 
@@ -264,5 +269,6 @@ public class ChickenBoss extends Enemy {
     @Override
     public void addSkills(SkillType skillType, String imagePath) {
         skills.put(skillType, imagePath);
+        
     }
 }

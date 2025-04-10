@@ -17,7 +17,6 @@ public class Main {
     private static MenuPanel menuPanel;
     private static SettingPanel settingPanel;
     private static GameContainerPanel gameContainerPanel;
-    private static MissionSelectionPanel missionSelectionPanel;
     private static GameLoop gameLoop;
     private static ViewController viewController;
     private static MouseController mouseController;
@@ -40,7 +39,7 @@ public class Main {
 
             viewController = new ViewController(cardLayout, mainPanel,
                     null, null, null,
-                    backgroundPanel, null, soundController, gameManager);
+                    backgroundPanel, null, soundController);
 
             mouseController = new MouseController(gamePanel, soundController);
 
@@ -54,16 +53,14 @@ public class Main {
 
             settingPanel = new SettingPanel(viewController, soundController);
             gameContainerPanel = new GameContainerPanel(gamePanel);
-            missionSelectionPanel = new MissionSelectionPanel(viewController, soundController);
 
             mainPanel.add(menuPanel, "Menu");
             mainPanel.add(settingPanel, "Setting");
             mainPanel.add(gameContainerPanel, "Game");
-            mainPanel.add(missionSelectionPanel, "MissionSelection");
 
-            viewController.setPanels(menuPanel, settingPanel, gameContainerPanel, gamePanel, missionSelectionPanel);
+            viewController.setPanels(menuPanel, settingPanel, gameContainerPanel, gamePanel);
 
-            viewController.switchToMissionSelectionPanel();
+            viewController.switchToMenuPanel();
             gameLoop.start();
 
             frame.add(mainPanel);

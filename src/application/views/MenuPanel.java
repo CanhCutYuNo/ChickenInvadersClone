@@ -104,7 +104,11 @@ public class MenuPanel extends JPanel {
             sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
             
             if (viewController != null) {
-                viewController.switchToMissionSelectionPanel();
+                viewController.switchToGameContainerPanel();
+                if (gamePanel != null) {
+                    gamePanel.triggerTransition();
+                   
+                }
             }
         });
 

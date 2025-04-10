@@ -42,7 +42,6 @@ public class Manager {
     private List<Enemy> enemies;
     private EnemySkillsController skillsManager;
     private DeathEffectController deathEffectController;
-    private GameSettings gameSettings;
 //    private EnemyProjectilesController eggs;
     private ItemsController items;
     private static BackgroundPanel backgroundPanel;
@@ -71,7 +70,6 @@ public class Manager {
 
     public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController, GamePanel _gamePanel) {
         screenUtil = ScreenUtil.getInstance();
-        gameSettings = GameSettings.getInstance();
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
         this.soundController = _soundController;
@@ -204,30 +202,18 @@ public class Manager {
                 level++;
                 isDelaying = true;
                 delayStartTime = System.currentTimeMillis();
-
-                gameSettings.setContinueLevel(level);
-                gameSettings.saveSettings();
             } else if(level == 2 && level2Manager != null) {
                 level++;
                 isDelaying = true;
                 delayStartTime = System.currentTimeMillis();
-
-                gameSettings.setContinueLevel(level);
-                gameSettings.saveSettings();                
             } else if(level == 3 && level3Manager != null) {
                 level++;
                 isDelaying = true;
                 delayStartTime = System.currentTimeMillis();
-
-                gameSettings.setContinueLevel(level);
-                gameSettings.saveSettings();                
             } else if(level == 4 && level4Manager != null) {
                 level++;
                 isDelaying = true;
                 delayStartTime = System.currentTimeMillis();
-                
-                gameSettings.setContinueLevel(level);
-                gameSettings.saveSettings();                
             }
         }
 
@@ -275,6 +261,8 @@ public class Manager {
             if(isColliding(playerController,item)) {
                 // Gọi hàm xử lý khi nhặt item(tăng máu, đạn, điểm...)
                 playerController.isDamaged(item.getDamage());
+                soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/(eating1).wav").getPath());
+
 
                 // Xóa item khỏi danh sách
                 iterator.remove();
@@ -309,31 +297,12 @@ public class Manager {
                             enemiesToRemove.add(enemy);
 
                             //Them item
+
                             Random random = new Random();
-                            float chance = 0;
-                            int damageItem = 0;
-                            switch (GameSettings.getInstance().getDifficulty()) {
-                                case EASY:
-                                    chance = 0.5F;
-                                    damageItem = 15;
-                                    break;
-                                case NORMAL:
-                                    chance = 0.3F;
-                                    damageItem = 10;
-                                    break;
-                                case HARD:
-                                    chance = 0.2F;
-                                    damageItem = 5;
-                                    break;
-                                case EXTREME:
-                                    chance = 0.15F;
-                                    damageItem = 5;
-                                    break;
+                            if(random.nextFloat() <  0.3){
+                                items.addItem((int)enemy.getPosX(),(int) enemy.getPosY()-15, 10);
                             }
 
-                            if(random.nextDouble() < chance){
-                                items.addItem((int) enemy.getPosX(), (int) enemy.getPosY()-15, damageItem);
-                            }
                         }
                     }
 
@@ -479,19 +448,7 @@ public class Manager {
     }
 
     public void shoot() {
-        switch (GameSettings.getInstance().getDifficulty()){
-            case EASY:
-                bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 40, 1.0, 0.4));
-                break;
-
-            case NORMAL:
-                bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 30, 1.0, 0.4));
-                break;
-
-            case HARD,EXTREME:
-                bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 25, 1.0, 0.4));
-                break;
-        }
+        bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 50, 1.0, 0.4));
         soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/bulletHenSolo.wav").getPath());
     }
 
@@ -511,15 +468,11 @@ public class Manager {
     }
 
     private boolean isColliding(PlayerController player, Items item) {
-        Rectangle itemBounds = new Rectangle(item.getPosX(), item.getPosY(), 4, 4);
-        return player.getHitbox().intersects(itemBounds);
+        
+        return player.getHitbox().intersects(item.getHitbox());
     }
 
 	public void setGamePanel(GamePanel _gamePanel) {
 		this.gamePanel = _gamePanel;
 	}
-
-    public void load(){
-        level = gameSettings.getContinueLevel();
-    }
 }

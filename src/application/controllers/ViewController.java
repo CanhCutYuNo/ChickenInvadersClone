@@ -11,7 +11,6 @@ import application.views.BackgroundPanel;
 import application.views.GameContainerPanel;
 import application.views.GamePanel;
 import application.views.MenuPanel;
-import application.views.MissionSelectionPanel;
 import application.views.SettingPanel;
 
 public class ViewController {
@@ -22,18 +21,15 @@ public class ViewController {
     private GameContainerPanel gameContainerPanel;
     private BackgroundPanel backgroundPanel;
     private GamePanel gamePanel;
-    private MissionSelectionPanel missionSelectionPanel;
 
     private SoundController soundController;
-
-    private Manager manager;
 
 
     public ViewController(CardLayout cardLayout, JPanel mainPanel, 
                           MenuPanel menuPanel, SettingPanel settingPanel, 
                           GameContainerPanel gameContainerPanel, 
                           BackgroundPanel backgroundPanel,
-                          GamePanel gamePanel, SoundController soundController, Manager manager) {
+                          GamePanel gamePanel, SoundController soundController) {
 
         this.cardLayout = cardLayout;
         this.mainPanel = mainPanel;
@@ -42,19 +38,17 @@ public class ViewController {
         this.gameContainerPanel = gameContainerPanel;
         this.backgroundPanel = backgroundPanel;
         this.gamePanel = gamePanel;
-        this.manager = manager;
 
         this.soundController = soundController;
 
     }
 
     public void setPanels(MenuPanel menuPanel, SettingPanel settingPanel, 
-                          GameContainerPanel gameContainerPanel, GamePanel gamePanel, MissionSelectionPanel missionSelectionPanel) { 
+                          GameContainerPanel gameContainerPanel, GamePanel gamePanel) {
         this.menuPanel = menuPanel;
         this.settingPanel = settingPanel;
         this.gameContainerPanel = gameContainerPanel;
         this.gamePanel = gamePanel;
-        this.missionSelectionPanel = missionSelectionPanel;
     }
 
     public void switchToMenuPanel() {
@@ -79,21 +73,10 @@ public class ViewController {
 //         Phát nhạc nền khi vào game
         soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4Ingame2.wav").getPath());
 
-        manager.load();
         
-        if (gamePanel != null) {
-            gamePanel.triggerTransition();
-        }
-
         // Phát nhạc nền khi vào game
         //soundController.switchTrack("assets/sounds/game_music.wav");
 
-    }
-
-    public void switchToMissionSelectionPanel() {
-        cardLayout.show(mainPanel, "MissionSelection");
-        missionSelectionPanel.setBackgroundPanel(backgroundPanel);
-        missionSelectionPanel.refresh();
     }
 
     private void centerMouseOnPlayer() {
