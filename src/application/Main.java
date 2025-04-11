@@ -26,7 +26,7 @@ public class Main {
     
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            ImageCache.getInstance();
+            // ImageCache.getInstance();
 
             frame = new JFrame("Chicken Invaders");
             frame.setUndecorated(true);
