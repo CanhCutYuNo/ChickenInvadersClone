@@ -42,6 +42,7 @@ public class Manager {
     private List<Enemy> enemies;
     private EnemySkillsController skillsManager;
     private DeathEffectController deathEffectController;
+    private GameSettings gameSettings;
 //    private EnemyProjectilesController eggs;
     private ItemsController items;
     private static BackgroundPanel backgroundPanel;
@@ -51,7 +52,7 @@ public class Manager {
     private JPanel mainPanel;
     private GameLoop gameLoop;
     private int frameDelay = 0;
-    private int level = 5;
+    private int level = 1;
     private boolean playerExploded = false;
     // Thêm các biến để lưu trữ LevelXManager
     private Level1Manager level1Manager;
@@ -69,10 +70,11 @@ public class Manager {
     private static final long DELAY_DURATION = 2000;
 
     public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController, GamePanel _gamePanel) {
-        screenUtil = ScreenUtil.getInstance();
+    	this.soundController = _soundController;
+    	screenUtil = ScreenUtil.getInstance();
+        gameSettings = GameSettings.getInstance();
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
-        this.soundController = _soundController;
         skillsManager = new EnemySkillsController(soundController);
         deathEffectController = new DeathEffectController();
         playerController = new PlayerController(null);
@@ -87,7 +89,6 @@ public class Manager {
         Manager.menuPanel = _menuPanel;
         this.gameLoop = _gameLoop;
         this.gamePanel = _gamePanel;
-      
     }
 
     public void setBackgroundPanel(BackgroundPanel _backgroundPanel) {
@@ -202,18 +203,30 @@ public class Manager {
                 level++;
                 isDelaying = true;
                 delayStartTime = System.currentTimeMillis();
+
+                gameSettings.setContinueLevel(level);
+                gameSettings.saveSettings();
             } else if(level == 2 && level2Manager != null) {
                 level++;
                 isDelaying = true;
                 delayStartTime = System.currentTimeMillis();
+
+                gameSettings.setContinueLevel(level);
+                gameSettings.saveSettings();                
             } else if(level == 3 && level3Manager != null) {
                 level++;
                 isDelaying = true;
                 delayStartTime = System.currentTimeMillis();
+
+                gameSettings.setContinueLevel(level);
+                gameSettings.saveSettings();                
             } else if(level == 4 && level4Manager != null) {
                 level++;
                 isDelaying = true;
                 delayStartTime = System.currentTimeMillis();
+                
+                gameSettings.setContinueLevel(level);
+                gameSettings.saveSettings();                
             }
         }
 
@@ -263,7 +276,6 @@ public class Manager {
                 playerController.isDamaged(item.getDamage());
                 soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/(eating1).wav").getPath());
 
-
                 // Xóa item khỏi danh sách
                 iterator.remove();
             }
@@ -297,12 +309,31 @@ public class Manager {
                             enemiesToRemove.add(enemy);
 
                             //Them item
-
                             Random random = new Random();
-                            if(random.nextFloat() <  0.3){
-                                items.addItem((int)enemy.getPosX(),(int) enemy.getPosY()-15, 10);
+                            float chance = 0;
+                            int damageItem = 0;
+                            switch (GameSettings.getInstance().getDifficulty()) {
+                                case EASY:
+                                    chance = 0.5F;
+                                    damageItem = 15;
+                                    break;
+                                case NORMAL:
+                                    chance = 0.3F;
+                                    damageItem = 10;
+                                    break;
+                                case HARD:
+                                    chance = 0.2F;
+                                    damageItem = 5;
+                                    break;
+                                case EXTREME:
+                                    chance = 0.15F;
+                                    damageItem = 5;
+                                    break;
                             }
 
+                            if(random.nextDouble() < chance){
+                                items.addItem((int) enemy.getPosX(), (int) enemy.getPosY()-15, damageItem);
+                            }
                         }
                     }
 
@@ -350,16 +381,13 @@ public class Manager {
         }
     }
     
-
     private void checkPlayerCollisionsWithSkills() {
         Iterator<EnemySkills> skillIterator = skillsManager.getSkills().iterator();
         while(skillIterator.hasNext()) {
             EnemySkills skill = skillIterator.next();
             if(skill.isActive() && isColliding(playerController, skill)) {
-
                 playerController.isDamaged(skill.getDamage());
                 soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggshellCrack.wav").getPath());
-
                 if(playerController.getHP() <= 0) {
                     playerController.getPlayerView().startExplosion();
                     soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/explosionPlayer.wav").getPath());
@@ -448,7 +476,19 @@ public class Manager {
     }
 
     public void shoot() {
-        bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 50, 1.0, 0.4));
+        switch (GameSettings.getInstance().getDifficulty()){
+            case EASY:
+                bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 40, 1.0, 0.4));
+                break;
+
+            case NORMAL:
+                bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 30, 1.0, 0.4));
+                break;
+
+            case HARD,EXTREME:
+                bullets.add(new Bullet(playerController.getPosX() + 39, playerController.getPosY(), 25, 1.0, 0.4));
+                break;
+        }
         soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/bulletHenSolo.wav").getPath());
     }
 
@@ -468,11 +508,14 @@ public class Manager {
     }
 
     private boolean isColliding(PlayerController player, Items item) {
-        
         return player.getHitbox().intersects(item.getHitbox());
     }
 
 	public void setGamePanel(GamePanel _gamePanel) {
 		this.gamePanel = _gamePanel;
 	}
+
+    public void load(){
+        level = gameSettings.getContinueLevel();
+    }
 }

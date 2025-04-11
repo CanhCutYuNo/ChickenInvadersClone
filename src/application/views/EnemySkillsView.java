@@ -1,11 +1,9 @@
 package application.views;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
-import java.awt.Shape;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,11 +11,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import application.controllers.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+import application.controllers.SoundController;
 import application.models.EnemySkills;
 import application.models.EnemySkills.SkillType;
 

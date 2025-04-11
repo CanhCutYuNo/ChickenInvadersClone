@@ -15,10 +15,8 @@ public class EnemySkillsController {
     private List<EnemySkills> skills;
     private EnemySkillsView view;
     Map<SkillType, String> skillImagePaths;
-    private SoundController soundController;
 
     public EnemySkillsController(SoundController soundController) {
-    	this.soundController = soundController;
         this.skills = new ArrayList<>();
         skillImagePaths = new HashMap<>();
         skillImagePaths.put(SkillType.HOLE, "/asset/resources/gfx/hole.png");
