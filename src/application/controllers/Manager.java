@@ -70,11 +70,12 @@ public class Manager {
     private static final long DELAY_DURATION = 2000;
 
     public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController, GamePanel _gamePanel) {
-        screenUtil = ScreenUtil.getInstance();
+    	this.soundController = _soundController;
+    	screenUtil = ScreenUtil.getInstance();
         gameSettings = GameSettings.getInstance();
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
-        skillsManager = new EnemySkillsController();
+        skillsManager = new EnemySkillsController(soundController);
         deathEffectController = new DeathEffectController();
         playerController = new PlayerController(null);
         playerView = new PlayerView(playerController);
@@ -88,7 +89,6 @@ public class Manager {
         Manager.menuPanel = _menuPanel;
         this.gameLoop = _gameLoop;
         this.gamePanel = _gamePanel;
-        this.soundController = _soundController;
     }
 
     public void setBackgroundPanel(BackgroundPanel _backgroundPanel) {
@@ -274,6 +274,7 @@ public class Manager {
             if(isColliding(playerController,item)) {
                 // Gọi hàm xử lý khi nhặt item(tăng máu, đạn, điểm...)
                 playerController.isDamaged(item.getDamage());
+                soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/(eating1).wav").getPath());
 
                 // Xóa item khỏi danh sách
                 iterator.remove();
@@ -386,6 +387,7 @@ public class Manager {
             EnemySkills skill = skillIterator.next();
             if(skill.isActive() && isColliding(playerController, skill)) {
                 playerController.isDamaged(skill.getDamage());
+                soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggshellCrack.wav").getPath());
                 if(playerController.getHP() <= 0) {
                     playerController.getPlayerView().startExplosion();
                     soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/explosionPlayer.wav").getPath());
@@ -506,8 +508,7 @@ public class Manager {
     }
 
     private boolean isColliding(PlayerController player, Items item) {
-        Rectangle itemBounds = new Rectangle(item.getPosX(), item.getPosY(), 4, 4);
-        return player.getHitbox().intersects(itemBounds);
+        return player.getHitbox().intersects(item.getHitbox());
     }
 
 	public void setGamePanel(GamePanel _gamePanel) {

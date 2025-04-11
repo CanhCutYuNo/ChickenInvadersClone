@@ -142,6 +142,7 @@ public class ChickenEnemy extends Enemy {
             g.setColor(Color.RED);
             g.fillRect(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
             return;
+            
         }
 
         Graphics2D g2d =(Graphics2D) g.create();
@@ -191,6 +192,10 @@ public class ChickenEnemy extends Enemy {
         }
 
         g2d.dispose();
+//        // Vẽ hitbox để kiểm tra
+//        g.setColor(Color.RED);
+//        Rectangle hitbox = getHitbox();
+//        g.drawRect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
     }
 
     @Override
@@ -249,7 +254,7 @@ public class ChickenEnemy extends Enemy {
     
     @Override
     public Rectangle getHitbox() {
-        return new Rectangle(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
+        return new Rectangle(PosX-20, PosY-5, MODEL_WIDTH+35, MODEL_HEIGHT+10);
     }
     
     @Override
