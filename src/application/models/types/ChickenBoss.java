@@ -51,7 +51,7 @@ public class ChickenBoss extends Enemy {
     private Random random = new Random();
 
     public ChickenBoss(int posX, int posY, SoundController sound) {
-        super(1000, 500, 600, posX, START_Y, sound);
+        super(1000, 500, 600, posX, START_Y, sound, null, null);
         System.out.println("ChickenBoss created at (" + PosX + "," + PosY + ")");
 
         addSkills(SkillType.HOLE, "/asset/resources/gfx/hole.png");

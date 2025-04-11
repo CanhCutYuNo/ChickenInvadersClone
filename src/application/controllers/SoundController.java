@@ -24,7 +24,7 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
             try {
                 stopBackgroundMusic(); // Dừng nhạc nền cũ trước khi phát bài mới
 
-                File file = new File(path);
+                File file = new File(path.replaceAll("%20", " "));
                 if (!file.exists()) {
                     System.err.println("Không tìm thấy file âm thanh: " + path);
                     return;
@@ -57,7 +57,7 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
     public void playSoundEffect(String path) {
         ex.submit(() -> {
             try {
-                File file = new File(path);
+                File file = new File(path.replaceAll("%20", " "));
                 if (!file.exists()) {
                     System.err.println("Không tìm thấy file âm thanh: " + path);
                     return;

@@ -20,7 +20,7 @@ public class ChickEnemy extends Enemy {
     protected Image spriteSheet;
 
     public ChickEnemy(int PosX, int PosY, SoundController sound) {
-        super(getHpByDifficulty(), 46, 54, PosX, PosY, sound);
+        super(getHpByDifficulty(), 46, 54, PosX, PosY, sound, null, null);
         curFrame = (int) (Math.random() % 26);
         frameCount = 0;
         spriteSheet = new ImageIcon(Objects.requireNonNull(getClass().getResource("/asset/resources/gfx/chick.png"))).getImage();

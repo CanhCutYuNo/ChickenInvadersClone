@@ -17,7 +17,7 @@ public class EggShellEnemy extends Enemy {
     protected Image spriteSheet;
 
     public EggShellEnemy(int PosX, int PosY, SoundController sound) {
-        super(400, SPRITE_SIZE[0], SPRITE_SIZE[1], PosX, PosY, sound);
+        super(400, SPRITE_SIZE[0], SPRITE_SIZE[1], PosX, PosY, sound, null, null);
         curFrame = 0;
         frameCount = 0;
         spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/eggShell.png")).getImage();
