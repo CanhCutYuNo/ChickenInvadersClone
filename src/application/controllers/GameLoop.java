@@ -31,10 +31,6 @@ public class GameLoop {
                 gamePanel.update(deltaTime);
                 gameManager.update(deltaTime);
 
-                if (gameManager.getEnemies().isEmpty() && !gamePanel.isTransitionActive()) {
-                    gamePanel.triggerTransition();
-                }
-
                 tickCount++;
             }
         });

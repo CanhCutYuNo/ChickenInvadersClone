@@ -66,12 +66,11 @@ public class ViewController {
         System.out.println("VC: Switching to Menu");
         if (checkComponents("Menu", menuPanel, backgroundPanel)) {
             cardLayout.show(mainPanel, "Menu");
+            gameContainerPanel.hidePauseOverlay();
             menuPanel.setBackgroundPanel(backgroundPanel);
             soundController.stopBackgroundMusic();
             playSoundSafe("/asset/resources/sfx/CI4Theme.wav", true);
-            if(menuPanel != null) {
-            	
-            }
+            gameLoop.start();
         }
     }
 
