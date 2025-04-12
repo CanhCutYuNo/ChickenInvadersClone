@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import application.controllers.GameSettings;
 import application.controllers.SoundController;
 import application.models.EnemySkills.SkillType;
 
@@ -26,7 +25,7 @@ public abstract class Enemy {
     protected int MODEL_WIDTH;
     protected int MODEL_HEIGHT;
     protected static final int MAP_WIDTH = 1900;
-    protected Map<SkillType, String> skills; // Lưu trữ thông tin về kỹ năng
+    protected Map<SkillType, String> skills; 
 
     public Enemy(int hp, int MODEL_WIDTH, int MODEL_HEIGHT, int PosX, int PosY, SoundController sound) {
         this.hp = hp;
@@ -35,8 +34,7 @@ public abstract class Enemy {
         this.PosX = PosX;
         this.PosY = PosY;
         this.sound = sound;
-        this.skills = new HashMap<>(); // Khởi tạo Map để lưu trữ kỹ năng
-    }
+        this.skills = new HashMap<>();     }
 
     String[] deathSounds = {
         "/asset/resources/sfx/chickDie3.wav",

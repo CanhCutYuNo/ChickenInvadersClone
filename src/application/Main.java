@@ -1,11 +1,23 @@
 package application;
 
-import javax.swing.*;
+import java.awt.CardLayout;
 
-import application.controllers.*;
-import application.views.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
-import java.awt.*;
+import application.controllers.Controller;
+import application.controllers.GameLoop;
+import application.controllers.Manager;
+import application.controllers.MouseController;
+import application.controllers.SoundController;
+import application.controllers.ViewController;
+import application.views.BackgroundPanel;
+import application.views.GameContainerPanel;
+import application.views.GamePanel;
+import application.views.MenuPanel;
+import application.views.MissionSelectionPanel;
+import application.views.SettingPanel;
 
 public class Main {
     private static JFrame frame;
