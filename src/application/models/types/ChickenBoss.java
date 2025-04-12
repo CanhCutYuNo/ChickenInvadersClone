@@ -39,7 +39,7 @@ public class ChickenBoss extends Enemy {
         {0,5}, {1,5}, {2,5}, {3,5}, {4,5}, {5,5}, {6,5}, {7,5}, {8,5}, {9,5},
     };
 
-    protected static final int[] SPRITE_SIZE = {300, 288};
+    protected static final int[] SPRITE_SIZE = {400, 376};
 
     private int currentFrame = 0;
     private long lastFrameTime;
