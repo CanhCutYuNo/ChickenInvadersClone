@@ -37,6 +37,8 @@ public class Main {
     
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
+            // ImageCache.getInstance();
+
             frame = new JFrame("Chicken Invaders");
             frame.setUndecorated(true);
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -75,7 +77,7 @@ public class Main {
 
             viewController.setPanels(menuPanel, settingPanel, gameContainerPanel, gamePanel, missionSelectionPanel);
 
-            viewController.switchToMissionSelectionPanel();
+            viewController.switchToMenuPanel();;
             gameLoop.start();
 
             frame.add(mainPanel);

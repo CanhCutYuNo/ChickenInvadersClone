@@ -27,33 +27,22 @@ public abstract class Enemy {
     protected static final int MAP_WIDTH = 1900;
     protected Map<SkillType, String> skills; 
 
-    public Enemy(int hp, int MODEL_WIDTH, int MODEL_HEIGHT, int PosX, int PosY, SoundController sound) {
+    public Enemy(int hp, int MODEL_WIDTH, int MODEL_HEIGHT, int PosX, int PosY, SoundController sound, String deathSounds[], String hitSounds[]) {
         this.hp = hp;
         this.MODEL_WIDTH = MODEL_WIDTH;
         this.MODEL_HEIGHT = MODEL_HEIGHT;
         this.PosX = PosX;
         this.PosY = PosY;
         this.sound = sound;
-        this.skills = new HashMap<>();     }
+        this.deathSounds = deathSounds;
+        this.hitSounds = hitSounds;
 
-    String[] deathSounds = {
-        "/asset/resources/sfx/chickDie3.wav",
-        "/asset/resources/sfx/chickDie4.wav",
-        "/asset/resources/sfx/chickDie5.wav",
-        "/asset/resources/sfx/chickDie6.wav",
-        "/asset/resources/sfx/chicken1a(die).wav",
-        "/asset/resources/sfx/chicken2b(die).wav",
-        "/asset/resources/sfx/chicken3a(die).wav"
-    };
+        this.skills = new HashMap<>(); // Khởi tạo Map để lưu trữ kỹ năng
+    }
 
-    String[] hitSounds = {
-        "/asset/resources/sfx/chicken1b1(pluck).wav",
-        "/asset/resources/sfx/chicken1b2(pluck).wav",
-        "/asset/resources/sfx/chicken2a1(pluck).wav",
-        "/asset/resources/sfx/chicken3b1(pluck).wav",
-        "/asset/resources/sfx/chicken3b2(pluck).wav",
-        "/asset/resources/sfx/chicken5b(pluck).wav"
-    };
+    String[] deathSounds;
+
+    String[] hitSounds;
 
     public abstract void render(Graphics g);
 
@@ -74,9 +63,13 @@ public abstract class Enemy {
     public void takeDamage(int damage) {
         hp -= damage;
         Random random = new Random();
-        sound.playSoundEffect(getClass().getResource(hitSounds[random.nextInt(hitSounds.length)]).getPath());
+        if(hitSounds != null && hitSounds.length != 0){
+            sound.playSoundEffect(getClass().getResource(hitSounds[random.nextInt(hitSounds.length)]).getPath());
+        }
         if (hp <= 0) {
-            sound.playSoundEffect(getClass().getResource(deathSounds[random.nextInt(deathSounds.length)]).getPath());
+            if(deathSounds != null && deathSounds.length != 0){
+                sound.playSoundEffect(getClass().getResource(deathSounds[random.nextInt(deathSounds.length)]).getPath());
+            }
         }
     }
 

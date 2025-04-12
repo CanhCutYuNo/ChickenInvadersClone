@@ -23,7 +23,7 @@ public class Level5Manager extends LevelManager {
 
         public EnemyControllerLevel5(int numEnemies, int enemyType, int startY, float timeDelay, SoundController soundController) {
             super(numEnemies, enemyType, startY, timeDelay, soundController);
-            Enemy enemy = createEnemy(SCREEN_WIDTH / 2 - 150, 100);
+            Enemy enemy = createEnemy(SCREEN_WIDTH / 2 - 250, 100);
             enemy.setInitialIndex(0);
             enemies.add(enemy);
         }
