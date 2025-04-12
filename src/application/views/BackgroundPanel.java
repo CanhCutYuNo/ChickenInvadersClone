@@ -37,7 +37,7 @@ public class BackgroundPanel extends javax.swing.JPanel {
     private int y;
     private final int width = 1920;
     private final int height = 1080;
-    private final int fps = 20;
+    private final int fps = 60;
     private boolean isRunning = true;
 
     public BackgroundPanel() {

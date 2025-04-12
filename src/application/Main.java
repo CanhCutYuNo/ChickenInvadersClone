@@ -17,6 +17,7 @@ import application.views.GameContainerPanel;
 import application.views.GamePanel;
 import application.views.MenuPanel;
 import application.views.MissionSelectionPanel;
+import application.views.PausePanel;
 import application.views.SettingPanel;
 
 public class Main {
@@ -34,6 +35,7 @@ public class Main {
     private static ViewController viewController;
     private static MouseController mouseController;
     private static SoundController soundController; 
+    private static PausePanel pausePanel;
     
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -54,9 +56,11 @@ public class Main {
 
             viewController = new ViewController(cardLayout, mainPanel,
                     null, null, null,
-                    backgroundPanel, null, soundController, gameManager);
+                    backgroundPanel, null, soundController, gameManager, null, null);
+            
+            pausePanel = new PausePanel(viewController, soundController);
 
-            mouseController = new MouseController(gamePanel, soundController);
+            mouseController = new MouseController(gamePanel);
 
             gamePanel = new GamePanel(gameManager);
             gameManager.setGamePanel(gamePanel);
@@ -67,7 +71,7 @@ public class Main {
             gameManager.setMenuPanel(menuPanel);
 
             settingPanel = new SettingPanel(viewController, soundController);
-            gameContainerPanel = new GameContainerPanel(gamePanel);
+            gameContainerPanel = new GameContainerPanel(gamePanel, pausePanel);
             missionSelectionPanel = new MissionSelectionPanel(viewController, soundController);
 
             mainPanel.add(menuPanel, "Menu");
@@ -75,7 +79,7 @@ public class Main {
             mainPanel.add(gameContainerPanel, "Game");
             mainPanel.add(missionSelectionPanel, "MissionSelection");
 
-            viewController.setPanels(menuPanel, settingPanel, gameContainerPanel, gamePanel, missionSelectionPanel);
+            viewController.setPanels(menuPanel, settingPanel, gameContainerPanel, gamePanel, missionSelectionPanel, gameLoop);
 
             viewController.switchToMenuPanel();;
             gameLoop.start();
@@ -84,7 +88,7 @@ public class Main {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
 
-            gamePanel.addKeyListener(new Controller(null, viewController));
+            gamePanel.addKeyListener(new Controller(viewController));
             frame.setFocusable(true);
             frame.requestFocus();
         });

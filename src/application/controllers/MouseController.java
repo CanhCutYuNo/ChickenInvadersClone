@@ -13,31 +13,35 @@ public class MouseController implements MouseListener, MouseMotionListener {
 
     private final GamePanel gamePanel;
     private Timer shootTimer;
-    private static final int SHOOT_DELAY = 200; // Đổi sang int vì Timer sử dụng ms
-    private SoundController soundController;
+    private static final int SHOOT_DELAY = 200;
 
-    public MouseController(GamePanel gamePanel, SoundController soundController) {
+    public MouseController(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
-        this.soundController = soundController;
-        // Tạo Timer, nhưng không chạy ngay
-        shootTimer = new Timer(SHOOT_DELAY, e -> gamePanel.getGameManager().shoot());
+        shootTimer = new Timer(SHOOT_DELAY, e -> {
+            if (!gamePanel.isPaused()) {
+                gamePanel.getGameManager().shoot();
+            }
+        });
         shootTimer.setRepeats(true);
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        gamePanel.getGameManager().movePlayer(e.getX(), e.getY());
+        if (!gamePanel.isPaused()) {
+            gamePanel.getGameManager().movePlayer(e.getX(), e.getY());
+        }
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        gamePanel.getGameManager().movePlayer(e.getX(), e.getY());
+        if (!gamePanel.isPaused()) {
+            gamePanel.getGameManager().movePlayer(e.getX(), e.getY());
+        }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (SwingUtilities.isLeftMouseButton(e)) {
-            soundController.playSoundEffect("/asset/resources/sfx/clickXP.wav"); // Thêm âm thanh click
+        if (SwingUtilities.isLeftMouseButton(e) && !gamePanel.isPaused()) { 
             if (!shootTimer.isRunning()) {
                 gamePanel.getGameManager().shoot();
                 shootTimer.start();
@@ -52,7 +56,6 @@ public class MouseController implements MouseListener, MouseMotionListener {
         }
     }
 
-    // Không sử dụng các phương thức này nhưng cần override
     @Override
     public void mouseClicked(MouseEvent e) {
     }
