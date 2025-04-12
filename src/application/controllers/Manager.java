@@ -69,6 +69,8 @@ public class Manager {
     private long delayStartTime = 0;
     private static final long DELAY_DURATION = 2000;
 
+    private int foodCount = 0;
+
     public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController, GamePanel _gamePanel) {
     	this.soundController = _soundController;
     	screenUtil = ScreenUtil.getInstance();
@@ -90,6 +92,10 @@ public class Manager {
         this.gameLoop = _gameLoop;
         this.gamePanel = _gamePanel;
     }
+
+    public PlayerController getPlayer(){return playerController;}
+
+    public int getFoodCount(){return foodCount;}
 
     public void setBackgroundPanel(BackgroundPanel _backgroundPanel) {
         Manager.backgroundPanel = _backgroundPanel;
@@ -275,7 +281,7 @@ public class Manager {
                 // Gọi hàm xử lý khi nhặt item(tăng máu, đạn, điểm...)
                 playerController.isDamaged(item.getDamage());
                 soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/(eating1).wav").getPath());
-
+                foodCount++;
                 // Xóa item khỏi danh sách
                 iterator.remove();
             }

@@ -1,18 +1,12 @@
 package application.views;
 
-import java.awt.AlphaComposite;
-import java.awt.Cursor;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import application.controllers.Manager;
 import application.controllers.MouseController;
@@ -35,6 +29,9 @@ public class GamePanel extends JPanel {
     private boolean enemiesPrepared = false;
     private boolean isTransitionTriggered = false;
     private boolean transitionComplete = false;
+
+    private Image hudBar;
+    private Font font;
 
     public GamePanel(Manager gameManager) {
         this.gameManager = gameManager;
@@ -64,6 +61,9 @@ public class GamePanel extends JPanel {
         mouseController = new MouseController(this);
         addMouseListener(mouseController);
         addMouseMotionListener(mouseController);
+
+        hudBar = new ImageIcon(getClass().getResource("/asset/resources/gfx/infohud.png")).getImage();
+        font = new Font("Arial", Font.BOLD, 24);
     }
 
     public void setPaused(boolean paused) {
@@ -122,8 +122,9 @@ public class GamePanel extends JPanel {
         super.paint(g);
 
         Graphics2D g2d = (Graphics2D) g;
-
+        drawHUD(g);
         if(showTransition && isTransitionTriggered) {
+
             if (levelImage != null) {
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
                 int x = (getWidth() - levelImage.getWidth()) / 2;
@@ -189,5 +190,22 @@ public class GamePanel extends JPanel {
 
     public Manager getGameManager() {
         return gameManager;
+    }
+
+    private void drawHUD(Graphics g){
+        int hudX = 0 - 50;
+        int hudY = getHeight() - hudBar.getHeight(null) + 20;
+
+        g.drawImage(hudBar, hudX, hudY, null);
+
+        g.setFont(font);
+        g.setColor(Color.WHITE);
+
+        var player = gameManager.getPlayer();
+        if(player != null){
+            g.drawString(" " + player.getHP(), hudX + 140, hudY + 65);
+            g.drawString(" " + gameManager.getFoodCount(), hudX + 450, hudY + 65);
+        }
+
     }
 }
