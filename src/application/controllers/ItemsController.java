@@ -48,6 +48,8 @@ public class ItemsController {
     public Iterator<Items> iterator() {
         return items.iterator();
     }
+    
+    
 
 //    // Thêm vật phẩm vào danh sách tại vị trí của kẻ địch
 //    public void spawnItem(Enemy enemy) {

@@ -60,7 +60,24 @@ public class ChickenEnemy extends Enemy {
 
     public ChickenEnemy(int PosX, int PosY, SoundController sound) {
         // Gọi super() với các tham số phù hợp, phải là câu lệnh đầu tiên
-        super(getHpByDifficulty(), 64, 64, PosX, PosY, sound);
+        super(getHpByDifficulty(), 64, 64, PosX, PosY, sound, 
+        new String[]{
+            "/asset/resources/sfx/chickDie3.wav",
+            "/asset/resources/sfx/chickDie4.wav",
+            "/asset/resources/sfx/chickDie5.wav",
+            "/asset/resources/sfx/chickDie6.wav",
+            "/asset/resources/sfx/chicken1a(die).wav",
+            "/asset/resources/sfx/chicken2b(die).wav",
+            "/asset/resources/sfx/chicken3a(die).wav"
+        },
+        new String[]{
+            "/asset/resources/sfx/chicken1b1(pluck).wav",
+            "/asset/resources/sfx/chicken1b2(pluck).wav",
+            "/asset/resources/sfx/chicken2a1(pluck).wav",
+            "/asset/resources/sfx/chicken3b1(pluck).wav",
+            "/asset/resources/sfx/chicken3b2(pluck).wav",
+            "/asset/resources/sfx/chicken5b(pluck).wav"
+        });
 
         
         // Sau khi gọi super(), mới thực hiện các khởi tạo khác
@@ -125,6 +142,7 @@ public class ChickenEnemy extends Enemy {
             g.setColor(Color.RED);
             g.fillRect(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
             return;
+            
         }
 
         Graphics2D g2d =(Graphics2D) g.create();
@@ -174,6 +192,10 @@ public class ChickenEnemy extends Enemy {
         }
 
         g2d.dispose();
+//        // Vẽ hitbox để kiểm tra
+//        g.setColor(Color.RED);
+//        Rectangle hitbox = getHitbox();
+//        g.drawRect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
     }
 
     @Override
@@ -232,7 +254,7 @@ public class ChickenEnemy extends Enemy {
     
     @Override
     public Rectangle getHitbox() {
-        return new Rectangle(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
+        return new Rectangle(PosX-20, PosY-5, MODEL_WIDTH+35, MODEL_HEIGHT+10);
     }
     
     @Override

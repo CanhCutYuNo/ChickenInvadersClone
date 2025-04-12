@@ -16,13 +16,13 @@ public class EnemySkillsController {
     private EnemySkillsView view;
     Map<SkillType, String> skillImagePaths;
 
-    public EnemySkillsController() {
+    public EnemySkillsController(SoundController soundController) {
         this.skills = new ArrayList<>();
         skillImagePaths = new HashMap<>();
         skillImagePaths.put(SkillType.HOLE, "/asset/resources/gfx/hole.png");
         skillImagePaths.put(SkillType.FIREBALL, "/asset/resources/gfx/fireball.png");
         skillImagePaths.put(SkillType.EGG, "/asset/resources/gfx/introEgg.png");
-        this.view = new EnemySkillsView(skillImagePaths);
+        this.view = new EnemySkillsView(skillImagePaths, soundController);
     }
 
 
