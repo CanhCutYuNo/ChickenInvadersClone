@@ -10,14 +10,13 @@ import javax.swing.*;
 
 import application.controllers.Manager;
 import application.controllers.MouseController;
-import application.controllers.SoundController;
 
 public class GamePanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private final Manager gameManager;
     private final MouseController mouseController;
-    private final SoundController soundController;
+    private boolean paused;
 
     private BufferedImage levelImage;
     private float alpha = 0f;
@@ -36,7 +35,7 @@ public class GamePanel extends JPanel {
 
     public GamePanel(Manager gameManager) {
         this.gameManager = gameManager;
-        this.soundController = gameManager.getSound();
+        this.paused = false;
 
         hideCursor();
         setLayout(null);
@@ -49,7 +48,7 @@ public class GamePanel extends JPanel {
 
         try {
             File imageFile = new File("src/asset/resources/gfx/wave" + currentLevel + ".png");
-            if (imageFile.exists()) {
+            if(imageFile.exists()) {
                 levelImage = ImageIO.read(imageFile);
             } else {
                 levelImage = new BufferedImage(400, 200, BufferedImage.TYPE_INT_ARGB);
@@ -59,7 +58,7 @@ public class GamePanel extends JPanel {
             levelImage = new BufferedImage(400, 200, BufferedImage.TYPE_INT_ARGB);
         }
 
-        mouseController = new MouseController(this, soundController);
+        mouseController = new MouseController(this);
         addMouseListener(mouseController);
         addMouseMotionListener(mouseController);
 
@@ -67,10 +66,25 @@ public class GamePanel extends JPanel {
         font = new Font("Arial", Font.BOLD, 24);
     }
 
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+        if(!paused) {
+            requestFocusInWindow();
+        }
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
     public void update(double deltaTime) {
-        if (isTransitionTriggered && showTransition) {
+        if(paused) {
+            return; 
+        }
+
+        if(isTransitionTriggered && showTransition) {
             fadeTime += (float) deltaTime;
-            if (fadeIn) {
+            if(fadeIn) {
                 alpha = Math.min(1.0f, fadeTime / FADE_DURATION);
                 if (alpha >= 1.0f) {
                     fadeIn = false;
@@ -90,7 +104,6 @@ public class GamePanel extends JPanel {
                         showTransition = false;
                         transitionComplete = true;
                         isTransitionTriggered = false;
-                        // Thông báo cho Manager rằng transition đã kết thúc
                         if (gameManager != null) {
                             gameManager.onTransitionComplete();
                         }
@@ -99,7 +112,7 @@ public class GamePanel extends JPanel {
             }
         }
 
-        if (transitionComplete) {
+        if(transitionComplete) {
             gameManager.update(deltaTime);
         }
     }
@@ -110,7 +123,8 @@ public class GamePanel extends JPanel {
 
         Graphics2D g2d = (Graphics2D) g;
         drawHUD(g);
-        if (showTransition && isTransitionTriggered) {
+        if(showTransition && isTransitionTriggered) {
+
             if (levelImage != null) {
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
                 int x = (getWidth() - levelImage.getWidth()) / 2;
@@ -119,7 +133,7 @@ public class GamePanel extends JPanel {
             }
         }
 
-        if (transitionComplete && gameManager != null) {
+        if(transitionComplete && gameManager != null) {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
             gameManager.render(g);
         }
@@ -129,6 +143,9 @@ public class GamePanel extends JPanel {
     }
 
     public void triggerTransition() {
+        if(paused) {
+            return; 
+        }
         this.isTransitionTriggered = true;
         this.showTransition = true;
         this.fadeIn = true;
@@ -145,9 +162,9 @@ public class GamePanel extends JPanel {
     }
 
     public void updateLevel() {
-        if (gameManager != null) {
+        if(gameManager != null && !paused) {
             int newLevel = gameManager.getLevel();
-            if (newLevel != currentLevel) {
+            if(newLevel != currentLevel) {
                 this.currentLevel = newLevel;
                 try {
                     File imageFile = new File("src/asset/resources/gfx/wave" + currentLevel + ".png");
@@ -176,7 +193,7 @@ public class GamePanel extends JPanel {
     }
 
     private void drawHUD(Graphics g){
-        int hudX = 0 - 50; // Góc trái màn hình
+        int hudX = 0 - 50;
         int hudY = getHeight() - hudBar.getHeight(null) + 20;
 
         g.drawImage(hudBar, hudX, hudY, null);
@@ -186,8 +203,8 @@ public class GamePanel extends JPanel {
 
         var player = gameManager.getPlayer();
         if(player != null){
-            g.drawString(" " +player.getHP(), hudX + 140, hudY + 65);
-            g.drawString(" " +gameManager.getFoodCount(), hudX + 450, hudY + 65);
+            g.drawString(" " + player.getHP(), hudX + 140, hudY + 65);
+            g.drawString(" " + gameManager.getFoodCount(), hudX + 450, hudY + 65);
         }
 
     }
