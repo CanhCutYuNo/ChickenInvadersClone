@@ -3,6 +3,7 @@ package application.models.types;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.image.BufferedImage;
@@ -11,12 +12,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
+import javax.swing.ImageIcon;
 
 import application.controllers.EnemySkillsController;
 import application.controllers.SoundController;
@@ -24,13 +27,26 @@ import application.models.Enemy;
 import application.models.EnemySkills.SkillType;
 
 public class ChickenBoss extends Enemy {
-    private List<BufferedImage> gifFrames;
-    private List<Integer> frameDelays;
+
+    private Image spriteSheet;
+
+    protected static final int[][] SPRITE = {
+        {0,0}, {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0}, {8,0}, {9,0},
+        {0,1}, {1,1}, {2,1}, {3,1}, {4,1}, {5,1}, {6,1}, {7,1}, {8,1}, {9,1},
+        {0,2}, {1,2}, {2,2}, {3,2}, {4,2}, {5,2}, {6,2}, {7,2}, {8,2}, {9,2},
+        {0,3}, {1,3}, {2,3}, {3,3}, {4,3}, {5,3}, {6,3}, {7,3}, {8,3}, {9,3},
+        {0,4}, {1,4}, {2,4}, {3,4}, {4,4}, {5,4}, {6,4}, {7,4}, {8,4}, {9,4},
+        {0,5}, {1,5}, {2,5}, {3,5}, {4,5}, {5,5}, {6,5}, {7,5}, {8,5}, {9,5},
+    };
+
+    protected static final int[] SPRITE_SIZE = {300, 288};
+
     private int currentFrame = 0;
     private long lastFrameTime;
     private float rotate = 0f;
     private int initialIndex;
     private boolean isGifLoaded = false;
+    private final int delay = 30;
 
     // Quản lý thời gian và trạng thái để thông báo khi tạo kỹ năng
     private long lastHoleSkillTime = 0;
@@ -45,7 +61,7 @@ public class ChickenBoss extends Enemy {
     // Thêm biến để theo dõi trạng thái di chuyển
     private boolean isMovingToCenter = true;
     private static final int START_Y = 1400;
-    private static final int TARGET_Y = 0;
+    private static final int TARGET_Y = (1080 - 600) / 2;
     private static final int MOVE_SPEED = 2;
 
     private Random random = new Random();
@@ -57,65 +73,23 @@ public class ChickenBoss extends Enemy {
         addSkills(SkillType.HOLE, "/asset/resources/gfx/hole.png");
         addSkills(SkillType.FIREBALL, "/asset/resources/gfx/bullet-bolt1.png");
 
-        gifFrames = new ArrayList<>();
-        frameDelays = new ArrayList<>();
         lastHoleSkillTime = System.currentTimeMillis();
         lastFireballSkillTime = System.currentTimeMillis();
 
-        new Thread(() -> {
-            loadGif("/asset/resources/gfx/boss.gif");
-            isGifLoaded = true;
-        }).start();
-
-    }
-
-    private void loadGif(String path) {
-        long startTime = System.currentTimeMillis();
-        try {
-            InputStream inputStream = getClass().getResourceAsStream(path);
-            if (inputStream == null) {
-                throw new IOException("Cannot find GIF file at path: " + path);
-            }
-            ImageReader reader = ImageIO.getImageReadersByFormatName("gif").next();
-            reader.setInput(ImageIO.createImageInputStream(inputStream));
-
-            int numFrames = reader.getNumImages(true);
-            System.out.println("Loading GIF with " + numFrames + " frames...");
-            for (int i = 0; i < numFrames; i++) {
-                BufferedImage frame = reader.read(i);
-                gifFrames.add(frame);
-
-                IIOMetadata metadata = reader.getImageMetadata(i);
-                IIOMetadataNode root = (IIOMetadataNode) metadata.getAsTree("javax_imageio_gif_image_1.0");
-                IIOMetadataNode gce = (IIOMetadataNode) root.getElementsByTagName("GraphicControlExtension").item(0);
-                int delay = Math.min(Integer.parseInt(gce.getAttribute("delayTime")) * 10, 50);
-                frameDelays.add(delay);
-                System.out.println("Frame " + i + " delay: " + delay + " ms");
-            }
-        } catch (IOException e) {
-            System.err.println("Error loading GIF: " + e.getMessage());
-            e.printStackTrace();
+        spriteSheet = new ImageIcon((getClass().getResource("/asset/resources/gfx/boss.png"))).getImage();
+        if(spriteSheet == null){
+            System.err.println("Failed to load sprite sheet.");
         }
-        long endTime = System.currentTimeMillis();
-        System.out.println("GIF loading took " + (endTime - startTime) + " ms");
+
+        isGifLoaded = true;
     }
 
     @Override
     public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
-
-        int centerX = PosX + MODEL_WIDTH / 2;
-        int centerY = PosY + MODEL_HEIGHT / 2;
-        g2d.rotate(Math.toRadians(rotate), centerX, centerY);
-
-        if (isGifLoaded && !gifFrames.isEmpty()) {
-            BufferedImage currentFrameImage = gifFrames.get(currentFrame);
-            g2d.drawImage(currentFrameImage, 0, PosY, 1920, PosY + 1080, null);
-        } else {
-            // Vẽ placeholder nếu GIF chưa tải
-            g2d.setColor(Color.RED);
-            g2d.fillRect(PosX, PosY, MODEL_WIDTH, MODEL_HEIGHT);
-        }
+        g.drawImage(spriteSheet,
+                PosX - 80, PosY, PosX + MODEL_WIDTH + 80, PosY + MODEL_HEIGHT,
+                SPRITE[curFrame][0] * SPRITE_SIZE[0], SPRITE[curFrame][1] * SPRITE_SIZE[1], (SPRITE[curFrame][0] + 1) * SPRITE_SIZE[0], (SPRITE[curFrame][1] + 1) * SPRITE_SIZE[1], null);
 
         // Vẽ hitbox để debug
         g2d.setColor(Color.RED);
@@ -127,18 +101,14 @@ public class ChickenBoss extends Enemy {
 
     @Override
     public void nextFrame() {
-        if (!isGifLoaded || gifFrames.isEmpty()) {
-            return;
-        }
 
         long currentTime = System.currentTimeMillis();
         long elapsedTime = currentTime - lastFrameTime;
-        int delay = frameDelays.get(currentFrame);
 
         if (elapsedTime >= delay) {
-            currentFrame++;
-            if (currentFrame >= gifFrames.size()) {
-                currentFrame = 0;
+            curFrame++;
+            if (curFrame >= SPRITE.length) {
+                curFrame = 0;
             }
             lastFrameTime = currentTime;
         }
@@ -225,7 +195,7 @@ public class ChickenBoss extends Enemy {
 
     @Override
     public Rectangle getHitbox() {
-        return new Rectangle(PosX - 120, PosY + 220, MODEL_WIDTH, MODEL_HEIGHT);
+        return new Rectangle(PosX + 20, PosY, MODEL_WIDTH - 40, MODEL_HEIGHT);
     }
 
     @Override
