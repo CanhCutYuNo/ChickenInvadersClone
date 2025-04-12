@@ -315,19 +315,19 @@ public class Manager {
                             switch (GameSettings.getInstance().getDifficulty()) {
                                 case EASY:
                                     chance = 0.5F;
-                                    damageItem = 15;
+                                    damageItem = -15;
                                     break;
                                 case NORMAL:
                                     chance = 0.3F;
-                                    damageItem = 10;
+                                    damageItem = -10;
                                     break;
                                 case HARD:
                                     chance = 0.2F;
-                                    damageItem = 5;
+                                    damageItem = -5;
                                     break;
                                 case EXTREME:
                                     chance = 0.15F;
-                                    damageItem = 5;
+                                    damageItem = -5;
                                     break;
                             }
 
