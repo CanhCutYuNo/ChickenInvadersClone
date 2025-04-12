@@ -127,4 +127,9 @@ public class PlayerController {
 	public int getHP() {
 		return player.getHp();
 	}
+
+    public void setHP(){
+        player.setHp(100);
+
+    }
 }

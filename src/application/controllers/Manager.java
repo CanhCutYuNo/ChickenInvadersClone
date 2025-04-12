@@ -20,11 +20,7 @@ import application.controllers.levels.Level2Manager;
 import application.controllers.levels.Level3Manager;
 import application.controllers.levels.Level4Manager;
 import application.controllers.levels.Level5Manager;
-import application.models.Bullet;
-import application.models.DeathEffect;
-import application.models.Enemy;
-import application.models.EnemySkills;
-import application.models.Items;
+import application.models.*;
 import application.models.types.ChickenBoss;
 import application.models.types.ChickenEnemy;
 import application.models.types.EggShellEnemy;
@@ -70,6 +66,8 @@ public class Manager {
     private static final long DELAY_DURATION = 2000;
 
     private int foodCount = 0;
+
+    private List<FloatingText> floatingTexts = new ArrayList<>();
 
     public Manager(CardLayout _cardLayout, JPanel _mainPanel, BackgroundPanel _backgroundPanel, MenuPanel _menuPanel, GameLoop _gameLoop, SoundController _soundController, GamePanel _gamePanel) {
     	this.soundController = _soundController;
@@ -204,6 +202,8 @@ public class Manager {
         checkPlayerCollisionsWithSkills();
         checkPlayerCollisionsWithItems();
 
+        updateFloatingTexts();
+
         if(getEnemies().isEmpty() && !levelTransitionTriggered && !isDelaying) {
             if(level == 1 && level1Manager != null) {
                 level++;
@@ -258,6 +258,10 @@ public class Manager {
         menuPanel.setBackgroundPanel(backgroundPanel);
         soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4Theme.wav").getPath());
         playerExploded = false;
+
+        foodCount = 0;
+        playerController.setHP();
+
     }
 
     private void updateBullets() {
@@ -280,6 +284,7 @@ public class Manager {
             if(isColliding(playerController,item)) {
                 // Gọi hàm xử lý khi nhặt item(tăng máu, đạn, điểm...)
                 playerController.isDamaged(item.getDamage());
+                spawnFloatingText(playerController.getPosX(), playerController.getPosY() - 10,"+ "+String.valueOf(Math.abs(item.getDamage())), Color.GREEN);
                 soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/(eating1).wav").getPath());
                 foodCount++;
                 // Xóa item khỏi danh sách
@@ -300,6 +305,7 @@ public class Manager {
             while(enemyIterator.hasNext()) {
                 Enemy enemy = enemyIterator.next();
                 if(isColliding(bullet, enemy)) {
+                    spawnFloatingText(enemy.getPosX()-2, enemy.getPosY(),"- "+String.valueOf(bullet.getDamage()),Color.red);
                     enemy.takeDamage(bullet.getDamage());
                     bulletsToRemove.add(bullet);
                     if(enemy.isDead()) {
@@ -371,7 +377,20 @@ public class Manager {
         enemies.removeAll(enemiesToRemove);
         //   System.out.println("Removed " + bulletsRemoved + " bullets and " + enemiesRemoved + " enemies. Current enemies size: " + enemies.size());
     }
-    
+
+    // Cập nhật và loại bỏ FloatingText đã hết thời gian tồn tại
+    public void updateFloatingTexts() {
+        for (int i = 0; i < floatingTexts.size(); i++) {
+            FloatingText floatingText = floatingTexts.get(i);
+            floatingText.update();
+            if (floatingText.isExpired()) {
+                floatingTexts.remove(i);
+                i--;  // Điều chỉnh lại chỉ số sau khi xóa
+            }
+        }
+    }
+
+
     private void checkPlayerCollisionsWithEnemies() {
         Iterator<Enemy> enemyIterator = enemies.iterator();
         while(enemyIterator.hasNext()) {
@@ -393,6 +412,7 @@ public class Manager {
             EnemySkills skill = skillIterator.next();
             if(skill.isActive() && isColliding(playerController, skill)) {
                 playerController.isDamaged(skill.getDamage());
+                spawnFloatingText(playerController.getPosX(), playerController.getPosY() - 10,"- "+String.valueOf(skill.getDamage()),Color.red);
                 soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggshellCrack.wav").getPath());
                 if(playerController.getHP() <= 0) {
                     playerController.getPlayerView().startExplosion();
@@ -456,6 +476,10 @@ public class Manager {
 
         items.drawItems(g);
 
+        for(FloatingText text: floatingTexts){
+            text.render(g);
+        }
+
         int fps = gameLoop.getFPS();
         g.setColor(Color.GREEN);
         g.setFont(new Font("Arial", Font.BOLD, 20));
@@ -479,6 +503,10 @@ public class Manager {
         playerController.setPosY(y - 32);
         playerController.updateDirection(x);
         playerController.setLastMoveTime(System.currentTimeMillis());
+    }
+
+    public void spawnFloatingText(int x, int y, String text, Color color) {
+        floatingTexts.add(new FloatingText(x, y, text, color));
     }
 
     public void shoot() {
