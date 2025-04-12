@@ -132,7 +132,8 @@ public class PlayerView {
 //        Rectangle hitbox = playerController.getHitbox();
 //        g2d.draw(hitbox);
 
-     
+
+
     }
 
     public boolean isExploding() {
