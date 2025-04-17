@@ -37,7 +37,7 @@ public abstract class Enemy {
         this.deathSounds = deathSounds;
         this.hitSounds = hitSounds;
 
-        this.skills = new HashMap<>(); // Khởi tạo Map để lưu trữ kỹ năng
+        this.skills = new HashMap<>();
     }
 
     String[] deathSounds;

@@ -50,7 +50,7 @@ public class MenuPanel extends JPanel {
     }
     
     public void setBackgroundPanel(JPanel backgroundPanel) {
-        if (this.backgroundPanel != null) {
+        if(this.backgroundPanel != null) {
             jLayeredPane.remove(this.backgroundPanel);
         }
         this.backgroundPanel = backgroundPanel;

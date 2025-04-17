@@ -44,7 +44,7 @@ public class GamePanel extends JPanel {
         setOpaque(false);
         requestFocusInWindow();
 
-        this.currentLevel = gameManager.getLevel();
+        this.currentLevel = gameManager.getGameStates().getLevel();
 
         try {
             File imageFile = new File("src/asset/resources/gfx/wave" + currentLevel + ".png");
@@ -163,7 +163,7 @@ public class GamePanel extends JPanel {
 
     public void updateLevel() {
         if(gameManager != null && !paused) {
-            int newLevel = gameManager.getLevel();
+            int newLevel = gameManager.getGameStates().getLevel();
             if(newLevel != currentLevel) {
                 this.currentLevel = newLevel;
                 try {
@@ -204,7 +204,7 @@ public class GamePanel extends JPanel {
         var player = gameManager.getPlayer();
         if(player != null){
             g.drawString(" " + player.getHP(), hudX + 140, hudY + 65);
-            g.drawString(" " + gameManager.getFoodCount(), hudX + 450, hudY + 65);
+            g.drawString(" " + gameManager.getGameStates().getFoodCounts(), hudX + 450, hudY + 65);
         }
 
     }
