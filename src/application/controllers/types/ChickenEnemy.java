@@ -8,7 +8,7 @@ import application.controllers.EnemySkillsController;
 import application.models.Enemy;
 import application.models.EnemySkills.SkillType;
 
-public class ChickenEnemyBehavior implements EnemyBehavior {
+public class ChickenEnemy implements EnemyBehavior {
     private Random random = new Random();
     private static final int MAX_FRAME = 48;
 

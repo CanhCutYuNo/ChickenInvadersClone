@@ -6,11 +6,12 @@ import application.controllers.EnemyBehavior;
 import application.models.Enemy;
 import application.models.EnemySkills.SkillType;
 
-public class EggShellEnemyBehavior implements EnemyBehavior {
+public class ChickEnemy implements EnemyBehavior {
+    private static final int MAX_FRAME = 25;
 
     @Override
     public void update(Enemy enemy) {
-        if (enemy.getType() != Enemy.EnemyType.EGG_SHELL_ENEMY) {
+        if (enemy.getType() != Enemy.EnemyType.CHICK_ENEMY) {
             return;
         }
         // Không có logic di chuyển
@@ -23,13 +24,23 @@ public class EggShellEnemyBehavior implements EnemyBehavior {
 
     @Override
     public void addSkills(Enemy enemy, SkillType skillType, String imagePath) {
-        enemy.getSkills().put(skillType, imagePath);
+        // ChickEnemy không có kỹ năng
     }
 
     public void nextFrame(Enemy enemy) {
-        if (enemy.getType() != Enemy.EnemyType.EGG_SHELL_ENEMY) {
+        if (enemy.getType() != Enemy.EnemyType.CHICK_ENEMY) {
             return;
         }
-        // Không có animation
+        if (enemy.isForward()) {
+            enemy.setCurFrame(enemy.getCurFrame() + 1);
+            if (enemy.getCurFrame() >= MAX_FRAME) {
+                enemy.setForward(false);
+            }
+        } else {
+            enemy.setCurFrame(enemy.getCurFrame() - 1);
+            if (enemy.getCurFrame() <= 0) {
+                enemy.setForward(true);
+            }
+        }
     }
 }

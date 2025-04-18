@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import application.controllers.types.ChickEnemyBehavior;
-import application.controllers.types.ChickenBossBehavior;
-import application.controllers.types.ChickenEnemyBehavior;
-import application.controllers.types.EggShellEnemyBehavior;
+import application.controllers.types.ChickEnemy;
+import application.controllers.types.ChickenBoss;
+import application.controllers.types.ChickenEnemy;
+import application.controllers.types.EggShellEnemy;
 import application.models.DeathEffect;
 import application.models.Enemy;
 import application.models.EnemySkills.SkillType;
@@ -31,10 +31,10 @@ public class EnemyController {
         this.soundController = soundController;
         this.random = new Random();
         this.behaviors = new HashMap<>();
-        behaviors.put(Enemy.EnemyType.CHICKEN_ENEMY, new ChickenEnemyBehavior());
-        behaviors.put(Enemy.EnemyType.EGG_SHELL_ENEMY, new EggShellEnemyBehavior());
-        behaviors.put(Enemy.EnemyType.CHICKEN_BOSS, new ChickenBossBehavior());
-        behaviors.put(Enemy.EnemyType.CHICK_ENEMY, new ChickEnemyBehavior());
+        behaviors.put(Enemy.EnemyType.CHICKEN_ENEMY, new ChickenEnemy());
+        behaviors.put(Enemy.EnemyType.EGG_SHELL_ENEMY, new EggShellEnemy());
+        behaviors.put(Enemy.EnemyType.CHICKEN_BOSS, new ChickenBoss());
+        behaviors.put(Enemy.EnemyType.CHICK_ENEMY, new ChickEnemy());
     }
 
     public void addEnemy(Enemy enemyModel, EnemyView enemyView) {
@@ -49,7 +49,7 @@ public class EnemyController {
             if (behavior != null) {
                 behavior.update(enemy);
                 if (enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
-                    ((ChickenEnemyBehavior) behavior).createEggs(enemy, skillsManager); // skillsManager cần được truyền vào
+                    ((ChickenEnemy) behavior).createEggs(enemy, skillsManager); // skillsManager cần được truyền vào
                 }
             }
             nextFrame(enemy);
@@ -61,12 +61,12 @@ public class EnemyController {
             return; // ChickenBossBehavior đã xử lý frame
         }
         if (enemy.getType() == Enemy.EnemyType.CHICK_ENEMY) {
-            ChickEnemyBehavior behavior = (ChickEnemyBehavior) behaviors.get(Enemy.EnemyType.CHICK_ENEMY);
+            ChickEnemy behavior = (ChickEnemy) behaviors.get(Enemy.EnemyType.CHICK_ENEMY);
             behavior.nextFrame(enemy);
             return;
         }
         if (enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
-            ChickenEnemyBehavior behavior = (ChickenEnemyBehavior) behaviors.get(Enemy.EnemyType.CHICKEN_ENEMY);
+            ChickenEnemy behavior = (ChickenEnemy) behaviors.get(Enemy.EnemyType.CHICKEN_ENEMY);
             behavior.nextFrame(enemy);
             return;
         }

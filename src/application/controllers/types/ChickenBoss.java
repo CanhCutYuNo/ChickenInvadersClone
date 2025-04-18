@@ -7,7 +7,7 @@ import application.controllers.EnemyBehavior;
 import application.models.Enemy;
 import application.models.EnemySkills.SkillType;
 
-public class ChickenBossBehavior implements EnemyBehavior {
+public class ChickenBoss implements EnemyBehavior {
     private Random random = new Random();
     private static final int[][] SPRITE = {
         {0,0}, {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0}, {8,0}, {9,0},
