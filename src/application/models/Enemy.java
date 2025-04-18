@@ -400,4 +400,8 @@ public class Enemy {
     public static int getMapWidth() {
         return MAP_WIDTH;
     }
+
+	public int getInitialY() {
+		return posY;
+	}
 }

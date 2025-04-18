@@ -49,7 +49,7 @@ public class EnemyController {
             if (behavior != null) {
                 behavior.update(enemy);
                 if (enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
-                    ((ChickenEnemyBehavior) behavior).createEggs(enemy, skillsManager); // skillsManager cần được truyền vào
+                    ((ChickenEnemyBehavior) behavior).createEggs(enemy, skillsManager);
                 }
             }
             nextFrame(enemy);

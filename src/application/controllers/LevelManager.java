@@ -27,7 +27,7 @@ public abstract class LevelManager {
     }
 
     public void checkEnemyDeath() {
-        // Mặc định không làm gì, các class con sẽ override nếu cần
+   
     }
 
     public EnemyController getEnemyController() {
