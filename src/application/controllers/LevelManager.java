@@ -1,50 +1,36 @@
 package application.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.awt.Graphics;
 
-import application.models.Enemy;
+import application.views.EnemyView;
 
 public abstract class LevelManager {
-
-    protected final List<EnemyController> enemyControllers = new ArrayList<>();
-    protected final List<Enemy> enemies;
+    protected EnemyController enemyController;
     protected SoundController soundController;
 
-    public LevelManager(SoundController soundController, List<Enemy> enemies) {
+    public LevelManager(SoundController soundController, EnemyController enemyController) {
         this.soundController = soundController;
-        this.enemies = enemies;
+        this.enemyController = enemyController;
+        initEnemies();
     }
 
-    public final void addEnemyController(EnemyController enemyController) {
-        enemyControllers.add(enemyController);
-        enemies.addAll(enemyController.getEnemies());
-    }
-    
-    public final List<Enemy> getEnemies() {
-        return enemies;
+    protected abstract void initEnemies();
+
+    public void update(float deltaTime) {
+        enemyController.update();
     }
 
-    public final void update(float deltaTime) {
-        for (EnemyController controller : enemyControllers) {
-            controller.update(deltaTime);
+    public void render(Graphics g) {
+        for(EnemyView view : enemyController.getEnemyViews()) {
+            view.render(g);
         }
     }
 
-    public final void render(Graphics g) {
-        for (EnemyController controller : enemyControllers) {
-            controller.render(g);
-        }
-    }    
+    public void checkEnemyDeath() {
+        // Mặc định không làm gì, các class con sẽ override nếu cần
+    }
 
-    public final void removeEnemy(Enemy enemy) {
-        for (EnemyController controller : enemyControllers) {
-            if (controller.getEnemies().contains(enemy)) {
-                controller.removeEnemy(enemy);
-                break;
-            }
-        }
-        enemies.remove(enemy);
+    public EnemyController getEnemyController() {
+        return enemyController;
     }
 }

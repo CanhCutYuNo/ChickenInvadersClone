@@ -1,191 +1,178 @@
 package application.controllers.levels;
 
-import application.controllers.EnemyController;
-import application.controllers.LevelManager;
-import application.controllers.SoundController;
-import application.models.Enemy;
-import application.models.types.ChickEnemy;
-import application.models.types.ChickenEnemy;
-
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import application.controllers.EnemyController;
+import application.controllers.LevelManager;
+import application.controllers.SoundController;
+import application.models.Enemy;
+import application.models.EnemySkills.SkillType;
+import application.views.EnemyView;
+
 public class Level3Manager extends LevelManager {
-    Random random;
+    private static final int SCREEN_WIDTH = 1920;
+    private static final int SCREEN_LEFT = -50;
+    private static final int SCREEN_RIGHT = 1920;
+    private static final int SPACING = 100;
+    private static final int NUM_CHICKEN_ROWS = 4;
+    private static final int NUM_CHICKENS_PER_ROW = 5;
+    private static final int NUM_CHICKS = 20; // Giả định 20 con từ mã gốc (10 controller x 2)
+    private static final float GRAVITY = 2.0f; // Tốc độ rơi cho ChickEnemy
+    private static final float OSCILLATION_SPEED = 0.5f; // Tốc độ lắc
+    private static final float OSCILLATION_AMPLITUDE = 1.0f; // Biên độ lắc
 
-    public Level3Manager(SoundController sound, List<Enemy> enemies) {
-        super(sound, enemies);
+    private Random random;
+    private List<ChickenRowState> chickenRowStates;
+    private List<ChickState> chickStates;
+
+    private class ChickenRowState {
+        float t;
+        int direction;
+        float timeElapsed;
+        boolean isActive;
+        int startY;
+        float timeDelay;
+
+        ChickenRowState(int startY, float timeDelay) {
+            this.t = 0;
+            this.direction = 1;
+            this.timeElapsed = 0;
+            this.isActive = false;
+            this.startY = startY;
+            this.timeDelay = timeDelay;
+        }
+    }
+
+    private class ChickState {
+        float timeElapsed;
+        boolean isActive;
+        float timeDelay;
+        float t; // Biến thời gian cho xoay sprite
+
+        ChickState(float timeDelay) {
+            this.timeElapsed = 0;
+            this.isActive = false;
+            this.timeDelay = timeDelay;
+            this.t = 0;
+        }
+    }
+
+    public Level3Manager(SoundController soundController, EnemyController enemyController) {
+        super(soundController, enemyController);
         this.random = new Random();
-
-
-        for(int i = 0; i < 4; i++){
-            addEnemyController(new ChickenEnemyControllerLevel3(5,EnemyController.CHICKEN, 100 * (i) + 100, 0.0f + i*20.f,sound));
+        this.chickenRowStates = new ArrayList<>();
+        this.chickStates = new ArrayList<>();
+        for (int i = 0; i < NUM_CHICKEN_ROWS; i++) {
+            chickenRowStates.add(new ChickenRowState(100 * i + 100, i * 20.0f));
         }
-
-
-        for(int i = 0; i < 10; i++){
-            int posY = random.nextInt(100);
-            addEnemyController(new ChickEnemyControllerLevel3(1, EnemyController.CHICK, posY - 50, 0.0f + i * 2.0f,sound));
-        }
-
-    }
-
-    private class ChickenEnemyControllerLevel3 extends EnemyController {
-
-        public ChickenEnemyControllerLevel3(int numEnemies, int enemyType, int startY, float timeDelay,
-                SoundController soundController) {
-            super(numEnemies, enemyType, startY, timeDelay, soundController);
-            for (int i = 0; i < numEnemies; i++) {
-                Enemy enemy = createEnemy(-50 - i * SPACING, startY);
-                enemy.setInitialIndex(i);
-                enemies.add(enemy);
-            }
-        }
-
-        @Override
-        public void update(float deltaTime) {
-            timeElapsed += deltaTime;
-            if (!isActive && timeElapsed >= timeDelay) {
-                isActive = true;
-            }
-
-            if (isActive) {
-                t += deltaTime * 100 * direction;
-                // rotate = (float) (20 * Math.sin(0.05 * t));
-                Random random = new Random();
-                float gravity = 30.0f; // Tốc độ rơi
-                float oscillationSpeed = 0.5f; // Tốc độ lắc
-                float oscillationAmplitude = 1.0f; // Biên độ lắc
-                for (Enemy enemy : enemies) {
-                    if (enemy instanceof ChickEnemy) {
-                        float posY = enemy.getPosY() + 2; // Gà rơi xuống
-                        float offsetX = (float) Math.sin(posY * 0.005) * oscillationAmplitude; // Lắc nhẹ
-                        float posX = enemy.getPosX() + offsetX * deltaTime * oscillationSpeed; // Lắc mượt hơn
-
-                        enemy.setPosY((int) posY);
-
-                        enemy.setPosX((int) posX);
-                        ((ChickEnemy) enemy).setRotate((float) (20 * Math.sin(0.02 * t))); // Xoay nhẹ
-                    } else if (enemy instanceof ChickenEnemy) {
-                        int index = enemy.getInitialIndex();
-                        float posX = -1800 + t + index * SPACING;
-                        float posY = startY + 20 * (float) Math.sin(0.02 * posX);
-                        enemy.setPosX((int) posX);
-                        enemy.setPosY((int) posY);
-                        ((ChickenEnemy) enemy).setRotate(rotate);
-                    }
-                    enemy.nextFrame();
-                }
-                for (Enemy enemy : enemies) {
-                    if (enemy instanceof ChickEnemy) {
-                        if (enemy.getPosY() > 1000) {
-                            enemy.setPosY(random.nextInt(200) - 300); // Xuất hiện lại từ trên
-                            enemy.setPosX(random.nextInt(1600) + 100); // X ngẫu nhiên
-                        }
-
-                    } else if (enemy instanceof ChickenEnemy) {
-                        if (!enemies.isEmpty()) {
-                            // Chỉ áp dụng logic di chuyển hàng cho ChickenEnemy
-                            Enemy firstEnemy = enemies.get(0);
-                            Enemy lastEnemy = enemies.get(enemies.size() - 1);
-
-                            if (lastEnemy.getPosX() > SCREEN_RIGHT && direction == 1) {
-                                direction = -1;
-                                t -= 2 * (lastEnemy.getPosX() - SCREEN_RIGHT);
-                                System.out.println("Row at Y=" + startY + " turning left at right edge");
-                            } else if (firstEnemy.getPosX() < SCREEN_LEFT && direction == -1) {
-                                direction = 1;
-                                t += 2 * (SCREEN_LEFT - firstEnemy.getPosX());
-                                System.out.println("Row at Y=" + startY + " turning right at left edge");
-                            }
-                        }
-
-                    }
-
-                }
-            }
-
+        for (int i = 0; i < NUM_CHICKS; i++) {
+            chickStates.add(new ChickState(i * 2.0f));
         }
     }
 
-    private class ChickEnemyControllerLevel3 extends EnemyController {
-        public ChickEnemyControllerLevel3(int numEnemies, int enemyType, int startY, float timeDelay, SoundController soundController) {
-            super(numEnemies, enemyType, startY, timeDelay, soundController);
-            for (int i = 0; i < numEnemies; i++) {
-                int x = random.nextInt(SCREEN_WIDTH - 200);
-                for (int j = 0; j < 2; j++) {
-                    Enemy enemy = createEnemy(x + j * 100, startY);
-                    enemy.setInitialIndex(j);
-                    enemies.add(enemy);
+    @Override
+    protected void initEnemies() {
+        // Tạo ChickenEnemy (4 hàng, mỗi hàng 5 con)
+        for (int row = 0; row < NUM_CHICKEN_ROWS; row++) {
+            for (int i = 0; i < NUM_CHICKENS_PER_ROW; i++) {
+                Enemy model = new Enemy(0, 64, 64, -50 - i * SPACING, 100 * row + 100, 0, Enemy.EnemyType.CHICKEN_ENEMY);
+                model.setInitialIndex(i);
+                model.getSkills().put(SkillType.EGG, "/asset/resources/gfx/introEgg.png");
+                EnemyView view = new EnemyView(model);
+                enemyController.addEnemy(model, view);
+            }
+        }
+        // Tạo ChickEnemy (20 con)
+        for (int i = 0; i < NUM_CHICKS; i++) {
+            int posY = random.nextInt(100) - 50; // Từ -50 đến 50
+            int posX = random.nextInt(SCREEN_WIDTH - 200); // Từ 0 đến 1720
+            Enemy model = new Enemy(0, 46, 54, posX, posY, 0, Enemy.EnemyType.CHICK_ENEMY);
+            model.setInitialIndex(i);
+            EnemyView view = new EnemyView(model);
+            enemyController.addEnemy(model, view);
+        }
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+        updateChickenRows(deltaTime);
+        updateChicks(deltaTime);
+    }
+
+    private void updateChickenRows(float deltaTime) {
+        for (int row = 0; row < chickenRowStates.size(); row++) {
+            ChickenRowState state = chickenRowStates.get(row);
+            state.timeElapsed += deltaTime;
+
+            if (!state.isActive && state.timeElapsed >= state.timeDelay) {
+                state.isActive = true;
+            }
+
+            if (state.isActive) {
+                state.t += deltaTime * 100 * state.direction;
+                float rotate = (float) (20 * Math.sin(0.05 * state.t));
+
+                // Tìm các ChickenEnemy thuộc hàng này
+                List<Enemy> rowEnemies = new ArrayList<>();
+                for (Enemy enemy : enemyController.getEnemyModels()) {
+                    if (enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY && enemy.getPosY() == state.startY) {
+                        rowEnemies.add(enemy);
+                    }
+                }
+
+                for (Enemy enemy : rowEnemies) {
+                    int index = enemy.getInitialIndex();
+                    float posX = -1800 + state.t + index * SPACING;
+                    float posY = state.startY + 20 * (float) Math.sin(0.02 * posX);
+                    enemy.setPosX((int) posX);
+                    enemy.setPosY((int) posY);
+                    enemy.setRotate(rotate);
+                }
+
+                if (!rowEnemies.isEmpty()) {
+                    Enemy firstEnemy = rowEnemies.get(0);
+                    Enemy lastEnemy = rowEnemies.get(rowEnemies.size() - 1);
+
+                    if (lastEnemy.getPosX() > SCREEN_RIGHT && state.direction == 1) {
+                        state.direction = -1;
+                        state.t -= 2 * (lastEnemy.getPosX() - SCREEN_RIGHT);
+                    } else if (firstEnemy.getPosX() < SCREEN_LEFT && state.direction == -1) {
+                        state.direction = 1;
+                        state.t += 2 * (SCREEN_LEFT - firstEnemy.getPosX());
+                    }
                 }
             }
         }
+    }
 
-        @Override
-        public void update(float deltaTime) {
-            timeElapsed += deltaTime;
-            if (!isActive && timeElapsed >= timeDelay) {
-                isActive = true;
+    private void updateChicks(float deltaTime) {
+        for (int i = 0; i < chickStates.size(); i++) {
+            ChickState state = chickStates.get(i);
+            Enemy enemy = enemyController.getEnemyModels().get(i + NUM_CHICKEN_ROWS * NUM_CHICKENS_PER_ROW); // Bỏ qua ChickenEnemy
+            state.timeElapsed += deltaTime;
+
+            if (!state.isActive && state.timeElapsed >= state.timeDelay) {
+                state.isActive = true;
             }
 
-            if (isActive) {
-                t += deltaTime * 100 * direction;
-                // rotate = (float) (20 * Math.sin(0.05 * t));
-                Random random = new Random();
-               // float gravity = 30.0f; // Tốc độ rơi
-                float oscillationSpeed = 0.5f; // Tốc độ lắc
-                float oscillationAmplitude = 1.0f; // Biên độ lắc
-                for (Enemy enemy : enemies) {
-                    if (enemy instanceof ChickEnemy) {
-                        float posY = enemy.getPosY() + 2; // Gà rơi xuống
-                        float offsetX = (float) Math.sin(posY * 0.005) * oscillationAmplitude; // Lắc nhẹ
-                        float posX = enemy.getPosX() + offsetX * deltaTime * oscillationSpeed; // Lắc mượt hơn
+            if (state.isActive && enemy.getType() == Enemy.EnemyType.CHICK_ENEMY) {
+                state.t += deltaTime * 100;
+                float posY = enemy.getPosY() + GRAVITY;
+                float offsetX = (float) Math.sin(posY * 0.005) * OSCILLATION_AMPLITUDE;
+                float posX = enemy.getPosX() + offsetX * deltaTime * OSCILLATION_SPEED;
 
-                        enemy.setPosY((int) posY);
+                enemy.setPosX((int) posX);
+                enemy.setPosY((int) posY);
+                enemy.setRotate((float) (20 * Math.sin(0.02 * state.t)));
 
-                        enemy.setPosX((int) posX);
-                        ((ChickEnemy) enemy).setRotate((float) (20 * Math.sin(0.02 * t))); // Xoay nhẹ
-                    } else if (enemy instanceof ChickenEnemy) {
-                        int index = enemy.getInitialIndex();
-                        float posX = -1800 + t + index * SPACING;
-                        float posY = startY + 20 * (float) Math.sin(0.02 * posX);
-                        enemy.setPosX((int) posX);
-                        enemy.setPosY((int) posY);
-                        ((ChickenEnemy) enemy).setRotate(rotate);
-                    }
-                    enemy.nextFrame();
-                }
-                for (Enemy enemy : enemies) {
-                    if (enemy instanceof ChickEnemy) {
-                        if (enemy.getPosY() > 1000) {
-                            enemy.setPosY(random.nextInt(200) - 300); // Xuất hiện lại từ trên
-                            enemy.setPosX(random.nextInt(1600) + 100); // X ngẫu nhiên
-                        }
-
-                    } else if (enemy instanceof ChickenEnemy) {
-                        if (!enemies.isEmpty()) {
-                            // Chỉ áp dụng logic di chuyển hàng cho ChickenEnemy
-                            Enemy firstEnemy = enemies.get(0);
-                            Enemy lastEnemy = enemies.get(enemies.size() - 1);
-
-                            if (lastEnemy.getPosX() > SCREEN_RIGHT && direction == 1) {
-                                direction = -1;
-                                t -= 2 * (lastEnemy.getPosX() - SCREEN_RIGHT);
-                                System.out.println("Row at Y=" + startY + " turning left at right edge");
-                            } else if (firstEnemy.getPosX() < SCREEN_LEFT && direction == -1) {
-                                direction = 1;
-                                t += 2 * (SCREEN_LEFT - firstEnemy.getPosX());
-                                System.out.println("Row at Y=" + startY + " turning right at left edge");
-                            }
-                        }
-
-                    }
-
+                if (enemy.getPosY() > 1000) {
+                    enemy.setPosY(random.nextInt(200) - 300); // Từ -300 đến -100
+                    enemy.setPosX(random.nextInt(1600) + 100); // Từ 100 đến 1700
                 }
             }
-
         }
     }
 }

@@ -1,116 +1,188 @@
 package application.controllers;
 
-import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
+import application.controllers.types.ChickEnemyBehavior;
+import application.controllers.types.ChickenBossBehavior;
+import application.controllers.types.ChickenEnemyBehavior;
+import application.controllers.types.EggShellEnemyBehavior;
+import application.models.DeathEffect;
 import application.models.Enemy;
-import application.models.types.ChickEnemy;
-import application.models.types.ChickenBoss;
-import application.models.types.ChickenEnemy;
-import application.models.types.EggShellEnemy;
+import application.models.EnemySkills.SkillType;
+import application.models.types.ChickDeathEffect;
+import application.models.types.ChickenDeathEffect;
+import application.views.EnemyView;
 
 public class EnemyController {
-    protected List<Enemy> enemies;
-    protected float timeDelay;
-    protected float timeElapsed = 0f;
-    protected boolean isActive = false;
-    protected float t = 0;
-    protected int startY;
-    protected SoundController soundController;
-    protected float rotate = 0f;
-    protected static final int SPACING = 150;
-    protected int direction = 1;
-    protected static final int SCREEN_WIDTH = 1920;
-    protected static final int SCREEN_LEFT = 0;
-    protected static final int SCREEN_RIGHT = SCREEN_WIDTH;
-    protected int enemyType;
+    private List<Enemy> enemyModels;
+    private List<EnemyView> enemyViews;
+    private SoundController soundController;
+    private Map<Enemy.EnemyType, EnemyBehavior> behaviors;
+    private Random random;
 
-    public static final int CHICKEN = 1;
-    public static final int CHICK = 2;
-    public static final int EGG_SHELL = 3;
-    public static final int BOSS = 4;
-
-    public EnemyController(int numEnemies, int enemyType, int startY, float timeDelay, SoundController soundController) {
-        this.enemies = new ArrayList<>();
-        this.startY = startY;
-        this.timeDelay = timeDelay;
-        this.enemyType = enemyType;
+    public EnemyController(SoundController soundController) {
+        this.enemyModels = new ArrayList<>();
+        this.enemyViews = new ArrayList<>();
         this.soundController = soundController;
+        this.random = new Random();
+        this.behaviors = new HashMap<>();
+        behaviors.put(Enemy.EnemyType.CHICKEN_ENEMY, new ChickenEnemyBehavior());
+        behaviors.put(Enemy.EnemyType.EGG_SHELL_ENEMY, new EggShellEnemyBehavior());
+        behaviors.put(Enemy.EnemyType.CHICKEN_BOSS, new ChickenBossBehavior());
+        behaviors.put(Enemy.EnemyType.CHICK_ENEMY, new ChickEnemyBehavior());
     }
 
-    public Enemy createEnemy(int posX, int posY) {
-        switch (enemyType) {
-            case CHICKEN:
-                return new ChickenEnemy(posX, posY, soundController);
-            case CHICK:
-                return new ChickEnemy(posX, posY, soundController);
-            case EGG_SHELL:
-                return new EggShellEnemy(posX, posY, soundController);
-            case BOSS:
-                // Đặt tọa độ cố định cho ChickenBoss(giữa màn hình)
-                return new ChickenBoss(posX, posY, soundController);
-            default:
-                throw new IllegalArgumentException("Unknown enemy type: " + enemyType);
-        }
+    public void addEnemy(Enemy enemyModel, EnemyView enemyView) {
+        enemyModels.add(enemyModel);
+        enemyViews.add(enemyView);
     }
 
-    public void update(float deltaTime) {
-
-    }
-
-    public void update3(float deltaTime){
-        timeElapsed += deltaTime;
-        if (!isActive && timeElapsed >= timeDelay) {
-            isActive = true;
-            System.out.println("Row at Y=" + startY + " is now active!");
-        }
-
-        if (isActive) {
-            t += deltaTime * 100 * direction;
-            // rotate = (float) (20 * Math.sin(0.05 * t));
-//            Random random = new Random();
-//            float gravity = 30.0f; // Tốc độ rơi
-//            float oscillationSpeed = 0.5f; // Tốc độ lắc
-//            float oscillationAmplitude = 1.0f; // Biên độ lắc
-            for (Enemy enemy : enemies) {
-                if (enemy instanceof EggShellEnemy) {
-                    float posY = enemy.getPosY() + 2; // Gà rơi xuống
-//                    float offsetX = (float) Math.sin(posY * 0.005) * oscillationAmplitude; // Lắc nhẹ
-//                    float posX = enemy.getPosX() + offsetX * deltaTime * oscillationSpeed; // Lắc mượt hơn
-
-                    enemy.setPosY((int) posY);
-
-//                    enemy.setPosX((int) posX);
-//                    ((EggShellEnemy) enemy).setRotate((float) (20 * Math.sin(0.05 * t))); // Xoay nhẹ
+    public void update() {
+        for (int i = 0; i < enemyModels.size(); i++) {
+            Enemy enemy = enemyModels.get(i);
+            EnemyBehavior behavior = behaviors.get(enemy.getType());
+            if (behavior != null) {
+                behavior.update(enemy);
+                if (enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
+                    ((ChickenEnemyBehavior) behavior).createEggs(enemy, skillsManager); // skillsManager cần được truyền vào
                 }
             }
+            nextFrame(enemy);
         }
     }
 
-    public void render(Graphics g) {
-        if(isActive) {
-            for(Enemy enemy : enemies) {
-                if(!enemy.isDead()) {
-                    enemy.render(g);
-                }
+    private void nextFrame(Enemy enemy) {
+        if (enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS) {
+            return; // ChickenBossBehavior đã xử lý frame
+        }
+        if (enemy.getType() == Enemy.EnemyType.CHICK_ENEMY) {
+            ChickEnemyBehavior behavior = (ChickEnemyBehavior) behaviors.get(Enemy.EnemyType.CHICK_ENEMY);
+            behavior.nextFrame(enemy);
+            return;
+        }
+        if (enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
+            ChickenEnemyBehavior behavior = (ChickenEnemyBehavior) behaviors.get(Enemy.EnemyType.CHICKEN_ENEMY);
+            behavior.nextFrame(enemy);
+            return;
+        }
+        if (enemy.isForward()) {
+            enemy.setCurFrame(enemy.getCurFrame() + 1);
+            if (enemy.getCurFrame() >= 48) {
+                enemy.setForward(false);
             }
-         //   System.out.println("Rendering row at Y=" + startY + ", Active enemies: " + enemies.size());
         } else {
-          //  System.out.println("Row at Y=" + startY + " not active yet");
+            enemy.setCurFrame(enemy.getCurFrame() - 1);
+            if (enemy.getCurFrame() <= 0) {
+                enemy.setForward(true);
+            }
         }
     }
 
-    public List<Enemy> getEnemies() {
-        return enemies;
+    public void takeDamage(int index, int damage, String[] hitSounds, String[] deathSounds) {
+        Enemy enemy = enemyModels.get(index);
+        enemy.setHp(enemy.getHp() - damage);
+        if (hitSounds != null && hitSounds.length != 0) {
+            soundController.playSoundEffect(getClass().getResource(hitSounds[random.nextInt(hitSounds.length)]).getPath());
+        }
+        if (enemy.isDead()) {
+            String deathSound = (enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS) 
+                ? "/asset/resources/sfx/death1.wav" 
+                : deathSounds[random.nextInt(deathSounds.length)];
+            if (deathSounds != null && deathSounds.length != 0) {
+                soundController.playSoundEffect(getClass().getResource(deathSound).getPath());
+            }
+        }
     }
 
-    public boolean isActive() {
-        return isActive;
+    public DeathEffect getDeathEffect(int index) {
+        Enemy enemy = enemyModels.get(index);
+        if (enemy.getType() == Enemy.EnemyType.CHICK_ENEMY) {
+            return new ChickDeathEffect(enemy.getCenterX(), enemy.getCenterY());
+        } else if (enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
+            return new ChickenDeathEffect(enemy.getCenterX(), enemy.getCenterY());
+        }
+        return null;
     }
 
-    public void removeEnemy(Enemy enemy) {
-        enemies.remove(enemy);
-     //   System.out.println("Removed enemy from EnemyController at (" + enemy.getPosX() + "," + enemy.getPosY() + "). New size: " + enemies.size());
+    public Rectangle getHitbox(int index) {
+        Enemy enemy = enemyModels.get(index);
+        EnemyBehavior behavior = behaviors.get(enemy.getType());
+        if (behavior != null) {
+            return behavior.getHitbox(enemy);
+        }
+        return new Rectangle(enemy.getPosX(), enemy.getPosY(), enemy.getModelWidth(), enemy.getModelHeight());
+    }
+
+    public void addSkills(int index, SkillType skillType, String imagePath) {
+        Enemy enemy = enemyModels.get(index);
+        EnemyBehavior behavior = behaviors.get(enemy.getType());
+        if (behavior != null) {
+            behavior.addSkills(enemy, skillType, imagePath);
+        }
+    }
+
+    public void removeEnemy(int index) {
+        if (index >= 0 && index < enemyModels.size()) {
+            enemyModels.remove(index);
+            enemyViews.remove(index);
+        }
+    }
+
+    public void clear() {
+        enemyModels.clear();
+        enemyViews.clear();
+    }
+
+    public List<Enemy> getEnemyModels() {
+        return new ArrayList<>(enemyModels);
+    }
+
+    public List<EnemyView> getEnemyViews() {
+        return new ArrayList<>(enemyViews);
+    }
+
+    public void createHoleSkill(int index, EnemySkillsController skillsManager) {
+        Enemy enemy = enemyModels.get(index);
+        if (enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS && enemy.shouldCreateHole()) {
+            skillsManager.addSkill(1920 / 2, 1080 / 2, 0, 5000, SkillType.HOLE);
+            soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/engineCrab.wav").getPath());
+            enemy.setShouldCreateHole(false);
+        }
+    }
+
+    public void createFireballBurst(int index, EnemySkillsController skillsManager) {
+        Enemy enemy = enemyModels.get(index);
+        if (enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS && enemy.shouldCreateFireballBurst()) {
+            double centerX = 1920 / 2;
+            double centerY = 1080 / 2;
+            int damage = 1000;
+            double speed = 5;
+
+            for (int i = 0; i < 10; i++) {
+                double angleStart = i * 36;
+                double angleEnd = (i + 1) * 36;
+
+                for (int j = 0; j < 2; j++) {
+                    double angle = Math.toRadians(random.nextDouble() * (angleEnd - angleStart) + angleStart);
+                    double speedX = speed * Math.cos(angle);
+                    double speedY = speed * Math.sin(angle);
+                    skillsManager.addSkill(centerX, centerY, speedX, speedY, damage, SkillType.FIREBALL);
+                }
+            }
+            soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/cannonFire.wav").getPath());
+            enemy.setShouldCreateFireballBurst(false);
+        }
+    }
+
+    // skillsManager cần được thêm vào constructor hoặc setter
+    private EnemySkillsController skillsManager;
+
+    public void setSkillsManager(EnemySkillsController skillsManager) {
+        this.skillsManager = skillsManager;
     }
 }

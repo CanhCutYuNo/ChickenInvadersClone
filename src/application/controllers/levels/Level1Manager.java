@@ -1,84 +1,113 @@
 package application.controllers.levels;
 
-import application.controllers.EnemyController;
-import application.controllers.GameSettings;
-import application.controllers.LevelManager;
-import application.models.Enemy;
-import application.models.types.ChickenEnemy;
-import application.controllers.SoundController;
-
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+import application.controllers.EnemyController;
+import application.controllers.LevelManager;
+import application.controllers.SoundController;
+import application.models.Enemy;
+import application.models.EnemySkills.SkillType;
+import application.views.EnemyView;
+
 public class Level1Manager extends LevelManager {
-    private boolean hardWaveTriggered = false;
-    public Level1Manager(SoundController soundController, List<Enemy> enemies) {
-        super(soundController, enemies);
+    private static final int SCREEN_LEFT = -50;
+    private static final int SCREEN_RIGHT = 1920;
+    private static final int SPACING = 100;
+    private static final int NUM_ENEMIES_PER_ROW = 10;
+    private static final int[] START_Y = {100, 300, 500};
+    private static final float[] TIME_DELAYS = {0.0f, 0.0f, 0.0f};
 
-        addEnemyController(new EnemyControllerLevel1(10, EnemyController.CHICKEN, 100, 0.0f, soundController));
-        addEnemyController(new EnemyControllerLevel1(10, EnemyController.CHICKEN, 300, 0.0f, soundController));
-        addEnemyController(new EnemyControllerLevel1(10, EnemyController.CHICKEN, 500, 0.0f, soundController));
-        // System.out.println("Initialized " + enemies.size() + " enemies in Level1Manager");
+    private List<RowState> rowStates;
+
+    private class RowState {
+        float t;
+        int direction;
+        float timeElapsed;
+        boolean isActive;
+        int startY;
+        float timeDelay;
+
+        RowState(int startY, float timeDelay) {
+            this.t = 0;
+            this.direction = 1;
+            this.timeElapsed = 0;
+            this.isActive = false;
+            this.startY = startY;
+            this.timeDelay = timeDelay;
+        }
     }
 
-
-
-    private class EnemyControllerLevel1 extends EnemyController {
-
-        public EnemyControllerLevel1(int numEnemies, int enemyType, int startY, float timeDelay, SoundController soundController) {
-            super(numEnemies, enemyType, startY, timeDelay, soundController);
-            for (int i = 0; i < numEnemies; i++) {
-                Enemy enemy = createEnemy(-50 - i * SPACING, startY);
-                enemy.setInitialIndex(i);
-                enemies.add(enemy);
-            }
+    public Level1Manager(SoundController soundController, EnemyController enemyController) {
+        super(soundController, enemyController);
+        rowStates = new ArrayList<>();
+        for (int i = 0; i < START_Y.length; i++) {
+            rowStates.add(new RowState(START_Y[i], TIME_DELAYS[i]));
         }
+    }
 
-        @Override
-        public void update(float deltaTime) {
-            timeElapsed += deltaTime;
-
-            if (!isActive && timeElapsed >= timeDelay) {
-                isActive = true;
-                //      System.out.println("Row at Y=" + startY + " is now active!");
-            }
-
-            if (isActive) {
-                t += deltaTime * 50 * direction;
-                // rotate =(float)(20 * Math.sin(0.05 * t));
-
-                for (Enemy enemy : enemies) {
-                    if (enemy instanceof ChickenEnemy) {
-                        // Logic di chuyển theo hàng cho ChickenEnemy
-                        int index = enemy.getInitialIndex();
-                        float posX = -1800 + t + index * SPACING;
-                        float posY = startY + 20 * (float) Math.sin(0.02 * posX);
-                        enemy.setPosX((int) posX);
-                        enemy.setPosY((int) posY);
-                        ((ChickenEnemy) enemy).setRotate(rotate);
-                    }
-
-                    enemy.nextFrame();
-                }
-
-                if (!enemies.isEmpty()) {
-                    // Chỉ áp dụng logic di chuyển hàng cho ChickenEnemy
-                    Enemy firstEnemy = enemies.get(0);
-                    Enemy lastEnemy = enemies.get(enemies.size() - 1);
-
-                    if (lastEnemy.getPosX() > SCREEN_RIGHT && direction == 1) {
-                        direction = -1;
-                        t -= 2 * (lastEnemy.getPosX() - SCREEN_RIGHT);
-                        System.out.println("Row at Y=" + startY + " turning left at right edge");
-                    } else if (firstEnemy.getPosX() < SCREEN_LEFT && direction == -1) {
-                        direction = 1;
-                        t += 2 * (SCREEN_LEFT - firstEnemy.getPosX());
-                        System.out.println("Row at Y=" + startY + " turning right at left edge");
-                    }
-                }
+    @Override
+    protected void initEnemies() {
+        for (int row = 0; row < START_Y.length; row++) {
+            for (int i = 0; i < NUM_ENEMIES_PER_ROW; i++) {
+                Enemy model = new Enemy(0, 64, 64, -50 - i * SPACING, START_Y[row], 0, Enemy.EnemyType.CHICKEN_ENEMY);
+                model.setInitialIndex(i);
+                model.getSkills().put(SkillType.EGG, "/asset/resources/gfx/introEgg.png");
+                EnemyView view = new EnemyView(model);
+                enemyController.addEnemy(model, view);
             }
         }
     }
 
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+        updateRows(deltaTime);
+    }
+
+    private void updateRows(float deltaTime) {
+        for (int row = 0; row < rowStates.size(); row++) {
+            RowState state = rowStates.get(row);
+            state.timeElapsed += deltaTime;
+
+            if (!state.isActive && state.timeElapsed >= state.timeDelay) {
+                state.isActive = true;
+            }
+
+            if (state.isActive) {
+                state.t += deltaTime * 50 * state.direction;
+                float rotate = (float) (20 * Math.sin(0.05 * state.t));
+
+                // Tìm các enemy thuộc hàng này
+                List<Enemy> rowEnemies = new ArrayList<>();
+                for (Enemy enemy : enemyController.getEnemyModels()) {
+                    if (enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY && enemy.getPosY() == state.startY) {
+                        rowEnemies.add(enemy);
+                    }
+                }
+
+                for (Enemy enemy : rowEnemies) {
+                    int index = enemy.getInitialIndex();
+                    float posX = -1800 + state.t + index * SPACING;
+                    float posY = state.startY + 20 * (float) Math.sin(0.02 * posX);
+                    enemy.setPosX((int) posX);
+                    enemy.setPosY((int) posY);
+                    enemy.setRotate(rotate);
+                }
+
+                if (!rowEnemies.isEmpty()) {
+                    Enemy firstEnemy = rowEnemies.get(0);
+                    Enemy lastEnemy = rowEnemies.get(rowEnemies.size() - 1);
+
+                    if (lastEnemy.getPosX() > SCREEN_RIGHT && state.direction == 1) {
+                        state.direction = -1;
+                        state.t -= 2 * (lastEnemy.getPosX() - SCREEN_RIGHT);
+                    } else if (firstEnemy.getPosX() < SCREEN_LEFT && state.direction == -1) {
+                        state.direction = 1;
+                        state.t += 2 * (SCREEN_LEFT - firstEnemy.getPosX());
+                    }
+                }
+            }
+        }
+    }
 }

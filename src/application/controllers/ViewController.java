@@ -151,7 +151,7 @@ public class ViewController {
             return;
         }
         try {
-            Point playerPos = manager.getPlayerPosition();
+            Point playerPos = manager.getPlayer().getPosition();
             Point screenPos = gamePanel.getLocationOnScreen();
             int playerWidth = 54; 
             int playerHeight = 50;
