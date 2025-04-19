@@ -6,19 +6,18 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import application.controllers.Controller;
-import application.controllers.GameLoop;
-import application.controllers.Manager;
-import application.controllers.MouseController;
-import application.controllers.SoundController;
-import application.controllers.ViewController;
-import application.views.BackgroundPanel;
-import application.views.GameContainerPanel;
-import application.views.GamePanel;
-import application.views.MenuPanel;
-import application.views.MissionSelectionPanel;
-import application.views.PausePanel;
-import application.views.SettingPanel;
+import application.controllers.core.GameLoop;
+import application.controllers.core.Manager;
+import application.controllers.util.Controller;
+import application.controllers.util.SoundController;
+import application.controllers.util.ViewController;
+import application.views.panels.BackgroundPanel;
+import application.views.panels.GameContainerPanel;
+import application.views.panels.GamePanel;
+import application.views.panels.MenuPanel;
+import application.views.panels.MissionSelectionPanel;
+import application.views.panels.PausePanel;
+import application.views.panels.SettingPanel;
 
 public class Main {
     private static JFrame frame;
@@ -33,7 +32,6 @@ public class Main {
     private static MissionSelectionPanel missionSelectionPanel;
     private static GameLoop gameLoop;
     private static ViewController viewController;
-    private static MouseController mouseController;
     private static SoundController soundController; 
     private static PausePanel pausePanel;
     
@@ -49,26 +47,26 @@ public class Main {
             mainPanel = new JPanel(cardLayout);
 
             soundController = new SoundController();
-            gameManager = new Manager(cardLayout, mainPanel, null, null, null, soundController, null);
+            gameManager = new Manager(null, soundController, null);
 
             backgroundPanel = new BackgroundPanel();
-            gameManager.setBackgroundPanel(backgroundPanel);
 
             viewController = new ViewController(cardLayout, mainPanel,
                     null, null, null,
                     backgroundPanel, null, soundController, gameManager, null, null);
             
+            gameManager.setViewController(viewController);
+            viewController.setBackgroundPanel(backgroundPanel);
+            
             pausePanel = new PausePanel(viewController, soundController);
-
-            mouseController = new MouseController(gamePanel);
 
             gamePanel = new GamePanel(gameManager);
             gameManager.setGamePanel(gamePanel);
             gameLoop = new GameLoop(gamePanel, frame);
             gameManager.setGameLoop(gameLoop);
 
-            menuPanel = new MenuPanel(viewController, mouseController, gamePanel);
-            gameManager.setMenuPanel(menuPanel);
+            menuPanel = new MenuPanel(viewController);
+            viewController.setMenuPanel(menuPanel);
 
             settingPanel = new SettingPanel(viewController, soundController);
             gameContainerPanel = new GameContainerPanel(gamePanel, pausePanel);
