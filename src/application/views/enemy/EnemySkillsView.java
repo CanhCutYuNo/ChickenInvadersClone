@@ -7,6 +7,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,8 +55,12 @@ public class EnemySkillsView {
     };
 
     public EnemySkillsView(Map<SkillType, String> skillImagePaths, SoundController soundController) {
-    	this.soundController = soundController;
+        this.soundController = soundController;
         skillImages = new HashMap<>();
+        EggSprites = new ArrayList<>(); // Khởi tạo EggSprites
+        for (int[] frame : EggBrokenSprite) {
+            EggSprites.add(frame);
+        }
         try {     	
             for (Map.Entry<SkillType, String> entry : skillImagePaths.entrySet()) {
                 SkillType skillType = entry.getKey();
@@ -121,9 +126,6 @@ public class EnemySkillsView {
                     g.drawImage(eggImage, (int) skill.getPosX(), (int) skill.getPosY(), 40, 80, null);
                 }
             } else {
-            	 if (skill.getAnimationFrame() == 0) {
-            		 soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggSplat.wav").getPath());	
-                 }
                 drawEggBroken(g, skill, skill.getAnimationFrame());
             }
         } else if (skill.getSkillType() == SkillType.FIREBALL) {
@@ -134,12 +136,6 @@ public class EnemySkillsView {
                 drawSkill(g, skill.getPosX(), skill.getPosY(), skill.getScale(), skill.getAngle(), skillImage);
             }
         }
-
-//        // Vẽ hitbox
-//        Graphics2D g2d = (Graphics2D) g;
-//        g2d.setColor(Color.RED);
-//        Shape hitbox = skill.getHitbox();
-//        g2d.draw(hitbox);
     }
 
     private void drawSkill(Graphics g, double posX, double posY, double scale, double angle, Image skillImage) {
@@ -167,14 +163,17 @@ public class EnemySkillsView {
     }
 
     public void drawEggBroken(Graphics g, EnemySkills skill, int eFrame) {
-        for (int[] frame : EggBrokenSprite) {
-            EggSprites.add(frame);
-        }
-        
-           
-        
         if (eggSheet != null) {
-      
+            if (eFrame < 2 && !skill.hasPlayedSound()) {
+                URL soundURL = getClass().getResource("/asset/resources/sfx/eggSplat.wav");
+                if (soundURL != null) {
+                    soundController.playSoundEffect(soundURL.getPath());
+                    skill.setHasPlayedSound(true); // Đánh dấu đã phát âm thanh
+                } else {
+                    System.err.println("Không tìm thấy tệp âm thanh: /asset/resources/sfx/eggSplat.wav");
+                }
+            }
+
             int[] eggFrame = EggSprites.get(eFrame);
             int ex = eggFrame[0], ey = eggFrame[1], ew = eggFrame[2], eh = eggFrame[3];
 
@@ -236,10 +235,4 @@ public class EnemySkillsView {
 
         g2d.dispose();
     }
-
-//    private int frameIndex = 0;
-//
-//    private void updateFrameIndex() {
-//        frameIndex = (frameIndex + 1) % FireballSprites.size();
-//    }
 }
