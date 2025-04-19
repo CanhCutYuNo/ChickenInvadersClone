@@ -69,6 +69,7 @@ public class CollisionManager {
                         enemyController.takeDamage(j, bullet.getDamage(), hitSounds, deathSounds);
                     } else {
                         enemyController.takeDamage(j, bullet.getDamage(), null, null);
+                        soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggshellCrack.wav").getPath());                        
                     }
                     bulletController.removeBullet(i);
                     if (enemy.isDead()) {
