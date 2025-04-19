@@ -84,7 +84,7 @@ public class Level1Manager extends LevelManager {
             }
         }
 
-        updateRows(deltaTime); // Cập nhật hàng (đặt lại posY).
+        updateRows(deltaTime); // Cập nhật hàng (đặt lại posY). 
 
         // Debug cuối: Kiểm tra posY sau updateRows.
         for (Enemy enemy : enemyController.getEnemyModels()) {
