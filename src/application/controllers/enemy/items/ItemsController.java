@@ -8,7 +8,7 @@ import java.util.List;
 import application.models.enemy.Items;
 import application.views.enemy.ItemsView;
 
-public class ItemsController implements IItemsController {
+public class ItemsController {
     private List<ItemUnit> itemUnits;
     private boolean atomDropped = false;
 
@@ -18,13 +18,11 @@ public class ItemsController implements IItemsController {
         atomDropped = false;
     }
 
-    @Override
     public void addItem(int x, int y, int damage, Items.ItemType type) {
         Items item = new Items(x, y, damage, type);
         itemUnits.add(new ItemUnit(item));
     }
 
-    @Override
     public void updateItems() {
         Iterator<ItemUnit> iterator = itemUnits.iterator();
         while (iterator.hasNext()) {
@@ -36,14 +34,12 @@ public class ItemsController implements IItemsController {
         }
     }
 
-    @Override
     public void drawItems(Graphics g) {
         for (ItemUnit unit : itemUnits) {
             unit.draw(g);
         }
     }
 
-    @Override
     public Iterator<Items> iterator() {
         List<Items> itemsOnly = new ArrayList<>();
         for (ItemUnit unit : itemUnits) {

@@ -29,9 +29,9 @@ public class BulletView {
     public void render(Graphics g) {
         // Kiểm tra loại bullet và vẽ hình ảnh tương ứng
         if (bullet.getType() == Bullet.BulletType.NORMAL) {
-            g.drawImage(imageBullet, bullet.getX(), bullet.getY(), null);
+            g.drawImage(imageBullet, bullet.getX() - 17, bullet.getY(), null);
         } else if (bullet.getType() == Bullet.BulletType.DOUBLE) {
-            g.drawImage(imageDoubleBullet, bullet.getX(), bullet.getY(), null);
+            g.drawImage(imageDoubleBullet, bullet.getX() - 17, bullet.getY(), null);
         }
     }
 }
