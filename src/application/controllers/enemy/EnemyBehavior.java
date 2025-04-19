@@ -1,7 +1,7 @@
-package application.controllers;
+package application.controllers.enemy;
 
-import application.models.Enemy;
-import application.models.EnemySkills.SkillType;
+import application.models.enemy.Enemy;
+import application.models.enemy.EnemySkills.SkillType;
 
 import java.awt.Rectangle;
 

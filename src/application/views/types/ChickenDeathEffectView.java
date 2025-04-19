@@ -4,14 +4,15 @@
  */
 package application.views.types;
 
-import application.models.DeathEffect;
-import application.models.types.ChickDeathEffect;
-import application.models.types.ChickenDeathEffect;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Random;
+
 import javax.swing.ImageIcon;
+
+import application.models.enemy.DeathEffect;
+import application.models.enemy.types.ChickenDeathEffect;
 
 /**
  *

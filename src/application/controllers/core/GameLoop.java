@@ -1,8 +1,9 @@
-package application.controllers;
+package application.controllers.core;
 
 import javax.swing.JFrame;
 import javax.swing.Timer;
-import application.views.GamePanel;
+
+import application.views.panels.GamePanel;
 
 public class GameLoop {
 
@@ -92,5 +93,9 @@ public class GameLoop {
 
     public int getTPS() {
         return tps;
+    }
+    
+    public Manager getManager() {
+    	return gameManager;
     }
 }
