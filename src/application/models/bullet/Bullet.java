@@ -5,13 +5,19 @@ public class Bullet {
     private int damage;
     private double speedY;
     private double acceleration;
+    public enum BulletType{
+        NORMAL, DOUBLE
+    }
 
-    public Bullet(int x, int y, int damage, double initialSpeedY, double acceleration) {
+    private BulletType type;
+
+    public Bullet(int x, int y, int damage, double initialSpeedY, double acceleration, BulletType type) {
         this.x = x;
         this.y = y;
         this.damage = damage;
         this.speedY = initialSpeedY;
         this.acceleration = acceleration;
+        this.type = type;
     }
 
     public int getX() {
@@ -34,6 +40,8 @@ public class Bullet {
         return damage;
     }
 
+    public void setDamage(int damage){this.damage = damage;}
+
     public double getSpeedY() {
         return speedY;
     }
@@ -49,4 +57,11 @@ public class Bullet {
     public void setAcceleration(double acceleration) {
         this.acceleration = acceleration;
     }
+
+    public void transformToStrongerBullet() {
+        this.type = BulletType.DOUBLE;
+        this.setDamage(this.getDamage() * 2);  // Tăng sát thương lên gấp đôi
+    }
+
+    public BulletType getType(){return type;}
 }

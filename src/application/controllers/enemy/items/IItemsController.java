@@ -8,6 +8,6 @@ import application.models.enemy.Items;
 public interface IItemsController {
     void updateItems();
     void drawItems(Graphics g);
-    void addItem(int x, int y, int damage);
+    void addItem(int x, int y, int damage, Items.ItemType type);
     Iterator<Items> iterator();
 }
