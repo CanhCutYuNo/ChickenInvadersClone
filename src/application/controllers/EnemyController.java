@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import application.controllers.enemy.EnemyBehavior;
 import application.controllers.types.ChickEnemy;
 import application.controllers.types.ChickenBoss;
 import application.controllers.types.ChickenEnemy;
@@ -24,6 +25,8 @@ public class EnemyController {
     private SoundController soundController;
     private Map<Enemy.EnemyType, EnemyBehavior> behaviors;
     private Random random;
+    private EnemySkillsController skillsManager;
+    private List<EnemyDeathListener> deathListeners = new ArrayList<>();
 
     public EnemyController(SoundController soundController) {
         this.enemyModels = new ArrayList<>();
@@ -41,6 +44,10 @@ public class EnemyController {
         enemyModels.add(enemyModel);
         enemyViews.add(enemyView);
     }
+    
+    public void addDeathListener(EnemyDeathListener listener) {
+        deathListeners.add(listener);
+    }
 
     public void update() {
         for (int i = 0; i < enemyModels.size(); i++) {
@@ -49,57 +56,48 @@ public class EnemyController {
             if (behavior != null) {
                 behavior.update(enemy);
                 if (enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
-                    ((ChickenEnemy) behavior).createEggs(enemy, skillsManager); // skillsManager cần được truyền vào
+                    ((ChickenEnemy) behavior).createEggs(enemy, skillsManager);
                 }
             }
-            nextFrame(enemy);
         }
     }
-
-    private void nextFrame(Enemy enemy) {
-        if (enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS) {
-            return; // ChickenBossBehavior đã xử lý frame
-        }
-        if (enemy.getType() == Enemy.EnemyType.CHICK_ENEMY) {
-            ChickEnemy behavior = (ChickEnemy) behaviors.get(Enemy.EnemyType.CHICK_ENEMY);
-            behavior.nextFrame(enemy);
-            return;
-        }
-        if (enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
-            ChickenEnemy behavior = (ChickenEnemy) behaviors.get(Enemy.EnemyType.CHICKEN_ENEMY);
-            behavior.nextFrame(enemy);
-            return;
-        }
-        if (enemy.isForward()) {
-            enemy.setCurFrame(enemy.getCurFrame() + 1);
-            if (enemy.getCurFrame() >= 48) {
-                enemy.setForward(false);
-            }
-        } else {
-            enemy.setCurFrame(enemy.getCurFrame() - 1);
-            if (enemy.getCurFrame() <= 0) {
-                enemy.setForward(true);
+    
+    public void checkAndNotifyDeaths() {
+        for (int i = enemyModels.size() - 1; i >= 0; i--) {
+            Enemy enemy = enemyModels.get(i);
+            if (enemy.isDead()) {
+                // Phát sự kiện trước khi xóa
+                for (EnemyDeathListener listener : deathListeners) {
+                    listener.onEnemyDeath(enemy, i);
+                }
+                getDeathEffect(i);
+                removeEnemy(i);
             }
         }
     }
 
     public void takeDamage(int index, int damage, String[] hitSounds, String[] deathSounds) {
+        if (index < 0 || index >= enemyModels.size()) {
+            return;
+        }
         Enemy enemy = enemyModels.get(index);
         enemy.setHp(enemy.getHp() - damage);
-        if (hitSounds != null && hitSounds.length != 0) {
+        if (hitSounds != null && hitSounds.length > 0) {
             soundController.playSoundEffect(getClass().getResource(hitSounds[random.nextInt(hitSounds.length)]).getPath());
         }
         if (enemy.isDead()) {
-            String deathSound = (enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS) 
-                ? "/asset/resources/sfx/death1.wav" 
-                : deathSounds[random.nextInt(deathSounds.length)];
-            if (deathSounds != null && deathSounds.length != 0) {
+            String deathSound = (deathSounds != null && deathSounds.length > 0) ? deathSounds[random.nextInt(deathSounds.length)] : null;
+            if (deathSound != null) {
                 soundController.playSoundEffect(getClass().getResource(deathSound).getPath());
             }
         }
+        checkAndNotifyDeaths();
     }
 
     public DeathEffect getDeathEffect(int index) {
+        if (index < 0 || index >= enemyModels.size()) {
+            return null;
+        }
         Enemy enemy = enemyModels.get(index);
         if (enemy.getType() == Enemy.EnemyType.CHICK_ENEMY) {
             return new ChickDeathEffect(enemy.getCenterX(), enemy.getCenterY());
@@ -110,6 +108,9 @@ public class EnemyController {
     }
 
     public Rectangle getHitbox(int index) {
+        if (index < 0 || index >= enemyModels.size()) {
+            return null;
+        }
         Enemy enemy = enemyModels.get(index);
         EnemyBehavior behavior = behaviors.get(enemy.getType());
         if (behavior != null) {
@@ -119,6 +120,9 @@ public class EnemyController {
     }
 
     public void addSkills(int index, SkillType skillType, String imagePath) {
+        if (index < 0 || index >= enemyModels.size()) {
+            return;
+        }
         Enemy enemy = enemyModels.get(index);
         EnemyBehavior behavior = behaviors.get(enemy.getType());
         if (behavior != null) {
@@ -147,6 +151,9 @@ public class EnemyController {
     }
 
     public void createHoleSkill(int index, EnemySkillsController skillsManager) {
+        if (index < 0 || index >= enemyModels.size()) {
+            return;
+        }
         Enemy enemy = enemyModels.get(index);
         if (enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS && enemy.shouldCreateHole()) {
             skillsManager.addSkill(1920 / 2, 1080 / 2, 0, 5000, SkillType.HOLE);
@@ -156,6 +163,9 @@ public class EnemyController {
     }
 
     public void createFireballBurst(int index, EnemySkillsController skillsManager) {
+        if (index < 0 || index >= enemyModels.size()) {
+            return;
+        }
         Enemy enemy = enemyModels.get(index);
         if (enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS && enemy.shouldCreateFireballBurst()) {
             double centerX = 1920 / 2;
@@ -179,10 +189,11 @@ public class EnemyController {
         }
     }
 
-    // skillsManager cần được thêm vào constructor hoặc setter
-    private EnemySkillsController skillsManager;
-
     public void setSkillsManager(EnemySkillsController skillsManager) {
         this.skillsManager = skillsManager;
     }
+
+	public EnemySkillsController getSkillsManager() {
+		return skillsManager;
+	}
 }
