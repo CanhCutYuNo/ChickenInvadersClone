@@ -2,6 +2,7 @@ package application.views.enemy;
 
 import javax.swing.*;
 
+import application.controllers.util.ImageCache;
 import application.models.enemy.Enemy;
 
 import java.awt.*;
@@ -22,6 +23,7 @@ public class EnemyView {
     private int[] headSprite;
     private List<int[]> wingSprites;
     private int[][] wingOffsets;
+    private ImageCache imageCache = ImageCache.getInstance();
 
     private static final int[][] SPRITE_HEAD = {{195, 93, 30, 45}};
     private static final int[][] SPRITE_BODY = {
@@ -100,10 +102,10 @@ public class EnemyView {
         if (enemyModel.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
             Image[] chickenImages = new Image[4];
             try {
-                chickenImages[0] = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-body-stripes.png")).getImage();
-                chickenImages[1] = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-wings.png")).getImage();
-                chickenImages[2] = new ImageIcon(getClass().getResource("/asset/resources/gfx/chicken-face.png")).getImage();
-                chickenImages[3] = new ImageIcon(getClass().getResource("/asset/resources/gfx/chickenBlink.png")).getImage();
+                chickenImages[0] = imageCache.getResourceImage("/asset/resources/gfx/chicken-body-stripes.png");
+                chickenImages[1] = imageCache.getResourceImage("/asset/resources/gfx/chicken-wings.png");
+                chickenImages[2] = imageCache.getResourceImage("/asset/resources/gfx/chicken-face.png");
+                chickenImages[3] = imageCache.getResourceImage("/asset/resources/gfx/chickenBlink.png");
             } catch (Exception e) {
                 System.out.println("Error: Could not load chicken images");
                 e.printStackTrace();
@@ -112,7 +114,7 @@ public class EnemyView {
         } else if (enemyModel.getType() == Enemy.EnemyType.EGG_SHELL_ENEMY) {
             Image[] eggShellImages = new Image[1];
             try {
-                eggShellImages[0] = new ImageIcon(getClass().getResource("/asset/resources/gfx/eggShell.png")).getImage();
+                eggShellImages[0] = imageCache.getResourceImage("/asset/resources/gfx/eggShell.png");
             } catch (Exception e) {
                 System.out.println("Error: Could not load egg shell sprite sheet");
                 e.printStackTrace();
@@ -121,7 +123,7 @@ public class EnemyView {
         } else if (enemyModel.getType() == Enemy.EnemyType.CHICKEN_BOSS) {
             Image[] bossImages = new Image[1];
             try {
-                bossImages[0] = new ImageIcon(getClass().getResource("/asset/resources/gfx/boss.png")).getImage();
+                bossImages[0] = imageCache.getResourceImage("/asset/resources/gfx/boss.png");
             } catch (Exception e) {
                 System.out.println("Error: Could not load boss sprite sheet");
                 e.printStackTrace();
@@ -130,7 +132,7 @@ public class EnemyView {
         } else if (enemyModel.getType() == Enemy.EnemyType.CHICK_ENEMY) {
             Image[] chickImages = new Image[1];
             try {
-                chickImages[0] = new ImageIcon(getClass().getResource("/asset/resources/gfx/chick.png")).getImage();
+                chickImages[0] = imageCache.getResourceImage("/asset/resources/gfx/chick.png");
             } catch (Exception e) {
                 System.out.println("Error: Could not load chick sprite sheet");
                 e.printStackTrace();
@@ -287,8 +289,7 @@ public class EnemyView {
 
                 // Vẽ sprite boss
                 g.drawImage(bossImages[0],
-                        enemyModel.getPosX(), enemyModel.getPosY(),
-                        enemyModel.getPosX() + spriteWidth, enemyModel.getPosY() + spriteHeight,
+                    enemyModel.getPosX() - 300, enemyModel.getPosY() - 50, enemyModel.getPosX() + enemyModel.getModelWidth() + 300, enemyModel.getPosY() + enemyModel.getModelHeight() + 100,
                         spriteX, spriteY,
                         spriteX + spriteWidth, spriteY + spriteHeight, null);
 
@@ -312,5 +313,7 @@ public class EnemyView {
                 g2d.dispose();
             }
         }
+        g.setColor(Color.WHITE);
+        g.drawRect(enemyModel.getPosX(), enemyModel.getPosY(), enemyModel.getModelWidth(), enemyModel.getModelHeight());
     }
 }

@@ -16,7 +16,7 @@ public class Level5Manager extends LevelManager {
 
     @Override
     protected void initEnemies() {
-        Enemy model = new Enemy(1000, 500, SCREEN_WIDTH / 2 - 250, 3000, 0, Enemy.EnemyType.CHICKEN_BOSS);
+        Enemy model = new Enemy(450, 600, SCREEN_WIDTH / 2 - 250, 3000, 0, Enemy.EnemyType.CHICKEN_BOSS);
         model.getSkills().put(SkillType.FIREBALL, "/asset/resources/gfx/fireball.png");
         model.getSkills().put(SkillType.HOLE, "/asset/resources/gfx/hole.png");
         EnemyView view = new EnemyView(model);

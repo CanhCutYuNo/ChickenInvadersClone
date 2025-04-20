@@ -6,10 +6,13 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.Rectangle;
+
 
 import javax.swing.ImageIcon;
 
 import application.controllers.player.PlayerController;
+import application.controllers.util.ImageCache;
 
 public class PlayerView {
 
@@ -17,7 +20,7 @@ public class PlayerView {
     private Image exhaustImage;
     private Image explosionSheet;
     private PlayerController playerController;
-  
+    private ImageCache imageCache = ImageCache.getInstance();
 
     private int[][] spriteData = {
         {1, 1135, 104, 114}, {1, 1019, 104, 114}, {1, 903, 104, 114},
@@ -54,9 +57,9 @@ public class PlayerView {
         this.playerController = _playerController;
 
         try {
-            spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/spaceship.png")).getImage();
-            exhaustImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/exhaust4.png")).getImage();
-            explosionSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/explosion4.png")).getImage();
+            spriteSheet = imageCache.getResourceImage("/asset/resources/gfx/spaceship.png");
+            exhaustImage = imageCache.getResourceImage("/asset/resources/gfx/exhaust4.png");
+            explosionSheet = imageCache.getResourceImage("/asset/resources/gfx/explosion4.png");
         } catch (Exception e) {
             System.out.println("Error: Could not load player sprite sheet or exhaust image.");
             e.printStackTrace();
@@ -130,7 +133,7 @@ public class PlayerView {
             g.setColor(Color.RED);
             g.fillRect(playerController.getPosX(), playerController.getPosY(), 64, 64);
         }
-//        // Vẽ hitbox
+        // Vẽ hitbox
 //        Graphics2D g2d = (Graphics2D) g;
 //        g2d.setColor(Color.RED);
 //        Rectangle hitbox = playerController.getHitbox();

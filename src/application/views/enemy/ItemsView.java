@@ -51,15 +51,22 @@ public class ItemsView {
     }
 
     public void draw(Graphics g, Items item) {
-        if (items.getType() == Items.ItemType.ATOM && atomSprites != null) {
+        if (item.getType() == Items.ItemType.ATOM && atomSprites != null) {
             frameCounter++;
             if (frameCounter >= FRAME_DELAY) {
                 currentFrame = (currentFrame + 1) % atomSprites.length;
                 frameCounter = 0;
             }
             g.drawImage(atomSprites[currentFrame], (int) item.getPosX(), (int) item.getPosY(), null);
-        } else if (items.getType() == Items.ItemType.FOOD && itemImage != null) {
+        } else if (item.getType() == Items.ItemType.FOOD && itemImage != null) {
             g.drawImage(itemImage, (int) item.getPosX(), (int) item.getPosY(), null);
+
+            // ✅ Vẽ hitbox 
+//            Rectangle hitbox = item.getHitbox();
+//            g.setColor(Color.RED);
+//            g.drawRect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
         }
     }
+
+    
 }

@@ -19,6 +19,7 @@ import application.controllers.enemy.death.DeathEffectController;
 import application.controllers.enemy.items.ItemsController;
 import application.controllers.enemy.skills.EnemySkillsController;
 import application.controllers.level.ILevelManager;
+import application.controllers.util.ImageCache;
 import application.controllers.util.ScreenUtil;
 import application.models.bullet.BulletDame;
 import application.views.bullet.BulletView;
@@ -35,6 +36,7 @@ public class GameRenderer {
     private final ScreenUtil screenUtil;
     private final Image hudBar;
     private final Font font;
+    private ImageCache imageCache = ImageCache.getInstance();
 
     private BufferedImage levelImage;
     private BufferedImage gameOverImage;
@@ -52,7 +54,7 @@ public class GameRenderer {
         this.playerView = playerView;
         this.screenUtil = ScreenUtil.getInstance();
 
-        this.hudBar = new ImageIcon(getClass().getResource("/asset/resources/gfx/infohud.png")).getImage();
+        this.hudBar = imageCache.getResourceImage("/asset/resources/gfx/infohud.png");
         this.font = new Font("Arial", Font.BOLD, 24);
 
         this.currentLevel = gameStates.getLevel();

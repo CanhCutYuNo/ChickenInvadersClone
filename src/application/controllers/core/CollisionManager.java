@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.List;
+import java.util.ArrayList;
+
 
 import application.controllers.bullet.BulletController;
 import application.controllers.enemy.EnemyController;
@@ -67,9 +70,20 @@ public class CollisionManager {
                     spawnFloatingText(enemy.getPosX() - 2, enemy.getPosY(), "- " + String.valueOf(bullet.getDamage()), Color.RED);
                     if (enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY || enemy.getType() == Enemy.EnemyType.CHICK_ENEMY) {
                         enemyController.takeDamage(j, bullet.getDamage(), hitSounds, deathSounds);
-                    } else {
+                    } 
+                    else if (enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS){
                         enemyController.takeDamage(j, bullet.getDamage(), null, null);
-                        soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggshellCrack.wav").getPath());                        
+                        soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/impactMetal2a.wav").getPath());    
+                        if (enemy.isDead()) {
+                            soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/(chickbossdie).wav").getPath());    
+                        }
+                    }
+                    else {
+                        enemyController.takeDamage(j, bullet.getDamage(), null, null);
+                        soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggshellCrack.wav").getPath());      
+                        if (enemy.isDead()) {
+                            soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggshellBreak.wav").getPath());    
+                        }
                     }
                     bulletController.removeBullet(i);
                     if (enemy.isDead()) {
@@ -113,23 +127,31 @@ public class CollisionManager {
     }
 
     private void checkPlayerCollisionsWithItems() {
-        Iterator<Items> iterator = itemsController.iterator();
-        while (iterator.hasNext()) {
-            Items item = iterator.next();
+        List<ItemsController.ItemUnit> toRemove = new ArrayList<>();
+        boolean soundPlayed = false;
+
+        for (ItemsController.ItemUnit unit : itemsController.getItemUnits()) {
+            Items item = unit.model;
+
             if (isColliding(playerController, item)) {
-                if(item.getType() == Items.ItemType.FOOD){
+                if (item.getType() == Items.ItemType.FOOD) {
                     playerController.isDamaged(item.getDamage());
-                    spawnFloatingText(playerController.getPosX(), playerController.getPosY() - 10, "+ " + String.valueOf(Math.abs(item.getDamage())), Color.GREEN);
+
+                    spawnFloatingText(playerController.getPosX(), playerController.getPosY() - 10,"+ " + Math.abs(item.getDamage()), Color.GREEN);
                     gameStates.setFoodCounts(gameStates.getFoodCounts() + 1);
-                }
-                else{
+                    soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/(eating1).wav").getPath());
+
+                } else {
                     isCollidingAtom = true;
+                    soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/keyCollect.wav").getPath());
                 }
-                soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/(eating1).wav").getPath());
-                iterator.remove();
+                toRemove.add(unit);
             }
         }
+
+        itemsController.removeItems(toRemove);
     }
+
 
     private void checkPlayerCollisionsWithEnemies() {
         for (int i = 0; i < enemyController.getEnemyModels().size(); i++) {
