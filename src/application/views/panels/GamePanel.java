@@ -33,6 +33,7 @@ public class GamePanel extends JPanel {
     private boolean isGameOver = false;
     private boolean isPlayerExploding = false;
     private boolean isPlayerDead = false;
+    private boolean isVictory = false; // Biến mới cho trạng thái Victory
 
     public GamePanel(Manager gameManager) {
         this.gameManager = gameManager;
@@ -46,7 +47,8 @@ public class GamePanel extends JPanel {
             gameManager.getItemsController(),
             gameManager.getGameStateController(),
             gameManager.getPlayerView(),
-            ScreenUtil.getInstance()
+            ScreenUtil.getInstance(),
+            this // Truyền GamePanel vào GameRenderer
         );
 
         hideCursor();
@@ -79,14 +81,14 @@ public class GamePanel extends JPanel {
 
         if(isTransitionTriggered && showTransition) {
             fadeTime += (float) deltaTime;
-            System.out.println("Fade: alpha=" + alpha + ", fadeIn=" + fadeIn + ", fadeTime=" + fadeTime + ", isGameOver=" + isGameOver);
+            System.out.println("Fade: alpha=" + alpha + ", fadeIn=" + fadeIn + ", fadeTime=" + fadeTime + ", isGameOver=" + isGameOver + ", isVictory=" + isVictory);
             if(fadeIn) {
                 alpha = Math.min(1.0f, fadeTime / FADE_DURATION);
                 if(alpha >= 1.0f) {
                     fadeIn = false;
                     fadeTime = 0f;
 
-                    if(!isGameOver && !enemiesPrepared && gameManager != null) {
+                    if(!isGameOver && !isVictory && !enemiesPrepared && gameManager != null) {
                         gameManager.spawnEnemiesAfterFade();
                         enemiesPrepared = true;
                     }
@@ -106,6 +108,12 @@ public class GamePanel extends JPanel {
                             if(gameManager != null) {
                                 gameManager.getGameStateHandler().restartGame();
                             }
+                        } else if(isVictory) {
+                            isVictory = false;
+                            isPlayerDead = false;
+                            if(gameManager != null) {
+                                gameManager.getGameStateHandler().restartGame();
+                            }
                         } else {
                             if(gameManager != null) {
                                 gameManager.onTransitionComplete();
@@ -116,20 +124,22 @@ public class GamePanel extends JPanel {
             }
         }
 
-        if(!isGameOver && !isTransitionTriggered && gameManager != null && gameManager.getPlayerView() != null
-                && gameManager.getPlayerView().getPlayer() != null
-                && gameManager.getPlayerView().getPlayer().getHP() <= 0) {
-            System.out.println("HP <= 0, isExploding=" + gameManager.getPlayerView().isExploding() + ", isPlayerExploding=" + isPlayerExploding);
-            if(gameManager.getPlayerView().isExploding()) {
-                isPlayerExploding = true;
-                isPlayerDead = true;
-            } else if(isPlayerExploding) {
-                triggerGameOver();
-                isPlayerExploding = false;
+        if(!isGameOver && !isVictory && !isTransitionTriggered && gameManager != null && gameManager.getPlayerView() != null
+                && gameManager.getPlayerView().getPlayer() != null) {
+            if(gameManager.getPlayerView().getPlayer().getHP() <= 0) {
+                if(gameManager.getPlayerView().isExploding()) {
+                    isPlayerExploding = true;
+                    isPlayerDead = true;
+                } else if(isPlayerExploding) {
+                    triggerGameOver();
+                    isPlayerExploding = false;
+                }
+            } else if(gameManager.getGameStateController().getLevel() >= 6) {
+                triggerVictory();
             }
         }
 
-        if(transitionComplete && !isGameOver) {
+        if(transitionComplete && !isGameOver && !isVictory) {
             gameManager.update(deltaTime);
         }
     }
@@ -148,19 +158,38 @@ public class GamePanel extends JPanel {
         this.transitionComplete = false;
     }
 
+    public void triggerVictory() {
+        if(paused) {
+            return;
+        }
+        System.out.println("Triggering Victory");
+        this.isVictory = true;
+        this.isPlayerDead = true; // Ngăn render người chơi
+        this.isTransitionTriggered = true;
+        this.showTransition = true;
+        this.fadeIn = true;
+        this.fadeTime = 0f;
+        this.alpha = 0f;
+        this.transitionComplete = false;
+    }
+
     public boolean isPlayerDead() {
         return isPlayerDead;
+    }
+
+    public boolean isVictory() {
+        return isVictory;
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         gameRenderer.setLevelManager(gameManager.getLevelManager());
-        gameRenderer.render(g, transitionComplete, showTransition, alpha, isGameOver, isPlayerDead, getWidth(), getHeight());
+        gameRenderer.render(g, transitionComplete, showTransition, alpha, isGameOver, isVictory, getWidth(), getHeight());
     }
 
     public void triggerTransition() {
-        if(paused || isGameOver) {
+        if(paused || isGameOver || isVictory) {
             return;
         }
         this.isTransitionTriggered = true;
