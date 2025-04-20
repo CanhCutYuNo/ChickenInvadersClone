@@ -69,7 +69,8 @@ public class CollisionManager {
                     spawnFloatingText(enemy.getPosX() - 2, enemy.getPosY(), "- " + String.valueOf(bullet.getDamage()), Color.RED);
                     if (enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY || enemy.getType() == Enemy.EnemyType.CHICK_ENEMY) {
                         enemyController.takeDamage(j, bullet.getDamage(), hitSounds, deathSounds);
-                    } if (enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS){
+                    } 
+                    else if (enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS){
                         enemyController.takeDamage(j, bullet.getDamage(), null, null);
                         soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/impactMetal2a.wav").getPath());    
                         if (enemy.isDead()) {
@@ -78,7 +79,10 @@ public class CollisionManager {
                     }
                     else {
                         enemyController.takeDamage(j, bullet.getDamage(), null, null);
-                        soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggshellCrack.wav").getPath());                        
+                        soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggshellCrack.wav").getPath());      
+                        if (enemy.isDead()) {
+                            soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggshellBreak.wav").getPath());    
+                        }
                     }
                     bulletController.removeBullet(i);
                     if (enemy.isDead()) {
@@ -152,6 +156,7 @@ public class CollisionManager {
         for (int i = 0; i < enemyController.getEnemyModels().size(); i++) {
             if (isColliding(playerController, i)) {
                 if (!gameStates.isPlayerExploded()) {
+                	playerController.setHP(-1);
                     playerController.getPlayerView().startExplosion();
                     soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/explosionPlayer.wav").getPath());
                     gameStates.setPlayerExploded(true);

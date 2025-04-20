@@ -36,8 +36,8 @@ public class GameStateHandler {
         playerController.setPosY(950);
         bullets.clear();
         levelManager = null;
+        playerController.setHP(100);
         viewController.showMenu();
-        playerController.setHP();
     }
 
     public void load() {
@@ -48,7 +48,7 @@ public class GameStateHandler {
         this.levelManager = levelManager;
     }
 
-	public ILevelManager getLevelManager() {
-		return levelManager;
-	}
+    public ILevelManager getLevelManager() {
+        return levelManager;
+    }
 }

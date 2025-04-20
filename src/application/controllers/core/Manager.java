@@ -85,6 +85,10 @@ public class Manager {
     public GameStateController getGameStateController() { // Thêm getter cho GameStateController
         return gameStateController;
     }
+    
+    public GameStateHandler getGameStateHandler() {
+    	return gameStateHandler;
+    }
 
     public BulletController getBulletController() {
         return bullets;
@@ -125,9 +129,6 @@ public class Manager {
     public void update(double deltaTime) {
         if (playerView.isExploding()) {
             playerView.updateExplosion();
-            if (52 < playerView.getExFrame()) {
-            	gameStateHandler.restartGame();
-            }
             return;
         }
         

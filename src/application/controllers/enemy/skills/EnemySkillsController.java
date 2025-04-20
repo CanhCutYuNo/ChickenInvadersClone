@@ -63,6 +63,7 @@ public class EnemySkillsController {
 
     public void clear() {
         skills.clear();
+        view.clear();
     }
 
 	

@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.Rectangle;
+
 
 import javax.swing.ImageIcon;
 
@@ -131,7 +133,7 @@ public class PlayerView {
             g.setColor(Color.RED);
             g.fillRect(playerController.getPosX(), playerController.getPosY(), 64, 64);
         }
-//        // Vẽ hitbox
+        // Vẽ hitbox
 //        Graphics2D g2d = (Graphics2D) g;
 //        g2d.setColor(Color.RED);
 //        Rectangle hitbox = playerController.getHitbox();

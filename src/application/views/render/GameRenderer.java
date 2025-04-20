@@ -39,6 +39,7 @@ public class GameRenderer {
     private ImageCache imageCache = ImageCache.getInstance();
 
     private BufferedImage levelImage;
+    private BufferedImage gameOverImage;
     private int currentLevel;
 
     public GameRenderer(BulletController bulletController, EnemySkillsController skillsManager, ILevelManager levelManager,
@@ -58,58 +59,67 @@ public class GameRenderer {
 
         this.currentLevel = gameStates.getLevel();
         loadLevelImage();
+        loadGameOverImage();
     }
 
-    public void render(Graphics g, boolean transitionComplete, boolean showTransition, float alpha, int panelWidth, int panelHeight) {
+    public void render(Graphics g, boolean transitionComplete, boolean showTransition, float alpha, 
+                      boolean isGameOver, boolean isPlayerDead, int panelWidth, int panelHeight) {
         Graphics2D g2d = (Graphics2D) g;
 
         g2d.scale(screenUtil.getWidth() / 1920f / screenUtil.getScaleX(),
-                screenUtil.getHeight() / 1080f / screenUtil.getScaleY());
+                  screenUtil.getHeight() / 1080f / screenUtil.getScaleY());
 
-        if(showTransition && levelImage != null) {
+        if(showTransition) {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-            int x = (1920 - levelImage.getWidth()) / 2;
-            int y = (1080 - levelImage.getHeight()) / 2;
-            g2d.drawImage(levelImage, x, y, levelImage.getWidth(), levelImage.getHeight(), null);
+            if(isGameOver && gameOverImage != null) {
+                System.out.println("Drawing gameOverImage: alpha=" + alpha + ", width=" + gameOverImage.getWidth() + ", height=" + gameOverImage.getHeight());
+                int x = (1920 - gameOverImage.getWidth()) / 2;
+                int y = (1080 - gameOverImage.getHeight()) / 2;
+                g2d.drawImage(gameOverImage, x, y, gameOverImage.getWidth(), gameOverImage.getHeight(), null);
+            } else if(levelImage != null) {
+                int x = (1920 - levelImage.getWidth()) / 2;
+                int y = (1080 - levelImage.getHeight()) / 2;
+                g2d.drawImage(levelImage, x, y, levelImage.getWidth(), levelImage.getHeight(), null);
+            }
         }
 
-        if(transitionComplete) {
+        if(transitionComplete && !isGameOver) {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-
-            
             renderBullet(g);
             skillsManager.drawSkills(g);
-
             if(levelManager != null) {
                 levelManager.render(g);
             }
-
             deathEffectController.render(g);
-
             itemsController.drawItems(g);
-
             for(BulletDame text : gameStates.getFloatingTexts()) {
                 text.render(g);
             }
         }
 
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-        renderPlayer(g);
-        drawHUD(g, panelWidth, panelHeight);
+        if(!isGameOver && !isPlayerDead) {
+            renderPlayer(g);
+            drawHUD(g, panelWidth, panelHeight);
+        }
+        renderPlayerExploding(g);
 
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
         g2d.dispose();
     }
 
     private void renderPlayer(Graphics g) {
-        if (playerView.isExploding()) {
-            playerView.explosionRender(g);
-        } else {
-            playerView.render(g);
-        }
+        playerView.render(g);
     }
     
+    private void renderPlayerExploding(Graphics g) {
+        if(playerView.isExploding()) {
+            playerView.explosionRender(g);
+        }
+    }
+
     private void renderBullet(Graphics g) {
-    	for (BulletView bulletView : bulletController.getBulletViews()) {
+        for (BulletView bulletView : bulletController.getBulletViews()) {
             bulletView.render(g);
         }
     }
@@ -123,14 +133,14 @@ public class GameRenderer {
         g.setColor(Color.WHITE);
 
         var player = playerView.getPlayer();
-        if (player != null) {
+        if(player != null) {
             g.drawString(" " + player.getHP(), hudX + 140, hudY + 65);
             g.drawString(" " + gameStates.getFoodCounts(), hudX + 450, hudY + 65);
         }
     }
 
     public void updateLevel(int newLevel) {
-        if (newLevel != currentLevel) {
+        if(newLevel != currentLevel) {
             this.currentLevel = newLevel;
             loadLevelImage();
         }
@@ -139,7 +149,7 @@ public class GameRenderer {
     private void loadLevelImage() {
         try {
             File imageFile = new File("src/asset/resources/gfx/wave" + currentLevel + ".png");
-            if (imageFile.exists()) {
+            if(imageFile.exists()) {
                 levelImage = ImageIO.read(imageFile);
             } else {
                 levelImage = new BufferedImage(400, 200, BufferedImage.TYPE_INT_ARGB);
@@ -150,7 +160,20 @@ public class GameRenderer {
         }
     }
 
-	public void setLevelManager(ILevelManager levelManager) {
-		this.levelManager = levelManager;
-	}
+    private void loadGameOverImage() {
+        try {
+            gameOverImage = ImageIO.read(getClass().getResource("/asset/resources/gfx/gameover.png"));
+            if(gameOverImage == null) {
+                System.out.println("Failed to load gameOverImage");
+                gameOverImage = new BufferedImage(400, 200, BufferedImage.TYPE_INT_ARGB);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            gameOverImage = new BufferedImage(400, 200, BufferedImage.TYPE_INT_ARGB);
+        }
+    }
+
+    public void setLevelManager(ILevelManager levelManager) {
+        this.levelManager = levelManager;
+    }
 }

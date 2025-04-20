@@ -243,4 +243,12 @@ public class EnemySkillsView {
 
         g2d.dispose();
     }
+
+	public void clear() {
+		EggSprites.clear();
+        EggSprites = new ArrayList<>();
+        for (int[] frame : EggBrokenSprite) {
+            EggSprites.add(frame);
+        }
+	}
 }
