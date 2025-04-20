@@ -58,10 +58,10 @@ public class CollisionManager {
     private void checkBulletEnemyCollisions() {
         for (int i = bulletController.getBullets().size() - 1; i >= 0; i--) {
             Bullet bullet = bulletController.getBullets().get(i);
-            if(isCollidingAtom){
+            if(isCollidingAtom && bullet.getType() == Bullet.BulletType.NORMAL){
                 bullet.transformToStrongerBullet();
-                bulletController.removeBullet(i);
-                bulletController.addBullet(bullet.getX(), bullet.getY(), bullet.getDamage(), bullet.getSpeedY(), bullet.getAcceleration(),bullet.getType());
+//                bulletController.removeBullet(i);
+//                bulletController.addBullet(bullet.getX(), bullet.getY(), bullet.getDamage(), bullet.getSpeedY(), bullet.getAcceleration(),bullet.getType());
             }
             for (int j = enemyController.getEnemyModels().size() - 1; j >= 0; j--) {
                 if (isColliding(bullet, j)) {
