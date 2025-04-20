@@ -83,7 +83,6 @@ public class GamePanel extends JPanel {
 
         if(isTransitionTriggered && showTransition) {
             fadeTime += (float) deltaTime;
-            System.out.println("Fade: alpha=" + alpha + ", fadeIn=" + fadeIn + ", fadeTime=" + fadeTime + ", isGameOver=" + isGameOver + ", isVictory=" + isVictory);
             if(fadeIn) {
                 alpha = Math.min(1.0f, fadeTime / FADE_DURATION);
                 if(alpha >= 1.0f) {
