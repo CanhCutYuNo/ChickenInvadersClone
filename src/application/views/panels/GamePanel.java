@@ -166,6 +166,7 @@ public class GamePanel extends JPanel {
             return;
         }
         System.out.println("Triggering Victory");
+        soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4MinorWin.wav").getPath());    
         this.isVictory = true;
         this.isPlayerDead = true; // Ngăn render người chơi
         this.isTransitionTriggered = true;
@@ -174,6 +175,7 @@ public class GamePanel extends JPanel {
         this.fadeTime = 0f;
         this.alpha = 0f;
         this.transitionComplete = false;
+        this.WAIT_DURATION = 7.0f;
     }
 
     public boolean isPlayerDead() {
