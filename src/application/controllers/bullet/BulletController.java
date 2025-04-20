@@ -31,6 +31,10 @@ public class BulletController {
             Bullet.setSpeedY(speedY);
             Bullet.setY(Bullet.getY() - (int) speedY);
 
+            if (Bullet.getType() == application.models.bullet.Bullet.BulletType.DOUBLE) {
+                Bullet.setDamage(Bullet.getDamage()); // Cập nhật damage nếu đạn là DOUBLE
+            }
+
             if(isOffScreen(Bullet, 1080)) {
                 bullets.remove(i);
                 bulletViews.remove(i);
