@@ -15,7 +15,6 @@ import application.views.enemy.EnemySkillsView;
 public class EnemySkillsController {
     private List<EnemySkills> skills;
     private EnemySkillsView view;
-    private SoundController soundController;
     Map<SkillType, String> skillImagePaths;
 
     public EnemySkillsController(SoundController soundController) {
@@ -25,7 +24,6 @@ public class EnemySkillsController {
         skillImagePaths.put(SkillType.FIREBALL, "/asset/resources/gfx/fireball.png");
         skillImagePaths.put(SkillType.EGG, "/asset/resources/gfx/introEgg.png");
         this.view = new EnemySkillsView(skillImagePaths, soundController);
-        this.soundController = soundController;
     }
 
 

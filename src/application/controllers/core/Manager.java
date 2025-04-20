@@ -128,6 +128,12 @@ public class Manager {
             }
             return;
         }
+        
+        updateBullets();
+        playerController.update();
+        items.updateItems();
+        skillsManager.updateSkills();
+        deathEffectController.update();
 
         if (gamePanel.isTransitionActive()) {
             return;
@@ -141,12 +147,8 @@ public class Manager {
             return;
         }
 
-        updateBullets();
-        playerController.update();
-        items.updateItems();
-        skillsManager.updateSkills();
         enemyController.update();
-        deathEffectController.update();
+        
 
         ILevelManager levelManager = gameStateHandler.getLevelManager();
         if (levelManager != null) {

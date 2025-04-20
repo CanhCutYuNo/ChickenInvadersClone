@@ -61,48 +61,39 @@ public class GameRenderer {
     public void render(Graphics g, boolean transitionComplete, boolean showTransition, float alpha, int panelWidth, int panelHeight) {
         Graphics2D g2d = (Graphics2D) g;
 
-        // Áp dụng tỷ lệ màn hình
         g2d.scale(screenUtil.getWidth() / 1920f / screenUtil.getScaleX(),
                 screenUtil.getHeight() / 1080f / screenUtil.getScaleY());
 
-        // Vẽ HUD
-        drawHUD(g, panelWidth, panelHeight);
-
-        // Vẽ hiệu ứng chuyển cảnh
-        if (showTransition && levelImage != null) {
+        if(showTransition && levelImage != null) {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-            int x = (1920 - levelImage.getWidth()) / 2; // Căn giữa theo tỷ lệ 1920x1080
+            int x = (1920 - levelImage.getWidth()) / 2;
             int y = (1080 - levelImage.getHeight()) / 2;
             g2d.drawImage(levelImage, x, y, levelImage.getWidth(), levelImage.getHeight(), null);
         }
 
-        if (transitionComplete) {
+        if(transitionComplete) {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 
-            for (BulletView bulletView : bulletController.getBulletViews()) {
-                bulletView.render(g);
-            }
-
+            
+            renderBullet(g);
             skillsManager.drawSkills(g);
 
-            if (levelManager != null) {
+            if(levelManager != null) {
                 levelManager.render(g);
             }
 
             deathEffectController.render(g);
 
-            // Vẽ vật phẩm
             itemsController.drawItems(g);
 
-            // Vẽ văn bản nổi
-            for (BulletDame text : gameStates.getFloatingTexts()) {
+            for(BulletDame text : gameStates.getFloatingTexts()) {
                 text.render(g);
             }
         }
 
-        // Vẽ người chơi
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
         renderPlayer(g);
+        drawHUD(g, panelWidth, panelHeight);
 
         g2d.dispose();
     }
@@ -114,11 +105,16 @@ public class GameRenderer {
             playerView.render(g);
         }
     }
+    
+    private void renderBullet(Graphics g) {
+    	for (BulletView bulletView : bulletController.getBulletViews()) {
+            bulletView.render(g);
+        }
+    }
 
     private void drawHUD(Graphics g, int panelWidth, int panelHeight) {
         int hudX = 0 - 50;
-        int hudY = 1080 - hudBar.getHeight(null) + 20; // Tính theo tỷ lệ 1920x1080
-
+        int hudY = 1080 - hudBar.getHeight(null) + 20;
         g.drawImage(hudBar, hudX, hudY, null);
 
         g.setFont(font);
