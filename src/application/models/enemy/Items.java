@@ -6,10 +6,18 @@ public class Items {
     private int posY, posX;
     private int damage;
 
-    public Items(int posX, int posY, int damage) {
+    public enum ItemType{
+        FOOD, ATOM
+    }
+
+    public ItemType type;
+
+    public Items(int posX, int posY, int damage, ItemType type) {
         this.posY = posY;
         this.posX = posX;
         this.damage = damage;
+        this.type = type;
+
     }
 
     public int getPosY() {
@@ -48,4 +56,6 @@ public class Items {
     public Rectangle getHitbox() {
         return new Rectangle(posX, posY, 40, 60); // hoặc thay đổi kích thước tùy game
     }
+
+    public ItemType getType(){return type;}
 }

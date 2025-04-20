@@ -28,6 +28,7 @@ public class CollisionManager {
     private final SoundController soundController;
     private final String[] hitSounds;
     private final String[] deathSounds;
+    private boolean isCollidingAtom = false;
 
     public CollisionManager(PlayerController playerController, EnemyController enemyController,
                                BulletController bulletController, EnemySkillsController skillsManager,
@@ -54,6 +55,12 @@ public class CollisionManager {
     private void checkBulletEnemyCollisions() {
         for (int i = bulletController.getBullets().size() - 1; i >= 0; i--) {
             Bullet bullet = bulletController.getBullets().get(i);
+            if(isCollidingAtom){
+                bullet.transformToStrongerBullet();
+                bulletController.removeBullet(i);
+                bulletController.addBullet(bullet.getX(), bullet.getY(), bullet.getDamage(), bullet.getSpeedY(), bullet.getAcceleration(),bullet.getType());
+            }
+
             for (int j = enemyController.getEnemyModels().size() - 1; j >= 0; j--) {
                 if (isColliding(bullet, j)) {
                     Enemy enemy = enemyController.getEnemyModels().get(j);
@@ -62,10 +69,12 @@ public class CollisionManager {
                         enemyController.takeDamage(j, bullet.getDamage(), hitSounds, deathSounds);
                     } else {
                         enemyController.takeDamage(j, bullet.getDamage(), null, null);
+                        soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggshellCrack.wav").getPath());                        
                     }
                     bulletController.removeBullet(i);
                     if (enemy.isDead()) {
                         Random random = new Random();
+                        Items.ItemType itemType = null;
                         float chance = 0;
                         int damageItem = 0;
                         switch (GameSettings.getInstance().getDifficulty()) {
@@ -87,7 +96,14 @@ public class CollisionManager {
                                 break;
                         }
                         if (random.nextDouble() < chance) {
-                            itemsController.addItem(enemy.getPosX(), enemy.getPosY() - 15, damageItem);
+                            if (!itemsController.hasDroppedAtom()) {
+                                itemType = Items.ItemType.ATOM;
+                                itemsController.markAtomDropped();
+                            } else {
+                                itemType = Items.ItemType.FOOD;
+
+                            }
+                            itemsController.addItem(enemy.getPosX(), enemy.getPosY() - 15, damageItem, itemType);
                         }
                     }
                     break;
@@ -101,10 +117,15 @@ public class CollisionManager {
         while (iterator.hasNext()) {
             Items item = iterator.next();
             if (isColliding(playerController, item)) {
-                playerController.isDamaged(item.getDamage());
-                spawnFloatingText(playerController.getPosX(), playerController.getPosY() - 10, "+ " + String.valueOf(Math.abs(item.getDamage())), Color.GREEN);
+                if(item.getType() == Items.ItemType.FOOD){
+                    playerController.isDamaged(item.getDamage());
+                    spawnFloatingText(playerController.getPosX(), playerController.getPosY() - 10, "+ " + String.valueOf(Math.abs(item.getDamage())), Color.GREEN);
+                    gameStates.setFoodCounts(gameStates.getFoodCounts() + 1);
+                }
+                else{
+                    isCollidingAtom = true;
+                }
                 soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/(eating1).wav").getPath());
-                gameStates.setFoodCounts(gameStates.getFoodCounts() + 1);
                 iterator.remove();
             }
         }

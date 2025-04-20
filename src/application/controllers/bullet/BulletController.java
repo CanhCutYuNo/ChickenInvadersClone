@@ -15,8 +15,8 @@ public class BulletController {
         this.bulletViews = new ArrayList<>();
     }
     
-    public void addBullet(int x, int y, int damage, double initialSpeedY, double acceleration) {
-        Bullet Bullet = new Bullet(x, y, damage, initialSpeedY, acceleration);
+    public void addBullet(int x, int y, int damage, double initialSpeedY, double acceleration, Bullet.BulletType type) {
+        Bullet Bullet = new Bullet(x, y, damage, initialSpeedY, acceleration, type );
         BulletView bulletView = new BulletView(Bullet);
         bullets.add(Bullet);
         bulletViews.add(bulletView);
