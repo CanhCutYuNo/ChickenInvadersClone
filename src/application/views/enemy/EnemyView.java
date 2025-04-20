@@ -289,7 +289,7 @@ public class EnemyView {
 
                 // Vẽ sprite boss
                 g.drawImage(bossImages[0],
-                    enemyModel.getPosX() - 300, enemyModel.getPosY() - 100, enemyModel.getPosX() + enemyModel.getModelWidth() + 300, enemyModel.getPosY() + enemyModel.getModelHeight() + 100,
+                    enemyModel.getPosX() - 300, enemyModel.getPosY() - 50, enemyModel.getPosX() + enemyModel.getModelWidth() + 300, enemyModel.getPosY() + enemyModel.getModelHeight() + 100,
                         spriteX, spriteY,
                         spriteX + spriteWidth, spriteY + spriteHeight, null);
 
