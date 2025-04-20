@@ -109,7 +109,7 @@ public class CollisionManager {
                                 break;
                         }
                         if (random.nextDouble() < chance) {
-                            if (!itemsController.hasDroppedAtom()) {
+                            if (!itemsController.hasDroppedAtom() && random.nextDouble() < chance) {
                                 itemType = Items.ItemType.ATOM;
                                 itemsController.markAtomDropped();
                             } else {
