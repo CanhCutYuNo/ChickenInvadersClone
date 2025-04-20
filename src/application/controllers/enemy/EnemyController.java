@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import application.controllers.enemy.death.DeathEffectController;
 import application.controllers.enemy.death.EnemyDeathListener;
 import application.controllers.enemy.skills.EnemySkillsController;
 import application.controllers.enemy.types.ChickEnemy;
@@ -28,6 +29,7 @@ public class EnemyController {
     private Map<Enemy.EnemyType, EnemyBehavior> behaviors;
     private Random random;
     private EnemySkillsController skillsManager;
+    private DeathEffectController deathEffectController;
     private List<EnemyDeathListener> deathListeners = new ArrayList<>();
 
     public EnemyController(SoundController soundController) {
@@ -88,6 +90,7 @@ public class EnemyController {
             soundController.playSoundEffect(getClass().getResource(hitSounds[random.nextInt(hitSounds.length)]).getPath());
         }
         if (enemy.isDead()) {
+            deathEffectController.add(getDeathEffect(index));
             String deathSound = (deathSounds != null && deathSounds.length > 0) ? deathSounds[random.nextInt(deathSounds.length)] : null;
             if (deathSound != null) {
                 soundController.playSoundEffect(getClass().getResource(deathSound).getPath());
@@ -198,4 +201,12 @@ public class EnemyController {
 	public EnemySkillsController getSkillsManager() {
 		return skillsManager;
 	}
+
+    public void setDeathEffectController(DeathEffectController deathEffectController) {
+        this.deathEffectController = deathEffectController;
+    }
+
+    public DeathEffectController getDeathEffectController() {
+        return deathEffectController;
+    }
 }

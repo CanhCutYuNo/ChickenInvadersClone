@@ -65,6 +65,7 @@ public class Manager {
         this.skillsManager = new EnemySkillsController(soundController);
         this.enemyController.setSkillsManager(skillsManager);
         this.deathEffectController = new DeathEffectController();
+        this.enemyController.setDeathEffectController(deathEffectController);
         this.playerController = new PlayerController(null);
         this.playerView = new PlayerView(playerController);
         this.playerController.setPlayerView(playerView);
