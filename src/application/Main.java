@@ -61,7 +61,7 @@ public class Main {
             
             pausePanel = new PausePanel(viewController, soundController);
 
-            gamePanel = new GamePanel(gameManager);
+            gamePanel = new GamePanel(gameManager, soundController);
             gameManager.setGamePanel(gamePanel);
             gameLoop = new GameLoop(gamePanel, frame);
             gameManager.setGameLoop(gameLoop);
