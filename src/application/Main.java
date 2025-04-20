@@ -9,6 +9,7 @@ import javax.swing.SwingUtilities;
 import application.controllers.core.GameLoop;
 import application.controllers.core.Manager;
 import application.controllers.util.Controller;
+import application.controllers.util.ImageCache;
 import application.controllers.util.SoundController;
 import application.controllers.util.ViewController;
 import application.views.panels.BackgroundPanel;
@@ -37,7 +38,7 @@ public class Main {
     
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            // ImageCache.getInstance();
+            ImageCache.getInstance();
 
             frame = new JFrame("Chicken Invaders");
             frame.setUndecorated(true);

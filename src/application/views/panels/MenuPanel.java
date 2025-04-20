@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.OverlayLayout;
 import javax.swing.SwingConstants;
 
+import application.controllers.util.ImageCache;
 import application.controllers.util.ScreenUtil;
 import application.controllers.util.SoundController;
 import application.controllers.util.ViewController;
@@ -31,6 +32,7 @@ public class MenuPanel extends JPanel {
     private JPanel backgroundPanel;
     private SoundController sound;
     private JLayeredPane jLayeredPane;
+    private ImageCache imageCache = ImageCache.getInstance();
 
     private JPanel containerPanel, symbolPanel, buttonPanel;
     private JLabel icon;
@@ -70,7 +72,7 @@ public class MenuPanel extends JPanel {
         symbolPanel.setOpaque(false);
         symbolPanel.setLayout(new GridBagLayout());
 
-        ImageIcon rawIcon = new ImageIcon(getClass().getResource("/asset/resources/gfx/logo5.png"));
+        ImageIcon rawIcon = imageCache.getResourceImageIcon("/asset/resources/gfx/logo5.png");
         Image rawImage = rawIcon.getImage();
 
         int newWidth = (int)(rawIcon.getIconWidth() * scaleX);

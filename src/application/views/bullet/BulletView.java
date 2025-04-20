@@ -1,6 +1,8 @@
 package application.views.bullet;
 
 import javax.swing.*;
+
+import application.controllers.util.ImageCache;
 import application.models.bullet.Bullet;
 import java.awt.*;
 
@@ -8,6 +10,7 @@ public class BulletView {
     private Image imageBullet;          // Hình ảnh của bullet bình thường
     private Image imageDoubleBullet;    // Hình ảnh của bullet đôi
     private Bullet bullet;              // Đối tượng Bullet
+    private ImageCache imageCache = ImageCache.getInstance();
 
     public BulletView(Bullet bullet) {
         this.bullet = bullet;          // Gán đối tượng bullet
@@ -17,8 +20,8 @@ public class BulletView {
     // Tải các hình ảnh của bullet
     private void loadImage() {
         try {
-            imageBullet = new ImageIcon(getClass().getResource("/asset/resources/gfx/bullet.png")).getImage();
-            imageDoubleBullet = new ImageIcon(getClass().getResource("/asset/resources/gfx/bulletion.png")).getImage();
+            imageBullet = imageCache.getResourceImage("/asset/resources/gfx/bullet.png");
+            imageDoubleBullet = imageCache.getResourceImage("/asset/resources/gfx/bulletion.png");
         } catch (Exception e) {
             System.out.println("Error: Could not load bullet image.");
             e.printStackTrace();

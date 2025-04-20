@@ -16,6 +16,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+import application.controllers.util.ImageCache;
 import application.controllers.util.SoundController;
 import application.models.enemy.EnemySkills;
 import application.models.enemy.EnemySkills.SkillType;
@@ -27,6 +28,7 @@ public class EnemySkillsView {
     private List<int[]> EggSprites = new ArrayList<>();
     private List<int[]> FireballSprites = new ArrayList<>();
     private SoundController soundController;
+    private ImageCache imageCache = ImageCache.getInstance();
 
     private static final int[][] EggBrokenSprite = {
             {1, 1, 31, 20}, {35, 1, 32, 21}, {69, 1, 34, 22},
@@ -68,9 +70,9 @@ public class EnemySkillsView {
                 String path = entry.getValue();
 
                 if (skillType == SkillType.EGG) {
-                    Image image = new ImageIcon(getClass().getResource(path)).getImage();
+                    Image image = imageCache.getResourceImage(path);
                     skillImages.put(skillType, image);
-                    eggSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/eggbreak~1.png")).getImage();
+                    eggSheet = imageCache.getResourceImage("/asset/resources/gfx/eggbreak~1.png");
                     
                 } else if (skillType == SkillType.FIREBALL) {
                     InputStream inputStream = getClass().getResourceAsStream("/asset/resources/gfx/bullet-bolt1.png");
