@@ -19,10 +19,10 @@ import application.controllers.enemy.death.DeathEffectController;
 import application.controllers.enemy.items.ItemsController;
 import application.controllers.enemy.skills.EnemySkillsController;
 import application.controllers.level.ILevelManager;
-import application.controllers.util.ImageCache;
 import application.controllers.util.ScreenUtil;
 import application.models.bullet.BulletDame;
 import application.views.bullet.BulletView;
+import application.views.panels.GamePanel;
 import application.views.player.PlayerView;
 
 public class GameRenderer {
@@ -34,17 +34,18 @@ public class GameRenderer {
     private final GameStateController gameStates;
     private final PlayerView playerView;
     private final ScreenUtil screenUtil;
+    private final GamePanel gamePanel; // Tham chiếu đến GamePanel
     private final Image hudBar;
     private final Font font;
-    private ImageCache imageCache = ImageCache.getInstance();
 
     private BufferedImage levelImage;
     private BufferedImage gameOverImage;
+    private BufferedImage victoryImage;
     private int currentLevel;
 
     public GameRenderer(BulletController bulletController, EnemySkillsController skillsManager, ILevelManager levelManager,
                         DeathEffectController deathEffectController, ItemsController itemsController, GameStateController gameStates,
-                        PlayerView playerView, ScreenUtil screenUtil) {
+                        PlayerView playerView, ScreenUtil screenUtil, GamePanel gamePanel) {
         this.bulletController = bulletController;
         this.skillsManager = skillsManager;
         this.levelManager = levelManager;
@@ -53,17 +54,19 @@ public class GameRenderer {
         this.gameStates = gameStates;
         this.playerView = playerView;
         this.screenUtil = ScreenUtil.getInstance();
+        this.gamePanel = gamePanel;
 
-        this.hudBar = imageCache.getResourceImage("/asset/resources/gfx/infohud.png");
+        this.hudBar = new ImageIcon(getClass().getResource("/asset/resources/gfx/infohud.png")).getImage();
         this.font = new Font("Arial", Font.BOLD, 24);
 
         this.currentLevel = gameStates.getLevel();
         loadLevelImage();
         loadGameOverImage();
+        loadVictoryImage();
     }
 
     public void render(Graphics g, boolean transitionComplete, boolean showTransition, float alpha, 
-                      boolean isGameOver, boolean isPlayerDead, int panelWidth, int panelHeight) {
+                      boolean isGameOver, boolean isVictory, int panelWidth, int panelHeight) {
         Graphics2D g2d = (Graphics2D) g;
 
         g2d.scale(screenUtil.getWidth() / 1920f / screenUtil.getScaleX(),
@@ -71,7 +74,12 @@ public class GameRenderer {
 
         if(showTransition) {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-            if(isGameOver && gameOverImage != null) {
+            if(isVictory && victoryImage != null) {
+                System.out.println("Drawing victoryImage: alpha=" + alpha + ", width=" + victoryImage.getWidth() + ", height=" + victoryImage.getHeight());
+                int x = (1920 - victoryImage.getWidth()) / 2;
+                int y = (1080 - victoryImage.getHeight()) / 2;
+                g2d.drawImage(victoryImage, x, y, victoryImage.getWidth(), victoryImage.getHeight(), null);
+            } else if(isGameOver && gameOverImage != null) {
                 System.out.println("Drawing gameOverImage: alpha=" + alpha + ", width=" + gameOverImage.getWidth() + ", height=" + gameOverImage.getHeight());
                 int x = (1920 - gameOverImage.getWidth()) / 2;
                 int y = (1080 - gameOverImage.getHeight()) / 2;
@@ -83,7 +91,7 @@ public class GameRenderer {
             }
         }
 
-        if(transitionComplete && !isGameOver) {
+        if(transitionComplete && !isGameOver && !isVictory) {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
             renderBullet(g);
             skillsManager.drawSkills(g);
@@ -98,7 +106,7 @@ public class GameRenderer {
         }
 
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-        if(!isGameOver && !isPlayerDead) {
+        if(!isGameOver && !isVictory && !gamePanel.isPlayerDead()) {
             renderPlayer(g);
             drawHUD(g, panelWidth, panelHeight);
         }
@@ -166,10 +174,39 @@ public class GameRenderer {
             if(gameOverImage == null) {
                 System.out.println("Failed to load gameOverImage");
                 gameOverImage = new BufferedImage(400, 200, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g = gameOverImage.createGraphics();
+                g.setColor(Color.RED);
+                g.fillRect(0, 0, 400, 200);
+                g.dispose();
             }
         } catch (IOException e) {
             e.printStackTrace();
             gameOverImage = new BufferedImage(400, 200, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = gameOverImage.createGraphics();
+            g.setColor(Color.RED);
+            g.fillRect(0, 0, 400, 200);
+            g.dispose();
+        }
+    }
+
+    private void loadVictoryImage() {
+        try {
+            victoryImage = ImageIO.read(getClass().getResource("/asset/resources/gfx/victory.png"));
+            if(victoryImage == null) {
+                System.out.println("Failed to load victoryImage");
+                victoryImage = new BufferedImage(400, 200, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g = victoryImage.createGraphics();
+                g.setColor(Color.GREEN); 
+                g.fillRect(0, 0, 400, 200);
+                g.dispose();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            victoryImage = new BufferedImage(400, 200, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = victoryImage.createGraphics();
+            g.setColor(Color.GREEN);
+            g.fillRect(0, 0, 400, 200);
+            g.dispose();
         }
     }
 

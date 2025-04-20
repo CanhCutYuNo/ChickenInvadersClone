@@ -13,6 +13,7 @@ import application.controllers.core.Manager;
 import application.controllers.util.MouseController;
 import application.controllers.util.ScreenUtil;
 import application.views.render.GameRenderer;
+import application.controllers.util.SoundController;
 
 public class GamePanel extends JPanel {
     private static final long serialVersionUID = 1L;
@@ -25,19 +26,21 @@ public class GamePanel extends JPanel {
     private boolean fadeIn = true;
     private boolean showTransition = true;
     private float fadeTime = 0f;
-    private static final float FADE_DURATION = 0.5f;
-    private static final float WAIT_DURATION = 1.0f;
+    private float FADE_DURATION = 0.5f;
+    private float WAIT_DURATION = 1.0f;
     private boolean enemiesPrepared = false;
     private boolean isTransitionTriggered = false;
     private boolean transitionComplete = false;
     private boolean isGameOver = false;
     private boolean isPlayerExploding = false;
     private boolean isPlayerDead = false;
+    private boolean isVictory = false; 
+    private final SoundController soundController;
 
-    public GamePanel(Manager gameManager) {
+    public GamePanel(Manager gameManager, SoundController soundController) {
         this.gameManager = gameManager;
         this.paused = false;
-
+        this.soundController = soundController;
         this.gameRenderer = new GameRenderer(
             gameManager.getBulletController(),
             gameManager.getSkillsManager(),
@@ -46,7 +49,8 @@ public class GamePanel extends JPanel {
             gameManager.getItemsController(),
             gameManager.getGameStateController(),
             gameManager.getPlayerView(),
-            ScreenUtil.getInstance()
+            ScreenUtil.getInstance(),
+            this
         );
 
         hideCursor();
@@ -79,14 +83,13 @@ public class GamePanel extends JPanel {
 
         if(isTransitionTriggered && showTransition) {
             fadeTime += (float) deltaTime;
-            System.out.println("Fade: alpha=" + alpha + ", fadeIn=" + fadeIn + ", fadeTime=" + fadeTime + ", isGameOver=" + isGameOver);
             if(fadeIn) {
                 alpha = Math.min(1.0f, fadeTime / FADE_DURATION);
                 if(alpha >= 1.0f) {
                     fadeIn = false;
                     fadeTime = 0f;
 
-                    if(!isGameOver && !enemiesPrepared && gameManager != null) {
+                    if(!isGameOver && !isVictory && !enemiesPrepared && gameManager != null) {
                         gameManager.spawnEnemiesAfterFade();
                         enemiesPrepared = true;
                     }
@@ -106,6 +109,12 @@ public class GamePanel extends JPanel {
                             if(gameManager != null) {
                                 gameManager.getGameStateHandler().restartGame();
                             }
+                        } else if(isVictory) {
+                            isVictory = false;
+                            isPlayerDead = false;
+                            if(gameManager != null) {
+                                gameManager.getGameStateHandler().restartGame();
+                            }
                         } else {
                             if(gameManager != null) {
                                 gameManager.onTransitionComplete();
@@ -116,20 +125,22 @@ public class GamePanel extends JPanel {
             }
         }
 
-        if(!isGameOver && !isTransitionTriggered && gameManager != null && gameManager.getPlayerView() != null
-                && gameManager.getPlayerView().getPlayer() != null
-                && gameManager.getPlayerView().getPlayer().getHP() <= 0) {
-            System.out.println("HP <= 0, isExploding=" + gameManager.getPlayerView().isExploding() + ", isPlayerExploding=" + isPlayerExploding);
-            if(gameManager.getPlayerView().isExploding()) {
-                isPlayerExploding = true;
-                isPlayerDead = true;
-            } else if(isPlayerExploding) {
-                triggerGameOver();
-                isPlayerExploding = false;
+        if(!isGameOver && !isVictory && !isTransitionTriggered && gameManager != null && gameManager.getPlayerView() != null
+                && gameManager.getPlayerView().getPlayer() != null) {
+            if(gameManager.getPlayerView().getPlayer().getHP() <= 0) {
+                if(gameManager.getPlayerView().isExploding()) {
+                    isPlayerExploding = true;
+                    isPlayerDead = true;
+                } else if(isPlayerExploding) {
+                    triggerGameOver();
+                    isPlayerExploding = false;
+                }
+            } else if(gameManager.getGameStateController().getLevel() >= 6) {
+                triggerVictory();
             }
         }
 
-        if(transitionComplete && !isGameOver) {
+        if(transitionComplete && !isGameOver && !isVictory) {
             gameManager.update(deltaTime);
         }
     }
@@ -139,6 +150,7 @@ public class GamePanel extends JPanel {
             return;
         }
         System.out.println("Triggering Game Over");
+        soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4Gameover.wav").getPath());    
         this.isGameOver = true;
         this.isTransitionTriggered = true;
         this.showTransition = true;
@@ -146,21 +158,43 @@ public class GamePanel extends JPanel {
         this.fadeTime = 0f;
         this.alpha = 0f;
         this.transitionComplete = false;
+        this.WAIT_DURATION = 9.0f;
+    }
+
+    public void triggerVictory() {
+        if(paused) {
+            return;
+        }
+        System.out.println("Triggering Victory");
+        soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4MinorWin.wav").getPath());    
+        this.isVictory = true;
+        this.isPlayerDead = true; // Ngăn render người chơi
+        this.isTransitionTriggered = true;
+        this.showTransition = true;
+        this.fadeIn = true;
+        this.fadeTime = 0f;
+        this.alpha = 0f;
+        this.transitionComplete = false;
+        this.WAIT_DURATION = 7.0f;
     }
 
     public boolean isPlayerDead() {
         return isPlayerDead;
     }
 
+    public boolean isVictory() {
+        return isVictory;
+    }
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         gameRenderer.setLevelManager(gameManager.getLevelManager());
-        gameRenderer.render(g, transitionComplete, showTransition, alpha, isGameOver, isPlayerDead, getWidth(), getHeight());
+        gameRenderer.render(g, transitionComplete, showTransition, alpha, isGameOver, isVictory, getWidth(), getHeight());
     }
 
     public void triggerTransition() {
-        if(paused || isGameOver) {
+        if(paused || isGameOver || isVictory) {
             return;
         }
         this.isTransitionTriggered = true;
