@@ -3,6 +3,7 @@ package application.controllers.player;
 import application.controllers.bullet.BulletController;
 import application.controllers.util.GameSettings;
 import application.controllers.util.SoundController;
+import application.models.bullet.Bullet;
 
 public class PlayerActionHandler {
     private final PlayerController playerController;
@@ -23,16 +24,17 @@ public class PlayerActionHandler {
     }
 
     public void shoot() {
+        Bullet.BulletType type = Bullet.BulletType.NORMAL;
         switch (GameSettings.getInstance().getDifficulty()) {
             case EASY:
-                bullets.addBullet(playerController.getPosX() + 39, playerController.getPosY(), 40, 1.0, 0.4);
+                bullets.addBullet(playerController.getPosX() + 39, playerController.getPosY(), 40, 1.0, 0.4,type);
                 break;
             case NORMAL:
-                bullets.addBullet(playerController.getPosX() + 39, playerController.getPosY(), 30, 1.0, 0.4);
+                bullets.addBullet(playerController.getPosX() + 39, playerController.getPosY(), 30, 1.0, 0.4,type);
                 break;
             case HARD:
             case EXTREME:
-                bullets.addBullet(playerController.getPosX() + 39, playerController.getPosY(), 25, 1.0, 0.4);
+                bullets.addBullet(playerController.getPosX() + 39, playerController.getPosY(), 25, 1.0, 0.4,type);
                 break;
         }
         soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/bulletHenSolo.wav").getPath());

@@ -23,7 +23,7 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
     public void playBackgroundMusic(String path) {
         ex.submit(() -> {
             try {
-                stopBackgroundMusic(); // Dừng nhạc nền cũ trước khi phát bài mới
+                stopBackgroundMusic();
 
                 File file = new File(path.replaceAll("%20", " "));
                 if (!file.exists()) {

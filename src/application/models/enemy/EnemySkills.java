@@ -10,6 +10,7 @@ public class EnemySkills {
     private boolean isExploding = false;
     private int animationFrame = 0;
     private int damage;
+    private boolean hasPlayedSound = false;
 
     private double scale = 1.0;
     private double angle = 0.0;
@@ -131,7 +132,6 @@ public class EnemySkills {
             if (posX < -100 || posX > 2020 || posY < -100 || posY > 1180) {
                 isActive = false;
                 endTime = currentTime;
-        //        System.out.println("EnemySkills (FIREBALL) disappeared at " + currentTime);
             }
         }
     }
@@ -151,6 +151,7 @@ public class EnemySkills {
 
     public void explode() {
         isExploding = true;
+        hasPlayedSound = false;
     }
 
     public boolean isExploding() {
@@ -222,12 +223,19 @@ public class EnemySkills {
         return rect;
     }
 
-
     public int getWidth() {
         return width;
     }
 
     public int getHeight() {
         return height;
+    }
+
+    public boolean hasPlayedSound() {
+        return hasPlayedSound;
+    }
+
+    public void setHasPlayedSound(boolean hasPlayedSound) {
+        this.hasPlayedSound = hasPlayedSound;
     }
 }
