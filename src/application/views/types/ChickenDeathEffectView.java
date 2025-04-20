@@ -11,6 +11,7 @@ import java.util.Random;
 
 import javax.swing.ImageIcon;
 
+import application.controllers.util.ImageCache;
 import application.models.enemy.DeathEffect;
 import application.models.enemy.types.ChickenDeathEffect;
 
@@ -22,6 +23,8 @@ public class ChickenDeathEffectView {
    private final DeathEffect deathEffect;
     private final ArrayList<Smoke> smokes;
     protected Image spriteSheet;
+    private ImageCache imageCache = ImageCache.getInstance();
+
     protected static final int[][] SPRITE = {
         {1, 1, 20, 20}, {23, 1, 29, 29}, {55, 1, 38, 38}, {95, 1, 45, 45},
         {143, 1, 51, 51}, {197, 1, 54, 54}, {253, 1, 57, 57}, {313, 1, 64, 64},
@@ -45,7 +48,7 @@ public class ChickenDeathEffectView {
         this.deathEffect = deathEffect;
         
         Random random = new Random();
-        spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/smoke4-white.png")).getImage();
+        spriteSheet = imageCache.getResourceImage("/asset/resources/gfx/smoke4-white.png");
         if(spriteSheet == null){
             System.err.println("Không tải được smoke4-white!");
         }

@@ -10,6 +10,7 @@ import java.awt.RenderingHints;
 import javax.swing.ImageIcon;
 
 import application.controllers.player.PlayerController;
+import application.controllers.util.ImageCache;
 
 public class PlayerView {
 
@@ -17,7 +18,7 @@ public class PlayerView {
     private Image exhaustImage;
     private Image explosionSheet;
     private PlayerController playerController;
-  
+    private ImageCache imageCache = ImageCache.getInstance();
 
     private int[][] spriteData = {
         {1, 1135, 104, 114}, {1, 1019, 104, 114}, {1, 903, 104, 114},
@@ -54,9 +55,9 @@ public class PlayerView {
         this.playerController = _playerController;
 
         try {
-            spriteSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/spaceship.png")).getImage();
-            exhaustImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/exhaust4.png")).getImage();
-            explosionSheet = new ImageIcon(getClass().getResource("/asset/resources/gfx/explosion4.png")).getImage();
+            spriteSheet = imageCache.getResourceImage("/asset/resources/gfx/spaceship.png");
+            exhaustImage = imageCache.getResourceImage("/asset/resources/gfx/exhaust4.png");
+            explosionSheet = imageCache.getResourceImage("/asset/resources/gfx/explosion4.png");
         } catch (Exception e) {
             System.out.println("Error: Could not load player sprite sheet or exhaust image.");
             e.printStackTrace();

@@ -10,6 +10,7 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
+import application.controllers.util.ImageCache;
 import application.controllers.util.ScreenUtil;
 
 /**
@@ -30,10 +31,11 @@ public class BackgroundPanel extends javax.swing.JPanel {
     private final int height = 1080;
     private final int fps = 60;
     private boolean isRunning = true;
+    private ImageCache imageCache = ImageCache.getInstance();
 
     public BackgroundPanel() {
         screenUtil = ScreenUtil.getInstance();
-        backgroundImage = new ImageIcon(getClass().getResource("/asset/resources/backgrounds/starfield5-ci5.png")).getImage();
+        backgroundImage = imageCache.getResourceImage("/asset/resources/backgrounds/starfield5-ci5.png");
         y = 0;
         updateThread = new Thread(() -> {
             updateLoop();
