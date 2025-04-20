@@ -20,6 +20,7 @@ public class GameStateController {
             gameStates.setLevel(gameStates.getLevel() + 1);
             gameStates.setDelaying(true);
             gameStates.setDelayStartTime(System.currentTimeMillis());
+
         }
     }
 
@@ -30,6 +31,7 @@ public class GameStateController {
             if (currentTime - gameStates.getDelayStartTime() >= DELAY_DURATION) {
                 gameStates.setDelaying(false);
                 gameStates.setLevelTransitionTriggered(true);
+
                 return true; // Báo hiệu rằng đã sẵn sàng để chuyển cảnh
             }
         }

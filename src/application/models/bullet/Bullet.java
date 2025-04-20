@@ -60,7 +60,10 @@ public class Bullet {
 
     public void transformToStrongerBullet() {
         this.type = BulletType.DOUBLE;
-        this.setDamage(this.getDamage() * 2);  // Tăng sát thương lên gấp đôi
+    }
+
+    public void resetToNormal(){
+        this.type = BulletType.NORMAL;
     }
 
     public BulletType getType(){return type;}

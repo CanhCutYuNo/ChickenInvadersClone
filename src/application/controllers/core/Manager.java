@@ -36,6 +36,8 @@ public class Manager {
     private GameStateHandler gameStateHandler;
     private final LevelTransitionHandler levelTransitionHandler;
 
+
+
     private String[] deathSounds = {
             "/asset/resources/sfx/chickDie3.wav",
             "/asset/resources/sfx/chickDie4.wav",
@@ -140,6 +142,7 @@ public class Manager {
         }
 
         if (gameStateController.updateLevelTransition()) {
+            collisionManager.resetBulletPowerUp();
             gamePanel.triggerTransition();
         }
 

@@ -63,7 +63,6 @@ public class CollisionManager {
                 bulletController.removeBullet(i);
                 bulletController.addBullet(bullet.getX(), bullet.getY(), bullet.getDamage(), bullet.getSpeedY(), bullet.getAcceleration(),bullet.getType());
             }
-
             for (int j = enemyController.getEnemyModels().size() - 1; j >= 0; j--) {
                 if (isColliding(bullet, j)) {
                     Enemy enemy = enemyController.getEnemyModels().get(j);
@@ -179,6 +178,13 @@ public class CollisionManager {
             }
         }
     }
+
+    public void resetBulletPowerUp(){
+        isCollidingAtom = false;
+        bulletController.resetAllBulletsToNormal();
+        itemsController.resetAtomDropped();
+    }
+
 
     private void spawnFloatingText(int x, int y, String text, Color color) {
         gameStates.getGameStates().addFloatingText(new BulletDame(x, y, text, color));
