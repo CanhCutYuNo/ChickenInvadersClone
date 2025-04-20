@@ -56,6 +56,10 @@ public class EnemySkillsView {
     public EnemySkillsView(Map<SkillType, String> skillImagePaths, SoundController soundController) {
     	this.soundController = soundController;
         skillImages = new HashMap<>();
+        for (int[] frame : EggBrokenSprite) {
+            EggSprites.add(frame);
+        }
+        
         try {     	
             for (Map.Entry<SkillType, String> entry : skillImagePaths.entrySet()) {
                 SkillType skillType = entry.getKey();
@@ -121,10 +125,11 @@ public class EnemySkillsView {
                     g.drawImage(eggImage, (int) skill.getPosX(), (int) skill.getPosY(), 40, 80, null);
                 }
             } else {
-            	 if (skill.getAnimationFrame() == 0) {
-            		 soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggSplat.wav").getPath());	
-                 }
                 drawEggBroken(g, skill, skill.getAnimationFrame());
+                if (skill.getAnimationFrame() == 0 && skill.isExploding()) {
+              		 soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggSplat.wav").getPath());	
+              		 System.out.println("Sound");
+                   }
             }
         } else if (skill.getSkillType() == SkillType.FIREBALL) {
             drawFireball(g, skill, skill.getAnimationFrame());
@@ -167,10 +172,7 @@ public class EnemySkillsView {
     }
 
     public void drawEggBroken(Graphics g, EnemySkills skill, int eFrame) {
-        for (int[] frame : EggBrokenSprite) {
-            EggSprites.add(frame);
-        }
-        
+       
            
         
         if (eggSheet != null) {
@@ -198,6 +200,11 @@ public class EnemySkillsView {
                     (int) (skill.getPosX() + offsetX + 15 + (ew * scale) / 2), (int) (skill.getPosY() + offsetY + (eh * scale) / 2),
                     ex, ey, ex + ew, ey + eh,
                     null);
+            if (eFrame == 0) {
+                System.out.println("egg broken started");
+            }
+
+           
         }
     }
 
