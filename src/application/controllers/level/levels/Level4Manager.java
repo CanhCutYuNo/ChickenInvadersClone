@@ -33,7 +33,7 @@ public class Level4Manager extends LevelManager implements EnemyDeathListener {
             int posX = random.nextInt(SCREEN_WIDTH - 200);
             Enemy model = new Enemy(75, 97, posX, posY, 0, Enemy.EnemyType.EGG_SHELL_ENEMY);
             model.setInitialIndex(i);
-            model.setState(new Enemy.EnemyState(i * 2.0f));
+            model.setState(new Enemy.EnemyState(i * 1.5f));
             EnemyView view = new EnemyView(model);
             enemyController.addEnemy(model, view);
         }
@@ -64,6 +64,7 @@ public class Level4Manager extends LevelManager implements EnemyDeathListener {
                         enemy.setPosX(random.nextInt(1000) + 20);
                         enemy.setPosY(random.nextInt(50) + 3);
                         enemy.state.timeElapsed = 0;
+                        enemy.state.timeDelay = 1.0f + random.nextFloat(); //Chỉ chờ 1-2s
                         enemy.state.isActive = false;
                     }
                 }

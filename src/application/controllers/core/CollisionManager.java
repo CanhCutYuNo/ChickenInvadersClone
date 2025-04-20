@@ -58,12 +58,11 @@ public class CollisionManager {
     private void checkBulletEnemyCollisions() {
         for (int i = bulletController.getBullets().size() - 1; i >= 0; i--) {
             Bullet bullet = bulletController.getBullets().get(i);
-            if(isCollidingAtom){
+            if(isCollidingAtom && bullet.getType() == Bullet.BulletType.NORMAL){
                 bullet.transformToStrongerBullet();
-                bulletController.removeBullet(i);
-                bulletController.addBullet(bullet.getX(), bullet.getY(), bullet.getDamage(), bullet.getSpeedY(), bullet.getAcceleration(),bullet.getType());
+//                bulletController.removeBullet(i);
+//                bulletController.addBullet(bullet.getX(), bullet.getY(), bullet.getDamage(), bullet.getSpeedY(), bullet.getAcceleration(),bullet.getType());
             }
-
             for (int j = enemyController.getEnemyModels().size() - 1; j >= 0; j--) {
                 if (isColliding(bullet, j)) {
                     Enemy enemy = enemyController.getEnemyModels().get(j);
@@ -110,7 +109,7 @@ public class CollisionManager {
                                 break;
                         }
                         if (random.nextDouble() < chance) {
-                            if (!itemsController.hasDroppedAtom()) {
+                            if (!itemsController.hasDroppedAtom() && random.nextDouble() < chance) {
                                 itemType = Items.ItemType.ATOM;
                                 itemsController.markAtomDropped();
                             } else {
@@ -184,6 +183,13 @@ public class CollisionManager {
             }
         }
     }
+
+    public void resetBulletPowerUp(){
+        isCollidingAtom = false;
+        bulletController.resetAllBulletsToNormal();
+        itemsController.resetAtomDropped();
+    }
+
 
     private void spawnFloatingText(int x, int y, String text, Color color) {
         gameStates.getGameStates().addFloatingText(new BulletDame(x, y, text, color));

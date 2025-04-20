@@ -16,7 +16,7 @@ public class BulletController {
     }
     
     public void addBullet(int x, int y, int damage, double initialSpeedY, double acceleration, Bullet.BulletType type) {
-        Bullet Bullet = new Bullet(x, y, damage, initialSpeedY, acceleration, type );
+        Bullet Bullet = new Bullet(x, y, damage, initialSpeedY, acceleration, type);
         BulletView bulletView = new BulletView(Bullet);
         bullets.add(Bullet);
         bulletViews.add(bulletView);
@@ -30,6 +30,10 @@ public class BulletController {
             speedY += acceleration;
             Bullet.setSpeedY(speedY);
             Bullet.setY(Bullet.getY() - (int) speedY);
+
+            if (Bullet.getType() == application.models.bullet.Bullet.BulletType.DOUBLE) {
+                Bullet.setDamage(Bullet.getDamage()); // Cập nhật damage nếu đạn là DOUBLE
+            }
 
             if(isOffScreen(Bullet, 1080)) {
                 bullets.remove(i);
@@ -62,4 +66,11 @@ public class BulletController {
         bullets.clear();
         bulletViews.clear();
     }
+
+    public void resetAllBulletsToNormal() {
+        for (Bullet bullet : bullets) {
+            bullet.resetToNormal();
+        }
+    }
+
 }

@@ -13,6 +13,7 @@ import application.controllers.core.Manager;
 import application.controllers.util.MouseController;
 import application.controllers.util.ScreenUtil;
 import application.views.render.GameRenderer;
+import application.controllers.util.SoundController;
 
 public class GamePanel extends JPanel {
     private static final long serialVersionUID = 1L;
@@ -25,20 +26,21 @@ public class GamePanel extends JPanel {
     private boolean fadeIn = true;
     private boolean showTransition = true;
     private float fadeTime = 0f;
-    private static final float FADE_DURATION = 0.5f;
-    private static final float WAIT_DURATION = 1.0f;
+    private float FADE_DURATION = 0.5f;
+    private float WAIT_DURATION = 1.0f;
     private boolean enemiesPrepared = false;
     private boolean isTransitionTriggered = false;
     private boolean transitionComplete = false;
     private boolean isGameOver = false;
     private boolean isPlayerExploding = false;
     private boolean isPlayerDead = false;
-    private boolean isVictory = false; // Biến mới cho trạng thái Victory
+    private boolean isVictory = false; 
+    private final SoundController soundController;
 
-    public GamePanel(Manager gameManager) {
+    public GamePanel(Manager gameManager, SoundController soundController) {
         this.gameManager = gameManager;
         this.paused = false;
-
+        this.soundController = soundController;
         this.gameRenderer = new GameRenderer(
             gameManager.getBulletController(),
             gameManager.getSkillsManager(),
@@ -48,7 +50,7 @@ public class GamePanel extends JPanel {
             gameManager.getGameStateController(),
             gameManager.getPlayerView(),
             ScreenUtil.getInstance(),
-            this // Truyền GamePanel vào GameRenderer
+            this
         );
 
         hideCursor();
@@ -149,6 +151,7 @@ public class GamePanel extends JPanel {
             return;
         }
         System.out.println("Triggering Game Over");
+        soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4Gameover.wav").getPath());    
         this.isGameOver = true;
         this.isTransitionTriggered = true;
         this.showTransition = true;
@@ -156,6 +159,7 @@ public class GamePanel extends JPanel {
         this.fadeTime = 0f;
         this.alpha = 0f;
         this.transitionComplete = false;
+        this.WAIT_DURATION = 9.0f;
     }
 
     public void triggerVictory() {

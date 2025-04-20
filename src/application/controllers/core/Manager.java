@@ -36,6 +36,8 @@ public class Manager {
     private GameStateHandler gameStateHandler;
     private final LevelTransitionHandler levelTransitionHandler;
 
+
+
     private String[] deathSounds = {
             "/asset/resources/sfx/chickDie3.wav",
             "/asset/resources/sfx/chickDie4.wav",
@@ -63,6 +65,7 @@ public class Manager {
         this.skillsManager = new EnemySkillsController(soundController);
         this.enemyController.setSkillsManager(skillsManager);
         this.deathEffectController = new DeathEffectController();
+        this.enemyController.setDeathEffectController(deathEffectController);
         this.playerController = new PlayerController(null);
         this.playerView = new PlayerView(playerController);
         this.playerController.setPlayerView(playerView);
@@ -141,6 +144,7 @@ public class Manager {
         }
 
         if (gameStateController.updateLevelTransition()) {
+            collisionManager.resetBulletPowerUp();
             gamePanel.triggerTransition();
         }
 

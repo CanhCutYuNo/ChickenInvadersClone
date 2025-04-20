@@ -57,6 +57,10 @@ public class ItemsController {
         atomDropped = true;
     }
 
+    public void resetAtomDropped() {
+        atomDropped = false;
+    }
+
 
     public class ItemUnit {
         public Items model;

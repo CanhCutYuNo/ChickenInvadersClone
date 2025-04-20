@@ -8,6 +8,7 @@ public class Bullet {
     public enum BulletType{
         NORMAL, DOUBLE
     }
+    private int originDame;
 
     private BulletType type;
 
@@ -18,6 +19,7 @@ public class Bullet {
         this.speedY = initialSpeedY;
         this.acceleration = acceleration;
         this.type = type;
+        this.originDame = damage;
     }
 
     public int getX() {
@@ -60,7 +62,11 @@ public class Bullet {
 
     public void transformToStrongerBullet() {
         this.type = BulletType.DOUBLE;
-        this.setDamage(this.getDamage() * 2);  // Tăng sát thương lên gấp đôi
+        this.damage = damage + 15;
+    }
+
+    public void resetToNormal(){
+        this.type = BulletType.NORMAL;
     }
 
     public BulletType getType(){return type;}
