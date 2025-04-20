@@ -289,8 +289,7 @@ public class EnemyView {
 
                 // Vẽ sprite boss
                 g.drawImage(bossImages[0],
-                        enemyModel.getPosX(), enemyModel.getPosY(),
-                        enemyModel.getPosX() + spriteWidth, enemyModel.getPosY() + spriteHeight,
+                    enemyModel.getPosX() - 300, enemyModel.getPosY() - 100, enemyModel.getPosX() + enemyModel.getModelWidth() + 300, enemyModel.getPosY() + enemyModel.getModelHeight() + 100,
                         spriteX, spriteY,
                         spriteX + spriteWidth, spriteY + spriteHeight, null);
 
@@ -314,5 +313,7 @@ public class EnemyView {
                 g2d.dispose();
             }
         }
+        g.setColor(Color.WHITE);
+        g.drawRect(enemyModel.getPosX(), enemyModel.getPosY(), enemyModel.getModelWidth(), enemyModel.getModelHeight());
     }
 }
