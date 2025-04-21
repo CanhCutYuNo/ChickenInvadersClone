@@ -3,6 +3,7 @@ package application.controllers.core;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
+import application.views.panels.BackgroundPanel;
 import application.views.panels.GamePanel;
 
 public class GameLoop {
@@ -17,8 +18,8 @@ public class GameLoop {
     private long lastUpdateTime = System.nanoTime();
     private final Manager gameManager;
     private final GamePanel gamePanel;
-
-    public GameLoop(GamePanel gamePanel, JFrame frame) {
+    
+    public GameLoop(GamePanel gamePanel, BackgroundPanel backgroundPanel, JFrame frame) {
         this.gamePanel = gamePanel;
         this.gameManager = gamePanel.getGameManager();
         this.paused = false;
@@ -31,6 +32,7 @@ public class GameLoop {
 
                 gamePanel.update(deltaTime);
                 gameManager.update(deltaTime);
+                backgroundPanel.update(deltaTime);
 
                 tickCount++;
             }
@@ -59,7 +61,7 @@ public class GameLoop {
 
     public void stop() {
         updateTimer.stop();
-     //   renderTimer.stop();
+        renderTimer.stop();
         paused = false;
         gamePanel.setPaused(false);
     }
@@ -68,7 +70,7 @@ public class GameLoop {
         if(!paused) {
             paused = true;
             updateTimer.stop();
-        //    renderTimer.stop();
+            renderTimer.stop();
             gamePanel.setPaused(true);
         }
     }
@@ -78,7 +80,7 @@ public class GameLoop {
             paused = false;
             lastUpdateTime = System.nanoTime();
             updateTimer.start();
-       //     renderTimer.start();
+            renderTimer.start();
             gamePanel.setPaused(false);
         }
     }

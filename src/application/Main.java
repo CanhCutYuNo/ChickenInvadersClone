@@ -63,7 +63,7 @@ public class Main {
 
             gamePanel = new GamePanel(gameManager, soundController);
             gameManager.setGamePanel(gamePanel);
-            gameLoop = new GameLoop(gamePanel, frame);
+            gameLoop = new GameLoop(gamePanel, backgroundPanel, frame);
             gameManager.setGameLoop(gameLoop);
 
             menuPanel = new MenuPanel(viewController);

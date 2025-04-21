@@ -81,6 +81,8 @@ public class GamePanel extends JPanel {
             return;
         }
 
+        if(isVictory || isGameOver) this.WAIT_DURATION = 9.0f;
+        else this.WAIT_DURATION = 1.0f;
         if(isTransitionTriggered && showTransition) {
             fadeTime += (float) deltaTime;
             if(fadeIn) {
@@ -149,7 +151,7 @@ public class GamePanel extends JPanel {
         if(paused) {
             return;
         }
-        System.out.println("Triggering Game Over");
+        
         soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4Gameover.wav").getPath());    
         this.isGameOver = true;
         this.isTransitionTriggered = true;
@@ -165,9 +167,8 @@ public class GamePanel extends JPanel {
         if(paused) {
             return;
         }
-        System.out.println("Triggering Victory");
         this.isVictory = true;
-        this.isPlayerDead = true; // Ngăn render người chơi
+        this.isPlayerDead = true;
         this.isTransitionTriggered = true;
         this.showTransition = true;
         this.fadeIn = true;
@@ -230,5 +231,13 @@ public class GamePanel extends JPanel {
 
     public Manager getGameManager() {
         return gameManager;
+    }
+    
+    public float getWAIT_DURATION() {
+    	return WAIT_DURATION;
+    }
+    
+    public void setWAIT_DURATION(float wait) {
+    	this.WAIT_DURATION = wait;
     }
 }

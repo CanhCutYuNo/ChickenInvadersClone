@@ -194,6 +194,10 @@ public class ViewController {
         }
         return true;
     }
+    
+    public Manager getManager() {
+    	return manager;
+    }
 
 	public void setManager(Manager gameManager) {
 		this.manager = gameManager;

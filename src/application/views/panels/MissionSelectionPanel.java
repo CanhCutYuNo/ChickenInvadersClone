@@ -92,7 +92,6 @@ public class MissionSelectionPanel extends JPanel {
     }
 
     private void createBackButton(JPanel containerPanel) {
-        // Back Button
         backButton = new Button("/asset/resources/gfx/button.png", "/asset/resources/gfx/button_hover.png");
         backButton.setText("Back");
         backButton.setFont(new Font("Comic Sans MS", Font.BOLD, (int)(30 * scaleX)));
@@ -101,12 +100,11 @@ public class MissionSelectionPanel extends JPanel {
 
             viewController.switchToMenuPanel();
         });
-        backButton.setBounds(scaledBounds(50, 950, 280, 110)); // x=466, y=690, width=348, height=70
+        backButton.setBounds(scaledBounds(50, 950, 280, 110));
         containerPanel.add(backButton);
     }
 
     private void createNextButton(JPanel containerPanel) {
-        // Next Button
         nextButton = new Button("/asset/resources/gfx/button.png", "/asset/resources/gfx/button_hover.png");
         nextButton.setText("Next!");
         nextButton.setFont(new Font("Comic Sans MS", Font.BOLD, (int) (30 * scaleX)));
@@ -116,7 +114,7 @@ public class MissionSelectionPanel extends JPanel {
             if(continueButton.isSelected()) {
                 gameSettings.setContinueLevel(gameSettings.getContinueLevel());
             } else if (startNewMissionButton.isSelected()) {
-                gameSettings.setContinueLevel(1);
+                viewController.getManager().getGameStateHandler().restartGame();
             }
             gameSettings.saveSettings();
             

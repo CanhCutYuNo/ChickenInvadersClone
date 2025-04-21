@@ -32,7 +32,7 @@ public class BulletController {
             Bullet.setY(Bullet.getY() - (int) speedY);
 
             if (Bullet.getType() == application.models.bullet.Bullet.BulletType.DOUBLE) {
-                Bullet.setDamage(Bullet.getDamage()); // Cập nhật damage nếu đạn là DOUBLE
+                Bullet.setDamage(Bullet.getDamage());
             }
 
             if(isOffScreen(Bullet, 1080)) {

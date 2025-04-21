@@ -42,7 +42,7 @@ public class MouseController implements MouseListener, MouseMotionListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if (SwingUtilities.isLeftMouseButton(e) && !gamePanel.isPaused()) { 
-            if (!shootTimer.isRunning()) {
+            if (!shootTimer.isRunning() && !gamePanel.isGameOver()) {
                 gamePanel.getGameManager().getPlayerActionHandler().shoot();
                 shootTimer.start();
             }

@@ -34,7 +34,7 @@ public class GameRenderer {
     private final GameStateController gameStates;
     private final PlayerView playerView;
     private final ScreenUtil screenUtil;
-    private final GamePanel gamePanel; // Tham chiếu đến GamePanel
+    private final GamePanel gamePanel;
     private final Image hudBar;
     private final Font font;
 
@@ -71,16 +71,24 @@ public class GameRenderer {
 
         g2d.scale(screenUtil.getWidth() / 1920f / screenUtil.getScaleX(),
                   screenUtil.getHeight() / 1080f / screenUtil.getScaleY());
+        
+        if(!isGameOver && !isVictory) {
+        	renderBullet(g);
+            deathEffectController.render(g);
+            itemsController.drawItems(g);
+            for(BulletDame text : gameStates.getFloatingTexts()) {
+                text.render(g);
+            }
+            skillsManager.drawSkills(g);
+        }
 
         if(showTransition) {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
             if(isVictory && victoryImage != null) {
-                System.out.println("Drawing victoryImage: alpha=" + alpha + ", width=" + victoryImage.getWidth() + ", height=" + victoryImage.getHeight());
                 int x = (1920 - victoryImage.getWidth()) / 2;
                 int y = (1080 - victoryImage.getHeight()) / 2;
                 g2d.drawImage(victoryImage, x, y, victoryImage.getWidth(), victoryImage.getHeight(), null);
             } else if(isGameOver && gameOverImage != null) {
-                System.out.println("Drawing gameOverImage: alpha=" + alpha + ", width=" + gameOverImage.getWidth() + ", height=" + gameOverImage.getHeight());
                 int x = (1920 - gameOverImage.getWidth()) / 2;
                 int y = (1080 - gameOverImage.getHeight()) / 2;
                 g2d.drawImage(gameOverImage, x, y, gameOverImage.getWidth(), gameOverImage.getHeight(), null);
@@ -90,18 +98,11 @@ public class GameRenderer {
                 g2d.drawImage(levelImage, x, y, levelImage.getWidth(), levelImage.getHeight(), null);
             }
         }
-
+        
         if(transitionComplete && !isGameOver && !isVictory) {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-            renderBullet(g);
-            skillsManager.drawSkills(g);
             if(levelManager != null) {
                 levelManager.render(g);
-            }
-            deathEffectController.render(g);
-            itemsController.drawItems(g);
-            for(BulletDame text : gameStates.getFloatingTexts()) {
-                text.render(g);
             }
         }
 

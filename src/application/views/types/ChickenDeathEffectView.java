@@ -9,8 +9,6 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javax.swing.ImageIcon;
-
 import application.controllers.util.ImageCache;
 import application.models.enemy.DeathEffect;
 import application.models.enemy.types.ChickenDeathEffect;
@@ -101,8 +99,8 @@ public class ChickenDeathEffectView {
             minFrameCount = Math.abs(random.nextInt() % 20);
             maxFrameCount = Math.abs(random.nextInt() % 27) + 26;
             frameCount = minFrameCount;
-            vX = (random.nextInt() % 3);
-            vY = (random.nextInt() % 3);
+            vX = (random.nextInt() % 2);
+            vY = (random.nextInt() % 2);
         }
 
         public void render(Graphics g) {

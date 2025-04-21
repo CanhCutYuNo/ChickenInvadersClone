@@ -133,11 +133,13 @@ public class Manager {
             return;
         }
         
-        updateBullets();
-        playerController.update();
-        items.updateItems();
-        skillsManager.updateSkills();
-        deathEffectController.update();
+        if(!gamePanel.isGameOver()) {
+        	updateBullets();
+        	playerController.update();
+            items.updateItems();
+            skillsManager.updateSkills();
+            deathEffectController.update();
+        }
 
         if (gamePanel.isTransitionActive()) {
             return;
