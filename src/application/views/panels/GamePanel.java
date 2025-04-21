@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 import application.controllers.core.Manager;
+import application.controllers.util.GameSettings;
 import application.controllers.util.MouseController;
 import application.controllers.util.ScreenUtil;
 import application.views.render.GameRenderer;
@@ -150,6 +151,11 @@ public class GamePanel extends JPanel {
             return;
         }
         System.out.println("Triggering Game Over");
+
+        GameSettings gameSettings = GameSettings.getInstance();
+        gameSettings.setContinueLevel(0);
+        gameSettings.saveSettings();
+
         soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4Gameover.wav").getPath());    
         this.isGameOver = true;
         this.isTransitionTriggered = true;
@@ -166,6 +172,12 @@ public class GamePanel extends JPanel {
             return;
         }
         System.out.println("Triggering Victory");
+
+        GameSettings gameSettings = GameSettings.getInstance();
+        gameSettings.setContinueLevel(0);
+        gameSettings.setComplete(true);
+        gameSettings.saveSettings();
+
         soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4MinorWin.wav").getPath());    
         this.isVictory = true;
         this.isPlayerDead = true; // Ngăn render người chơi

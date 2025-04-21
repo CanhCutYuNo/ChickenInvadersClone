@@ -24,7 +24,7 @@ public class MissionSelectionPanel extends JPanel {
     private SoundController soundClick;
     private JLayeredPane jLayeredPane;
     private JPanel backgroundPanel;
-    private Button backButton, nextButton;
+    private Button backButton, nextButton, switchToLevelSelectionButtonButton;
     private RadioButton continueButton, startNewMissionButton;
     private final GameSettings gameSettings = GameSettings.getInstance();
     private JLabel continueLabel;
@@ -78,6 +78,8 @@ public class MissionSelectionPanel extends JPanel {
 
         createStartNewMission(containerPanel);
 
+        createSwtichToLevelSelectionButton(containerPanel);
+
         createBackButton(containerPanel);
 
         createNextButton(containerPanel);
@@ -104,6 +106,19 @@ public class MissionSelectionPanel extends JPanel {
         backButton.setBounds(scaledBounds(50, 950, 280, 110)); // x=466, y=690, width=348, height=70
         containerPanel.add(backButton);
     }
+
+    private void createSwtichToLevelSelectionButton(JPanel containerPanel) {
+        switchToLevelSelectionButtonButton = new Button("/asset/resources/gfx/button.png", "/asset/resources/gfx/button_hover.png");
+        switchToLevelSelectionButtonButton.setText("Level");
+        switchToLevelSelectionButtonButton.setFont(new Font("Comic Sans MS", Font.BOLD, (int)(30 * scaleX)));
+        switchToLevelSelectionButtonButton.addActionListener(e -> {
+            soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
+
+            viewController.switchToLevelSelectionPanel();
+        });
+        switchToLevelSelectionButtonButton.setBounds(scaledBounds(820, 950, 280, 110)); 
+        containerPanel.add(switchToLevelSelectionButtonButton);
+    }    
 
     private void createNextButton(JPanel containerPanel) {
         // Next Button
@@ -196,6 +211,12 @@ public class MissionSelectionPanel extends JPanel {
             continueButton.setEnabled(true);
             continueButton.setSelected(true);
             continueLabel.setForeground(Color.WHITE);
+        }
+        if(gameSettings.isComplete()){
+            switchToLevelSelectionButtonButton.setEnabled(true);
+        }
+        else{
+            switchToLevelSelectionButtonButton.setEnabled(false);
         }
     }
 

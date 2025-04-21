@@ -79,6 +79,19 @@ public class Button extends JButton {
         g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
+        if(super.isEnabled()){
+            paintEnabledComponent(g);
+        }
+        else{
+            paintUnabledComponent(g);
+        }
+
+        g2D.dispose();
+    }
+
+    private void paintEnabledComponent(Graphics g) {
+        Graphics2D g2D = (Graphics2D)g;
+
         // Vẽ ảnh nền (hover hoặc normal)
         if (isEntered && buttonHoverImage != null) {
             g2D.drawImage(buttonHoverImage, 0, 0, getWidth(), getHeight(), this);
@@ -89,14 +102,14 @@ public class Button extends JButton {
             g2D.setColor(new Color(0, 0, 0, 200));
             g2D.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
         }
-
+    
         // Vẽ hình ảnh dấu tick nếu trạng thái là checked
-        if (isChecked && checkedImage != null) {
+        if (super.isSelected() && checkedImage != null) {
             int x = (getWidth() - checkedImage.getWidth()) / 2;
             int y = (getHeight() - checkedImage.getHeight()) / 2;
             g2D.drawImage(checkedImage, x, y, this);
         }
-
+    
         // Vẽ text căn giữa
         String text = getText();
         if (text != null && !text.isEmpty()) {
@@ -110,7 +123,42 @@ public class Button extends JButton {
             g2D.drawString(text, x, y);
         }
 
-        g2D.dispose();
+    }
+
+    private void paintUnabledComponent(Graphics g) {
+        Graphics2D g2D = (Graphics2D)g;
+
+        // Làm tối đi
+        g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+
+        // Vẽ ảnh nền (hover hoặc normal)
+        if (buttonImage != null) {
+            g2D.drawImage(buttonImage, 0, 0, getWidth(), getHeight(), this);
+        } else {
+            // Fallback nếu không có ảnh
+            g2D.setColor(new Color(0, 0, 0, 200));
+            g2D.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+        }
+    
+        // Vẽ hình ảnh dấu tick nếu trạng thái là checked
+        if (super.isSelected() && checkedImage != null) {
+            int x = (getWidth() - checkedImage.getWidth()) / 2;
+            int y = (getHeight() - checkedImage.getHeight()) / 2;
+            g2D.drawImage(checkedImage, x, y, this);
+        }
+    
+        // Vẽ text căn giữa
+        String text = getText();
+        if (text != null && !text.isEmpty()) {
+            g2D.setFont(getFont());
+            FontMetrics fm = g2D.getFontMetrics();
+            int textWidth = fm.stringWidth(text);
+            int textHeight = fm.getAscent();
+            int x = (getWidth() - textWidth) / 2;
+            int y = (getHeight() + textHeight) / 2 - fm.getDescent();
+            g2D.setColor(getForeground());
+            g2D.drawString(text, x, y);
+        }       
     }
 
     public void enter() {
