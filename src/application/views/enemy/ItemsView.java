@@ -1,18 +1,20 @@
 package application.views.enemy;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import application.models.enemy.Items;
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+
+import application.models.enemy.Items;
 
 public class ItemsView {
     private BufferedImage atomSpritesheet;
     private BufferedImage[] atomSprites; // Mảng chứa các sprite đã cắt
     private Image foodImage;
     private Image itemImage;
-    private Items items;
     private int currentFrame = 0;
     private int frameCounter = 0;
     private static final int FRAME_DELAY = 5;
@@ -28,7 +30,6 @@ public class ItemsView {
     };
 
     public ItemsView(Items items) {
-        this.items = items;
         try {
             atomSpritesheet = ImageIO.read(getClass().getResource("/asset/resources/gfx/atom_1.png"));
             foodImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/food_thighs.PNG")).getImage();

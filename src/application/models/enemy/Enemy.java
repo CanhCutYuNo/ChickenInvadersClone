@@ -137,15 +137,15 @@ public class Enemy {
         } else if (type == EnemyType.CHICKEN_BOSS) {
             switch (GameSettings.getInstance().getDifficulty()) {
             case EASY:
-                return 250;
+                return 1000;
             case NORMAL:
-                return 350;
+                return 1500;
             case HARD:
-                return 450;
+                return 2000;
             case EXTREME:
-                return 550;
+                return 3500;
             default:
-                return 250;
+                return 1000;
             }
         }
             

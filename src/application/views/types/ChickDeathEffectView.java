@@ -1,14 +1,13 @@
 package application.views.types;
 
-import application.controllers.util.ImageCache;
-import application.models.enemy.DeathEffect;
-import application.models.enemy.types.ChickDeathEffect;
-
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Random;
-import javax.swing.ImageIcon;
+
+import application.controllers.util.ImageCache;
+import application.models.enemy.DeathEffect;
+import application.models.enemy.types.ChickDeathEffect;
 
 public class ChickDeathEffectView {
    private final DeathEffect deathEffect;

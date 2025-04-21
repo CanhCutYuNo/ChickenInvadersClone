@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 
 import application.controllers.util.ImageCache;
 import application.controllers.util.SoundController;
