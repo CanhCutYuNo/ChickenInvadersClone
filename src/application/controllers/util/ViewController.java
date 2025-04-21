@@ -76,61 +76,62 @@ public class ViewController {
     }
 
     public void switchToMenuPanel() {
-    	gameLoop.stop();
-        if (checkComponents("Menu", menuPanel, backgroundPanel)) {
+        if(checkComponents("Menu", menuPanel, backgroundPanel)) {
             cardLayout.show(mainPanel, "Menu");
             gameContainerPanel.hidePauseOverlay();
             menuPanel.setBackgroundPanel(backgroundPanel);
-            if (soundController != null) {
+            if(soundController != null) {
                 soundController.stopBackgroundMusic();
                 try {
                     URL soundUrl = getClass().getResource("/asset/resources/sfx/CI4Theme.wav");
-                    if (soundUrl != null) {
+                    if(soundUrl != null) {
                         soundController.playBackgroundMusic(soundUrl.getPath());
                     } else {
-                        System.err.println("UIManager: Sound resource not found: /asset/resources/sfx/CI4Theme.wav");
+                        System.err.println("ound resource not found: /asset/resources/sfx/CI4Theme.wav");
                     }
                 } catch (Exception ex) {
-                    System.err.println("UIManager: Error playing menu music - " + ex.getMessage());
+                    System.err.println("Error playing menu music - " + ex.getMessage());
                 }
             }
             gameLoop.start();
+            gamePanel.setPaused(true);
         }
     }
 
     public void switchToSettingPanel() {
-        if (checkComponents("Settings", settingPanel, backgroundPanel)) {
+        if(checkComponents("Settings", settingPanel, backgroundPanel)) {
             cardLayout.show(mainPanel, "Setting");
             settingPanel.setBackgroundPanel(backgroundPanel);
         }
     }
 
     public void switchToMissionSelectionPanel() {
-        if (checkComponents("MissionSelection", missionSelectionPanel, backgroundPanel)) {
+        if(checkComponents("MissionSelection", missionSelectionPanel, backgroundPanel)) {
             cardLayout.show(mainPanel, "MissionSelection");
             missionSelectionPanel.setBackgroundPanel(backgroundPanel);
-            if (missionSelectionPanel != null) missionSelectionPanel.refresh();
+            if(missionSelectionPanel != null) missionSelectionPanel.refresh();
         }
     }
 
     public void switchToLevelSelectionPanel(){
-        if (checkComponents("LevelSelection", levelSelectionPanel, backgroundPanel)) {
+        if(checkComponents("LevelSelection", levelSelectionPanel, backgroundPanel)) {
             cardLayout.show(mainPanel, "LevelSelection");
             levelSelectionPanel.setBackgroundPanel(backgroundPanel);
-            if (levelSelectionPanel != null) levelSelectionPanel.refresh();
+            if(levelSelectionPanel != null) levelSelectionPanel.refresh();
         }        
     }
 
     public void switchToGameContainerPanel() {
-        if (checkComponents("Game", gameContainerPanel, backgroundPanel)) {
+    	gamePanel.setPaused(false);
+        if(checkComponents("Game", gameContainerPanel, backgroundPanel)) {
             cardLayout.show(mainPanel, "Game");
             gameContainerPanel.setBackgroundPanel(backgroundPanel);
             centerMouseOnPlayer();
-            if (soundController != null) {
+            if(soundController != null) {
                 soundController.stopBackgroundMusic();
                 try {
                     URL soundUrl = getClass().getResource("/asset/resources/sfx/CI4Ingame2.wav");
-                    if (soundUrl != null) {
+                    if(soundUrl != null) {
                         soundController.playBackgroundMusic(soundUrl.getPath());
                     } else {
                         System.err.println("UIManager: Sound resource not found: /asset/resources/sfx/CI4Ingame2.wav");
@@ -139,8 +140,8 @@ public class ViewController {
                     System.err.println("UIManager: Error playing game music - " + ex.getMessage());
                 }
             }
-            if (manager != null) manager.load();
-            if (gamePanel != null) {
+            if(manager != null) manager.load();
+            if(gamePanel != null) {
                 gamePanel.requestFocusInWindow();
                 gamePanel.triggerTransition();
             }
@@ -148,29 +149,29 @@ public class ViewController {
     }
 
     public void switchToPausePanel() {
-        if (gameContainerPanel != null) {
+        if(gameContainerPanel != null) {
             gameContainerPanel.showPauseOverlay();
-            if (gameLoop != null) {
+            if(gameLoop != null) {
                 gameLoop.pause();
             }
         }
     }
 
     public void resumeGame() {
-        if (gameContainerPanel != null) {
+        if(gameContainerPanel != null) {
             gameContainerPanel.hidePauseOverlay();
-            if (gamePanel != null) {
+            if(gamePanel != null) {
                 centerMouseOnPlayer();
                 gamePanel.requestFocusInWindow();
             }
-            if (gameLoop != null) {
+            if(gameLoop != null) {
                 gameLoop.resume();
             }
         }
     }
 
     private void centerMouseOnPlayer() {
-        if (gamePanel == null || manager == null) {
+        if(gamePanel == null || manager == null) {
             return;
         }
         try {
@@ -185,7 +186,6 @@ public class ViewController {
             int mouseY = screenPos.y + playerCenterY;
 
             Robot robot = new Robot();
-            System.out.println("UIManager: Centering mouse to Player at screen coordinates: " + mouseX + ", " + mouseY);
             robot.mouseMove(mouseX, mouseY);
         } catch (AWTException | IllegalComponentStateException e) {
             System.err.println("UIManager: Failed to center mouse - " + e.getMessage());
@@ -196,12 +196,12 @@ public class ViewController {
 
     private boolean checkComponents(String targetPanel, JComponent... components) {
         for (JComponent comp : components) {
-            if (comp == null) {
+            if(comp == null) {
                 System.err.println("UIManager Error: Cannot switch to " + targetPanel + " - Required component is null: " + comp);
                 return false;
             }
         }
-        if (cardLayout == null || mainPanel == null) {
+        if(cardLayout == null || mainPanel == null) {
             System.err.println("UIManager Error: Cannot switch to " + targetPanel + " - CardLayout or MainPanel is null.");
             return false;
         }

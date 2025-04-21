@@ -179,8 +179,4 @@ public class PausePanel extends JPanel {
             resumeButton.requestFocusInWindow();
         }
     }
-
-    public void onPausePanelHidden() {
-    	
-    }
 }

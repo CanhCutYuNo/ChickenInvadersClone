@@ -3,6 +3,7 @@ package application.controllers.core;
 import application.controllers.bullet.BulletController;
 import application.controllers.enemy.EnemyController;
 import application.controllers.enemy.death.DeathEffectController;
+import application.controllers.enemy.items.ItemsController;
 import application.controllers.enemy.skills.EnemySkillsController;
 import application.controllers.level.ILevelManager;
 import application.controllers.player.PlayerController;
@@ -16,19 +17,22 @@ public class GameStateHandler {
     private final PlayerController playerController;
     private final BulletController bullets;
     private final DeathEffectController deathEffectController;
+    private final ItemsController itemsController;
     private final ViewController viewController;
     
     private ILevelManager levelManager;
 
     public GameStateHandler(GameStateController gameStateController, EnemyController enemyController,
                             EnemySkillsController skillsManager, PlayerController playerController,
-                            BulletController bullets, DeathEffectController deathEffectController, ViewController viewController) {
+                            BulletController bullets, DeathEffectController deathEffectController, 
+                            ItemsController itemsController, ViewController viewController) {
         this.gameStateController = gameStateController;
         this.enemyController = enemyController;
         this.skillsManager = skillsManager;
         this.playerController = playerController;
         this.bullets = bullets;
         this.deathEffectController = deathEffectController;
+        this.itemsController = itemsController;
         this.viewController = viewController;
     }
 
@@ -39,6 +43,9 @@ public class GameStateHandler {
         playerController.setPosX(800);
         playerController.setPosY(950);
         bullets.clear();
+        deathEffectController.clear();
+        gameStateController.clearAllFloatingTexts();
+        itemsController.clear();
         levelManager = null;
         playerController.setHP(100);
         viewController.showMenu();
@@ -52,6 +59,7 @@ public class GameStateHandler {
         bullets.clear();
         deathEffectController.clear();
         gameStateController.clearAllFloatingTexts();
+        itemsController.clear();
     }
 
     public void load() {

@@ -29,7 +29,6 @@ public final class ScreenUtil {
         Dimension screenSize = toolkit.getScreenSize();
         screenWidth = screenSize.width;
         screenHeight = screenSize.height;
-        System.out.println(screenWidth + ", " + screenHeight);
     }
 
     public static ScreenUtil getInstance() { 

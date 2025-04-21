@@ -89,7 +89,6 @@ public class Level4Manager extends LevelManager implements EnemyDeathListener {
     @Override
     public void onEnemyDeath(Enemy enemy, int index) {
         if (enemy.getType() == Enemy.EnemyType.EGG_SHELL_ENEMY) {
-            System.out.println("EggShellEnemy " + index + " died, spawning ChickEnemy");
             int chickPosX = enemy.getPosX() + (enemy.getModelWidth() - 46) / 2;
             int chickPosY = enemy.getPosY() + (enemy.getModelHeight() - 54) / 2;
             Enemy chickModel = new Enemy(46, 54, chickPosX, chickPosY, 0, Enemy.EnemyType.CHICK_ENEMY);

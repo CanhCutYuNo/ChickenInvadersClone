@@ -86,9 +86,13 @@ public class ItemsController {
     public List<ItemUnit> getItemUnits() {
         return itemUnits;
     }
+    
     public void removeItems(List<ItemUnit> units) {
         itemUnits.removeAll(units);
     }
-
+    
+    public void clear() {
+    	itemUnits.clear();
+    }
 
 }

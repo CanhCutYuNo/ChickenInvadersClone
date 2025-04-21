@@ -129,11 +129,12 @@ public class MissionSelectionPanel extends JPanel {
             if(continueButton.isSelected()) {
                 gameSettings.setContinueLevel(gameSettings.getContinueLevel());
                 viewController.getManager().getGameStateHandler().continueGame();
-            } else if (startNewMissionButton.isSelected()) {
+            } else if(startNewMissionButton.isSelected()) {
+            	gameSettings.setContinueLevel(1);
                 viewController.getManager().getGameStateHandler().restartGame();
             }
             gameSettings.saveSettings();
-            
+            viewController.getManager().getCollisionManager().resetBulletPowerUp();
             viewController.switchToGameContainerPanel();
         });
         nextButton.setBounds(scaledBounds(1590, 950, 280, 110)); // x=466, y=690, width=348, height=70

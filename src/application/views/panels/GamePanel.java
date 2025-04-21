@@ -245,12 +245,4 @@ public class GamePanel extends JPanel {
     public Manager getGameManager() {
         return gameManager;
     }
-    
-    public float getWAIT_DURATION() {
-    	return WAIT_DURATION;
-    }
-    
-    public void setWAIT_DURATION(float wait) {
-    	this.WAIT_DURATION = wait;
-    }
 }

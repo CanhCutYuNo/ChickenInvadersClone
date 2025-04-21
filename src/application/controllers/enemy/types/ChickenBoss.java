@@ -14,7 +14,6 @@ public class ChickenBoss implements EnemyBehavior {
             return;
         }
 
-        // Di chuyển đến trung tâm
         if (enemy.isMovingToCenter()) {
             enemy.setPosY(enemy.getPosY() - enemy.getMoveSpeed());
             if (enemy.getPosY() <= enemy.getTargetY()) {
@@ -29,7 +28,6 @@ public class ChickenBoss implements EnemyBehavior {
                 enemy.setShouldCreateHole(true);
                 enemy.setLastHoleSkillTime(currentTime);
                 enemy.setSkillState(1);
-                System.out.println("ChickenBoss requests new HOLE skill at " + currentTime);
             }
         } else if (enemy.getSkillState() == 1) {
             if (currentTime - enemy.getLastHoleSkillTime() >= enemy.getSkillsDelay() &&
@@ -37,7 +35,6 @@ public class ChickenBoss implements EnemyBehavior {
                 enemy.setShouldCreateFireballBurst(true);
                 enemy.setLastFireballSkillTime(currentTime);
                 enemy.setSkillState(0);
-                System.out.println("ChickenBoss requests new FIREBALL burst at " + currentTime);
             }
         }
     }

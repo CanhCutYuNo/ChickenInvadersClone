@@ -14,7 +14,6 @@ public class GameStateController {
         this.gameStates = gameStates;
     }
 
-    // Kiểm tra và kích hoạt chuyển level
     public void checkLevelTransition(boolean isEnemiesEmpty) {
         if (isEnemiesEmpty && !gameStates.isLevelTransitionTriggered() && !gameStates.isDelaying()) {
             gameStates.setLevel(gameStates.getLevel() + 1);
@@ -24,7 +23,6 @@ public class GameStateController {
         }
     }
 
-    // Cập nhật trạng thái chuyển level (xử lý thời gian chờ)
     public boolean updateLevelTransition() {
         if (gameStates.isDelaying()) {
             long currentTime = System.currentTimeMillis();
@@ -32,18 +30,16 @@ public class GameStateController {
                 gameStates.setDelaying(false);
                 gameStates.setLevelTransitionTriggered(true);
 
-                return true; // Báo hiệu rằng đã sẵn sàng để chuyển cảnh
+                return true;
             }
         }
         return false;
     }
 
-    // Hoàn tất chuyển cảnh
     public void onTransitionComplete() {
         gameStates.setLevelTransitionTriggered(false);
     }
 
-    // Cập nhật văn bản nổi (FloatingText)
     public void updateFloatingTexts() {
         for (BulletDame floatingText : gameStates.getFloatingTexts()) {
             floatingText.update();
@@ -51,7 +47,6 @@ public class GameStateController {
         gameStates.removeExpiredFloatingTexts();
     }
 
-    // Thêm văn bản nổi
     public void spawnFloatingText(int x, int y, String text, Color color) {
         gameStates.addFloatingText(new BulletDame(x, y, text, color));
     }
@@ -60,12 +55,10 @@ public class GameStateController {
         gameStates.getFloatingTexts().clear();
     }
     
-    // Reset trạng thái game
     public void resetGame() {
         gameStates.reset();
     }
 
-    // Getters để truy cập trạng thái
     public int getLevel() {
         return gameStates.getLevel();
     }
@@ -94,7 +87,6 @@ public class GameStateController {
         return gameStates.isLevelTransitionTriggered();
     }
 
-    // Load level từ settings (nếu cần)
     public void loadLevel(int level) {
         gameStates.setLevel(level);
     }

@@ -70,7 +70,7 @@ public class Manager {
         this.playerController = new PlayerController(null);
         this.playerView = new PlayerView(playerController);
         this.playerController.setPlayerView(playerView);
-        this.items = new ItemsController("/asset/resources/gfx/flareSmall~1.png");
+        this.items = new ItemsController("");
         this.gameLoop = _gameLoop;
         this.gamePanel = _gamePanel;
         this.collisionManager = new CollisionManager(playerController, enemyController, bullets,
@@ -84,7 +84,7 @@ public class Manager {
         return playerController;
     }
 
-    public GameStateController getGameStateController() { // Thêm getter cho GameStateController
+    public GameStateController getGameStateController() { 
         return gameStateController;
     }
     
@@ -123,13 +123,21 @@ public class Manager {
     public PlayerActionHandler getPlayerActionHandler() {
     	return playerActionHandler;
     }
+    
+    public CollisionManager getCollisionManager() {
+    	return collisionManager;
+    }
 
     public void onTransitionComplete() {
         levelTransitionHandler.onTransitionComplete();
     }
 
     public void update(double deltaTime) {
-        if (playerView.isExploding()) {
+    	if(gamePanel.isPaused()) {
+    		return;
+    	}
+    	
+    	if(playerView.isExploding()) {
             playerView.updateExplosion();
             return;
         }
@@ -144,12 +152,11 @@ public class Manager {
             gameStateController.updateFloatingTexts();
         }
 
-        if (gamePanel.isTransitionActive()) {
+        if(gamePanel.isTransitionActive()) {
             return;
         }
 
-        if (gameStateController.updateLevelTransition()) {
-            //collisionManager.resetBulletPowerUp();
+        if(gameStateController.updateLevelTransition()) {
             gamePanel.triggerTransition();
             
             GameSettings gameSettings = GameSettings.getInstance();
@@ -157,7 +164,7 @@ public class Manager {
             gameSettings.saveSettings();
         }
 
-        if (gameStateController.isDelaying()) {
+        if(gameStateController.isDelaying()) {
             return;
         }
 
@@ -165,7 +172,7 @@ public class Manager {
         
 
         ILevelManager levelManager = gameStateHandler.getLevelManager();
-        if (levelManager != null) {
+        if(levelManager != null) {
             levelManager.update((float) deltaTime);
         }
         
@@ -200,6 +207,6 @@ public class Manager {
 	public void setViewController(ViewController _viewController) {
 		this.viewController = _viewController;
 		this.gameStateHandler = new GameStateHandler(gameStateController, enemyController, skillsManager,
-                playerController, bullets, deathEffectController, viewController);
+                playerController, bullets, deathEffectController, items, viewController);
 	}
 }

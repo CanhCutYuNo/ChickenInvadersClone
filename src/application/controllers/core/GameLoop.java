@@ -62,8 +62,8 @@ public class GameLoop {
     public void stop() {
         updateTimer.stop();
         renderTimer.stop();
-        paused = false;
-        gamePanel.setPaused(false);
+        paused = true;
+        gamePanel.setPaused(true);
     }
 
     public void pause() {

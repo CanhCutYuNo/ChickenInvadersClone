@@ -116,6 +116,7 @@ public class LevelSelectionPanel extends JPanel {
             gameSettings.saveSettings();
             
             viewController.getManager().getGameStateHandler().continueGame();
+            viewController.getManager().getCollisionManager().resetBulletPowerUp();
             viewController.switchToGameContainerPanel();
         });
         nextButton.setBounds(scaledBounds(1590, 950, 280, 110)); // x=466, y=690, width=348, height=70
