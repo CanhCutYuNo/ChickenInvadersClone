@@ -44,7 +44,6 @@ public class Level4Manager extends LevelManager implements EnemyDeathListener {
         super.update(deltaTime);
         updateEggShells(deltaTime);
         updateChicks(deltaTime);
-        // Không cần checkEnemyDeath() nữa, xử lý qua sự kiện
     }
 
     private void updateEggShells(float deltaTime) {
@@ -62,9 +61,9 @@ public class Level4Manager extends LevelManager implements EnemyDeathListener {
 
                     if (enemy.getPosY() > 1000) {
                         enemy.setPosX(random.nextInt(1000) + 20);
-                        enemy.setPosY(random.nextInt(50) + 3);
+                        enemy.setPosY(random.nextInt(100) - 300);
                         enemy.state.timeElapsed = 0;
-                        enemy.state.timeDelay = 1.0f + random.nextFloat(); //Chỉ chờ 1-2s
+                        enemy.state.timeDelay = 1.0f + random.nextFloat();
                         enemy.state.isActive = false;
                     }
                 }
