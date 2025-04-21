@@ -134,12 +134,14 @@ public class Manager {
             return;
         }
         
-        if(!gamePanel.isGameOver()) {
+        if(!gamePanel.isGameOver() && !gamePanel.isVictory()) {
         	updateBullets();
         	playerController.update();
             items.updateItems();
             skillsManager.updateSkills();
             deathEffectController.update();
+            collisionManager.checkCollisions();
+            gameStateController.updateFloatingTexts();
         }
 
         if (gamePanel.isTransitionActive()) {
@@ -147,7 +149,7 @@ public class Manager {
         }
 
         if (gameStateController.updateLevelTransition()) {
-            collisionManager.resetBulletPowerUp();
+            //collisionManager.resetBulletPowerUp();
             gamePanel.triggerTransition();
             
             GameSettings gameSettings = GameSettings.getInstance();
@@ -166,10 +168,7 @@ public class Manager {
         if (levelManager != null) {
             levelManager.update((float) deltaTime);
         }
-
-        collisionManager.checkCollisions();
-        gameStateController.updateFloatingTexts();
-
+        
         gameStateController.checkLevelTransition(enemyController.getEnemyModels().isEmpty());
     }
 
