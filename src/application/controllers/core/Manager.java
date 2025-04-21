@@ -11,6 +11,7 @@ import application.controllers.level.ILevelManager;
 import application.controllers.level.LevelTransitionHandler;
 import application.controllers.player.PlayerActionHandler;
 import application.controllers.player.PlayerController;
+import application.controllers.util.GameSettings;
 import application.controllers.util.SoundController;
 import application.controllers.util.ViewController;
 import application.models.core.GameStates;
@@ -146,6 +147,10 @@ public class Manager {
         if (gameStateController.updateLevelTransition()) {
             collisionManager.resetBulletPowerUp();
             gamePanel.triggerTransition();
+            
+            GameSettings gameSettings = GameSettings.getInstance();
+            gameSettings.setContinueLevel(getGameStateController().getLevel());
+            gameSettings.saveSettings();
         }
 
         if (gameStateController.isDelaying()) {

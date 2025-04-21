@@ -1,6 +1,5 @@
 package application.controllers.core;
 
-import application.controllers.util.GameSettings;
 import application.models.bullet.BulletDame;
 import application.models.core.GameStates;
 
@@ -22,9 +21,6 @@ public class GameStateController {
             gameStates.setDelaying(true);
             gameStates.setDelayStartTime(System.currentTimeMillis());
 
-            GameSettings gameSettings = GameSettings.getInstance();
-            gameSettings.setContinueLevel(gameStates.getLevel());
-            gameSettings.saveSettings();
         }
     }
 
