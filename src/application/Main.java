@@ -15,6 +15,7 @@ import application.controllers.util.ViewController;
 import application.views.panels.BackgroundPanel;
 import application.views.panels.GameContainerPanel;
 import application.views.panels.GamePanel;
+import application.views.panels.LevelSelectionPanel;
 import application.views.panels.MenuPanel;
 import application.views.panels.MissionSelectionPanel;
 import application.views.panels.PausePanel;
@@ -31,6 +32,7 @@ public class Main {
     private static SettingPanel settingPanel;
     private static GameContainerPanel gameContainerPanel;
     private static MissionSelectionPanel missionSelectionPanel;
+    private static LevelSelectionPanel levelSelectionPanel;
     private static GameLoop gameLoop;
     private static ViewController viewController;
     private static SoundController soundController; 
@@ -72,15 +74,18 @@ public class Main {
             settingPanel = new SettingPanel(viewController, soundController);
             gameContainerPanel = new GameContainerPanel(gamePanel, pausePanel);
             missionSelectionPanel = new MissionSelectionPanel(viewController, soundController);
+            levelSelectionPanel = new LevelSelectionPanel(viewController, soundController);
 
             mainPanel.add(menuPanel, "Menu");
             mainPanel.add(settingPanel, "Setting");
             mainPanel.add(gameContainerPanel, "Game");
             mainPanel.add(missionSelectionPanel, "MissionSelection");
+            mainPanel.add(levelSelectionPanel, "LevelSelection");
 
-            viewController.setPanels(menuPanel, settingPanel, gameContainerPanel, gamePanel, missionSelectionPanel, gameLoop);
+            viewController.setPanels(menuPanel, settingPanel, gameContainerPanel, gamePanel, missionSelectionPanel, levelSelectionPanel,
+                                     gameLoop);
 
-            viewController.switchToMenuPanel();;
+            viewController.switchToMenuPanel();
             gameLoop.start();
 
             frame.add(mainPanel);
