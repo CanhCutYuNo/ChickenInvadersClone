@@ -153,7 +153,7 @@ public class GamePanel extends JPanel {
         System.out.println("Triggering Game Over");
 
         GameSettings gameSettings = GameSettings.getInstance();
-        gameSettings.setContinueLevel(0);
+        gameSettings.setContinueLevel(1);
         gameSettings.saveSettings();
 
         soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4Gameover.wav").getPath());    
@@ -174,7 +174,7 @@ public class GamePanel extends JPanel {
         System.out.println("Triggering Victory");
 
         GameSettings gameSettings = GameSettings.getInstance();
-        gameSettings.setContinueLevel(0);
+        gameSettings.setContinueLevel(1);
         gameSettings.setComplete(true);
         gameSettings.saveSettings();
 
