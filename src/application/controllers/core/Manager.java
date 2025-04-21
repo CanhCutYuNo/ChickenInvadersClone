@@ -201,6 +201,6 @@ public class Manager {
 	public void setViewController(ViewController _viewController) {
 		this.viewController = _viewController;
 		this.gameStateHandler = new GameStateHandler(gameStateController, enemyController, skillsManager,
-                playerController, bullets, viewController);
+                playerController, bullets, deathEffectController, viewController);
 	}
 }

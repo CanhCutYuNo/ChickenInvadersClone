@@ -128,6 +128,7 @@ public class MissionSelectionPanel extends JPanel {
 
             if(continueButton.isSelected()) {
                 gameSettings.setContinueLevel(gameSettings.getContinueLevel());
+                viewController.getManager().getGameStateHandler().continueGame();
             } else if (startNewMissionButton.isSelected()) {
                 viewController.getManager().getGameStateHandler().restartGame();
             }

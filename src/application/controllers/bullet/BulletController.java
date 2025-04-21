@@ -31,7 +31,7 @@ public class BulletController {
             Bullet.setSpeedY(speedY);
             Bullet.setY(Bullet.getY() - (int) speedY);
 
-            if (Bullet.getType() == application.models.bullet.Bullet.BulletType.DOUBLE) {
+            if(Bullet.getType() == application.models.bullet.Bullet.BulletType.DOUBLE) {
                 Bullet.setDamage(Bullet.getDamage());
             }
 

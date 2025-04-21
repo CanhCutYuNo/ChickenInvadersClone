@@ -1,10 +1,10 @@
 package application.views.bullet;
 
-import javax.swing.*;
+import java.awt.Graphics;
+import java.awt.Image;
 
 import application.controllers.util.ImageCache;
 import application.models.bullet.Bullet;
-import java.awt.*;
 
 public class BulletView {
     private Image imageBullet;          // Hình ảnh của bullet bình thường

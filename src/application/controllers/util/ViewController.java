@@ -76,6 +76,7 @@ public class ViewController {
     }
 
     public void switchToMenuPanel() {
+    	gameLoop.stop();
         if (checkComponents("Menu", menuPanel, backgroundPanel)) {
             cardLayout.show(mainPanel, "Menu");
             gameContainerPanel.hidePauseOverlay();

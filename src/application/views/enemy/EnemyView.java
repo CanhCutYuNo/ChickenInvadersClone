@@ -1,15 +1,16 @@
 package application.views.enemy;
 
-import javax.swing.*;
-
-import application.controllers.util.ImageCache;
-import application.models.enemy.Enemy;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import application.controllers.util.ImageCache;
+import application.models.enemy.Enemy;
 
 public class EnemyView {
     private Enemy enemyModel;
@@ -289,7 +290,7 @@ public class EnemyView {
 
                 // Vẽ sprite boss
                 g.drawImage(bossImages[0],
-                    enemyModel.getPosX() - 300, enemyModel.getPosY() - 50, enemyModel.getPosX() + enemyModel.getModelWidth() + 300, enemyModel.getPosY() + enemyModel.getModelHeight() + 100,
+                    enemyModel.getPosX() - 200, enemyModel.getPosY() - 50, enemyModel.getPosX() + enemyModel.getModelWidth() + 200, enemyModel.getPosY() + enemyModel.getModelHeight() + 100,
                         spriteX, spriteY,
                         spriteX + spriteWidth, spriteY + spriteHeight, null);
 

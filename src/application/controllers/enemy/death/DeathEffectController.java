@@ -38,4 +38,7 @@ public class DeathEffectController {
         }
     }
 
+    public void clear() {
+    	deathEffects.clear();
+    }
 }

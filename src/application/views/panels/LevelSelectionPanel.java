@@ -27,8 +27,7 @@ public class LevelSelectionPanel extends JPanel {
     private JPanel backgroundPanel;
     private Button backButton, nextButton;
     private final GameSettings gameSettings = GameSettings.getInstance();
-    private Vector<RadioButton> levelButtons;
-    private ButtonGroup buttonGroup;
+    private Vector<RadioButton> levelButtons; ButtonGroup buttonGroup;
 
     private final double scaleX = ScreenUtil.getInstance().getScreenScaleX();
     private final double scaleY = ScreenUtil.getInstance().getScreenScaleY();
@@ -116,6 +115,7 @@ public class LevelSelectionPanel extends JPanel {
             gameSettings.setContinueLevel(this.getLevel());
             gameSettings.saveSettings();
             
+            viewController.getManager().getGameStateHandler().continueGame();
             viewController.switchToGameContainerPanel();
         });
         nextButton.setBounds(scaledBounds(1590, 950, 280, 110)); // x=466, y=690, width=348, height=70

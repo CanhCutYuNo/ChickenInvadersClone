@@ -56,6 +56,10 @@ public class GameStateController {
         gameStates.addFloatingText(new BulletDame(x, y, text, color));
     }
 
+    public void clearAllFloatingTexts() {
+        gameStates.getFloatingTexts().clear();
+    }
+    
     // Reset trạng thái game
     public void resetGame() {
         gameStates.reset();

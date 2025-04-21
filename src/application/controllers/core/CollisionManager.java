@@ -127,7 +127,6 @@ public class CollisionManager {
 
     private void checkPlayerCollisionsWithItems() {
         List<ItemsController.ItemUnit> toRemove = new ArrayList<>();
-        boolean soundPlayed = false;
 
         for (ItemsController.ItemUnit unit : itemsController.getItemUnits()) {
             Items item = unit.model;

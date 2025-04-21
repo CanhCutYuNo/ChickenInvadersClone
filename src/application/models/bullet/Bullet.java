@@ -8,7 +8,6 @@ public class Bullet {
     public enum BulletType{
         NORMAL, DOUBLE
     }
-    private int originDame;
 
     private BulletType type;
 
@@ -18,9 +17,7 @@ public class Bullet {
         this.damage = damage;
         this.speedY = initialSpeedY;
         this.acceleration = acceleration;
-        this.type = type;
-        this.originDame = damage;
-    }
+        this.type = type;    }
 
     public int getX() {
         return x;
