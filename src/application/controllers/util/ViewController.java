@@ -15,6 +15,7 @@ import application.controllers.core.Manager;
 import application.views.panels.BackgroundPanel;
 import application.views.panels.GameContainerPanel;
 import application.views.panels.GamePanel;
+import application.views.panels.LevelSelectionPanel;
 import application.views.panels.MenuPanel;
 import application.views.panels.MissionSelectionPanel;
 import application.views.panels.SettingPanel;
@@ -28,6 +29,7 @@ public class ViewController {
     private BackgroundPanel backgroundPanel;
     private GamePanel gamePanel;
     private MissionSelectionPanel missionSelectionPanel;
+    private LevelSelectionPanel levelSelectionPanel;
     private SoundController soundController;
     private Manager manager;
     private GameLoop gameLoop;
@@ -62,12 +64,14 @@ public class ViewController {
     }
 
     public void setPanels(MenuPanel menuPanel, SettingPanel settingPanel, GameContainerPanel gameContainerPanel,
-                          GamePanel gamePanel, MissionSelectionPanel missionSelectionPanel, GameLoop gameLoop) {
+                          GamePanel gamePanel, MissionSelectionPanel missionSelectionPanel, LevelSelectionPanel levelSelectionPanel,
+                          GameLoop gameLoop) {
         this.menuPanel = menuPanel;
         this.settingPanel = settingPanel;
         this.gameContainerPanel = gameContainerPanel;
         this.gamePanel = gamePanel;
         this.missionSelectionPanel = missionSelectionPanel;
+        this.levelSelectionPanel = levelSelectionPanel;
         this.gameLoop = gameLoop;
     }
 
@@ -106,6 +110,14 @@ public class ViewController {
             missionSelectionPanel.setBackgroundPanel(backgroundPanel);
             if (missionSelectionPanel != null) missionSelectionPanel.refresh();
         }
+    }
+
+    public void switchToLevelSelectionPanel(){
+        if (checkComponents("LevelSelection", levelSelectionPanel, backgroundPanel)) {
+            cardLayout.show(mainPanel, "LevelSelection");
+            levelSelectionPanel.setBackgroundPanel(backgroundPanel);
+            if (levelSelectionPanel != null) levelSelectionPanel.refresh();
+        }        
     }
 
     public void switchToGameContainerPanel() {

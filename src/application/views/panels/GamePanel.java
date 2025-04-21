@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 import application.controllers.core.Manager;
+import application.controllers.util.GameSettings;
 import application.controllers.util.MouseController;
 import application.controllers.util.ScreenUtil;
 import application.views.render.GameRenderer;
@@ -82,6 +83,7 @@ public class GamePanel extends JPanel {
         }
 
         if(isVictory || isGameOver) this.WAIT_DURATION = 9.0f;
+        
         else this.WAIT_DURATION = 1.0f;
         if(isTransitionTriggered && showTransition) {
             fadeTime += (float) deltaTime;
@@ -151,7 +153,11 @@ public class GamePanel extends JPanel {
         if(paused) {
             return;
         }
-        
+
+        GameSettings gameSettings = GameSettings.getInstance();
+        gameSettings.setContinueLevel(1);
+        gameSettings.saveSettings();
+
         soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4Gameover.wav").getPath());    
         this.isGameOver = true;
         this.isTransitionTriggered = true;
@@ -167,6 +173,12 @@ public class GamePanel extends JPanel {
         if(paused) {
             return;
         }
+        GameSettings gameSettings = GameSettings.getInstance();
+        gameSettings.setContinueLevel(1);
+        gameSettings.setComplete(true);
+        gameSettings.saveSettings();
+
+        soundController.playBackgroundMusic(getClass().getResource("/asset/resources/sfx/CI4MinorWin.wav").getPath());    
         this.isVictory = true;
         this.isPlayerDead = true;
         this.isTransitionTriggered = true;
@@ -175,6 +187,7 @@ public class GamePanel extends JPanel {
         this.fadeTime = 0f;
         this.alpha = 0f;
         this.transitionComplete = false;
+        this.WAIT_DURATION = 7.0f;
     }
 
     public boolean isPlayerDead() {
