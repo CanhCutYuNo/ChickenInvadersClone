@@ -314,7 +314,5 @@ public class EnemyView {
                 g2d.dispose();
             }
         }
-        g.setColor(Color.WHITE);
-        g.drawRect(enemyModel.getPosX(), enemyModel.getPosY(), enemyModel.getModelWidth(), enemyModel.getModelHeight());
     }
 }
