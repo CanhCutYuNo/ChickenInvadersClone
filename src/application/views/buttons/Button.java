@@ -12,7 +12,6 @@ public class Button extends JButton {
     private boolean isEntered = false;
     private BufferedImage buttonImage;
     private BufferedImage buttonHoverImage;
-    private boolean isChecked = false; // Thêm biến trạng thái checked
     private BufferedImage checkedImage; // Hình ảnh dấu tick
 
     public Button(String normalImagePath, String hoverImagePath) {
@@ -61,16 +60,6 @@ public class Button extends JButton {
     public void setCheckedImage(String checkedImagePath) {
         BufferedImage image = loadImage(checkedImagePath);
         checkedImage = image;
-    }
-
-    // Thêm getter và setter cho trạng thái checked
-    public boolean isChecked() {
-        return isChecked;
-    }
-
-    public void setChecked(boolean checked) {
-        this.isChecked = checked;
-        repaint();
     }
 
     @Override

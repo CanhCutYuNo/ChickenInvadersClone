@@ -232,11 +232,11 @@ public class SettingPanel extends JPanel {
      // Tạo Button thay cho JCheckBox
         Button muteAudioButton = new Button("/asset/resources/gfx/checkbox.png", "/asset/resources/gfx/checkbox_hover.png");
         muteAudioButton.setCheckedImage("/asset/resources/gfx/tick.png"); // Đặt hình ảnh dấu tick
-        muteAudioButton.setChecked(GameSettings.getInstance().isMuteAudio()); // Khởi tạo trạng thái
+        muteAudioButton.setSelected(GameSettings.getInstance().isMuteAudio()); // Khởi tạo trạng thái
         muteAudioButton.setBounds(scaledBounds(230, 5, 100, 100)); 
         muteAudioButton.addActionListener(e -> {
-            muteAudioButton.setChecked(!muteAudioButton.isChecked()); // Đảo trạng thái
-            GameSettings.getInstance().setMuteAudio(muteAudioButton.isChecked());
+            muteAudioButton.setSelected(!muteAudioButton.isSelected()); // Đảo trạng thái
+            GameSettings.getInstance().setMuteAudio(muteAudioButton.isSelected());
             GameSettings.getInstance().saveSettings();
             soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
         });
