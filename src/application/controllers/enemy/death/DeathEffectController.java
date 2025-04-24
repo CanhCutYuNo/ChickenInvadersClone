@@ -31,7 +31,7 @@ public class DeathEffectController {
     }
 
     public void render(Graphics g) {
-        for (DeathEffect deathEffect : deathEffects) {
+        for(DeathEffect deathEffect : deathEffects) {
             if(deathEffect != null){
                 deathEffect.render(g);
             }

@@ -29,7 +29,7 @@ public class BackgroundPanel extends JPanel {
 
     public void update(double deltaTime) {
         y += scrollSpeed * deltaTime;
-        if (y >= height) {
+        if(y >= height) {
             y -= height;
         }
     }

@@ -1,8 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package application.views.types;
+package application.views.enemy.deaths;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -11,13 +7,9 @@ import java.util.Random;
 
 import application.controllers.util.ImageCache;
 import application.models.enemy.DeathEffect;
-import application.models.enemy.types.ChickenDeathEffect;
+import application.models.enemy.types.ChickDeathEffect;
 
-/**
- *
- * @author hp
- */
-public class ChickenDeathEffectView {
+public class ChickDeathEffectView {
    private final DeathEffect deathEffect;
     private final ArrayList<Smoke> smokes;
     protected Image spriteSheet;
@@ -42,13 +34,13 @@ public class ChickenDeathEffectView {
         0, 4, 9, 12, 15, 17, 18, 22, 24, 26, 28, 29, 30, 31, 34, 36, 41, 42, 44, 45, 45, 46, 47, 47, 48, 48, 49, 49, 49, 50, 50, 52, 53, 53, 53, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 51, 49
     };
 
-    public ChickenDeathEffectView(ChickenDeathEffect deathEffect) {
+    public ChickDeathEffectView(ChickDeathEffect deathEffect) {
         this.deathEffect = deathEffect;
         
         Random random = new Random();
-        spriteSheet = imageCache.getResourceImage("/asset/resources/gfx/smoke4-white.png");
+        spriteSheet = imageCache.getResourceImage("/asset/resources/gfx/smoke4-yellow.png");
         if(spriteSheet == null){
-            System.err.println("Không tải được smoke4-white!");
+            System.err.println("Không tải được smoke4-yellow!");
         }
         smokes = new ArrayList<>();
         int size = Math.abs(random.nextInt()) % 3 + 1;
@@ -61,10 +53,6 @@ public class ChickenDeathEffectView {
         for (Smoke smoke : smokes) {
             smoke.render(g);
         }
-        
-        //Vẽ chấm đỏ tìm PosX, PosY
-//        g.setColor(Color.RED);
-//        g.fillOval(PosX, PosY, 4, 4);
     }
 
     public void update() {
@@ -99,8 +87,8 @@ public class ChickenDeathEffectView {
             minFrameCount = Math.abs(random.nextInt() % 20);
             maxFrameCount = Math.abs(random.nextInt() % 27) + 26;
             frameCount = minFrameCount;
-            vX = (random.nextInt() % 2);
-            vY = (random.nextInt() % 2);
+            vX = (random.nextInt() % 3);
+            vY = (random.nextInt() % 3);
         }
 
         public void render(Graphics g) {
@@ -119,5 +107,5 @@ public class ChickenDeathEffectView {
             PosX = PosX + vX;
             PosY = PosY + vY;
         }
-    }         
+    }     
 }

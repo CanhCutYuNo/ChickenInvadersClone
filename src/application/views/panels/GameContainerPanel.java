@@ -19,9 +19,9 @@ public class GameContainerPanel extends JPanel {
     }
 
     public void setBackgroundPanel(JPanel backgroundPanel) {
-        if (backgroundPanel == null) return;
+        if(backgroundPanel == null) return;
 
-        if (this.backgroundPanel != null) {
+        if(this.backgroundPanel != null) {
             jLayeredPane.remove(this.backgroundPanel);
         }
         this.backgroundPanel = backgroundPanel;
@@ -35,13 +35,13 @@ public class GameContainerPanel extends JPanel {
         add(jLayeredPane, BorderLayout.CENTER);
 
          jLayeredPane.setLayout(new OverlayLayout(jLayeredPane));
-        if (gamePanel != null) {
+        if(gamePanel != null) {
             gamePanel.setOpaque(false);
             jLayeredPane.add(gamePanel, JLayeredPane.PALETTE_LAYER); 
             jLayeredPane.setLayer(gamePanel, JLayeredPane.PALETTE_LAYER);
         }
 
-        if (pausePanel != null) {
+        if(pausePanel != null) {
              pausePanel.setOpaque(false);
             jLayeredPane.add(pausePanel, JLayeredPane.MODAL_LAYER);
             jLayeredPane.setLayer(pausePanel, JLayeredPane.MODAL_LAYER);
@@ -57,10 +57,10 @@ public class GameContainerPanel extends JPanel {
     }
 
     public void hidePauseOverlay() {
-        if (pausePanel != null) {
+        if(pausePanel != null) {
             pausePanel.setVisible(false);
         }
-        if (gamePanel != null) {
+        if(gamePanel != null) {
             gamePanel.requestFocusInWindow();
         }
     }

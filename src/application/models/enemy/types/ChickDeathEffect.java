@@ -1,7 +1,8 @@
 package application.models.enemy.types;
 
 import application.models.enemy.DeathEffect;
-import application.views.types.ChickDeathEffectView;
+import application.views.enemy.deaths.ChickDeathEffectView;
+
 import java.awt.Graphics;
 
 public class ChickDeathEffect extends DeathEffect {

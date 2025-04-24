@@ -13,10 +13,9 @@ public class ChickenEnemy implements EnemyBehavior {
 
     @Override
     public void update(Enemy enemy) {
-        if (enemy.getType() != Enemy.EnemyType.CHICKEN_ENEMY) {
+        if(enemy.getType() != Enemy.EnemyType.CHICKEN_ENEMY) {
             return;
         }
-        // Sử dụng moveCounter thay vì frameCount
         enemy.setPosX(enemy.getPosX() + (int) (enemy.getSpeed() * Math.sin(enemy.getMoveCounter() * 0.05)));
         enemy.setPosY(enemy.getPosY() + enemy.getSpeed());
         enemy.setMoveCounter(enemy.getMoveCounter() + 1);
@@ -33,10 +32,10 @@ public class ChickenEnemy implements EnemyBehavior {
     }
 
     public void createEggs(Enemy enemy, EnemySkillsController skillsManager) {
-        if (enemy.getType() != Enemy.EnemyType.CHICKEN_ENEMY) {
+        if(enemy.getType() != Enemy.EnemyType.CHICKEN_ENEMY) {
             return;
         }
-        if (random.nextDouble() < enemy.getEggProbability()) {
+        if(random.nextDouble() < enemy.getEggProbability()) {
             skillsManager.addSkill(enemy.getPosX(), enemy.getPosY(), 5, enemy.getEggDamage(), SkillType.EGG);
         }
     }

@@ -94,7 +94,7 @@ public class ViewController {
                 }
             }
             gameLoop.start();
-            gamePanel.setPaused(true);
+            gamePanel.getTransitionManager().setPaused(true);
         }
     }
 
@@ -122,7 +122,7 @@ public class ViewController {
     }
 
     public void switchToGameContainerPanel() {
-    	gamePanel.setPaused(false);
+    	gamePanel.getTransitionManager().setPaused(false);
         if(checkComponents("Game", gameContainerPanel, backgroundPanel)) {
             cardLayout.show(mainPanel, "Game");
             gameContainerPanel.setBackgroundPanel(backgroundPanel);
@@ -143,7 +143,7 @@ public class ViewController {
             if(manager != null) manager.load();
             if(gamePanel != null) {
                 gamePanel.requestFocusInWindow();
-                gamePanel.triggerTransition();
+                gamePanel.getTransitionManager().triggerTransition();
             }
         }
     }
@@ -188,14 +188,14 @@ public class ViewController {
             Robot robot = new Robot();
             robot.mouseMove(mouseX, mouseY);
         } catch (AWTException | IllegalComponentStateException e) {
-            System.err.println("UIManager: Failed to center mouse - " + e.getMessage());
+            System.err.println("Failed to center mouse - " + e.getMessage());
         } catch (Exception e) {
-            System.err.println("UIManager: Unexpected error centering mouse - " + e.getMessage());
+            System.err.println("Unexpected error centering mouse - " + e.getMessage());
         }
     }
 
     private boolean checkComponents(String targetPanel, JComponent... components) {
-        for (JComponent comp : components) {
+        for(JComponent comp : components) {
             if(comp == null) {
                 System.err.println("UIManager Error: Cannot switch to " + targetPanel + " - Required component is null: " + comp);
                 return false;

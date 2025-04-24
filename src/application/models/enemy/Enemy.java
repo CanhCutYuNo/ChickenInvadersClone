@@ -51,7 +51,7 @@ public class Enemy {
     protected boolean shouldCreateFireballBurst;
     protected float eggProbability;
     protected int eggDamage;
-    protected int moveCounter; // Thay thế frameCount
+    protected int moveCounter;
 
     public EnemyState state;
 
@@ -82,7 +82,7 @@ public class Enemy {
         this.moveCounter = 0; // Khởi tạo moveCounter
         this.state = null;
 
-        if (type == EnemyType.CHICKEN_ENEMY) {
+        if(type == EnemyType.CHICKEN_ENEMY) {
             switch (GameSettings.getInstance().getDifficulty()) {
                 case EASY:
                     this.eggProbability = 0.0002f;
@@ -108,7 +108,7 @@ public class Enemy {
     }
 
     private int getHpByDifficulty(EnemyType type) {
-        if (type == EnemyType.CHICK_ENEMY) {
+        if(type == EnemyType.CHICK_ENEMY) {
             switch (GameSettings.getInstance().getDifficulty()) {
                 case EASY:
                     return 40;
@@ -121,7 +121,7 @@ public class Enemy {
                 default:
                     return 50;
             }
-        } else if (type == EnemyType.CHICKEN_ENEMY) {
+        } else if(type == EnemyType.CHICKEN_ENEMY) {
             switch (GameSettings.getInstance().getDifficulty()) {
                 case EASY:
                     return 90;
@@ -134,7 +134,7 @@ public class Enemy {
                 default:
                     return 100;
             }
-        } else if (type == EnemyType.CHICKEN_BOSS) {
+        } else if(type == EnemyType.CHICKEN_BOSS) {
             switch (GameSettings.getInstance().getDifficulty()) {
             case EASY:
                 return 1000;
@@ -152,7 +152,6 @@ public class Enemy {
         return 400;
     }
 
-    // Getters và setters
     public boolean isDead() { return hp <= 0; }
     public int getCenterX() { return posX + modelWidth / 2; }
     public int getCenterY() { return posY + modelHeight / 2; }

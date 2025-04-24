@@ -84,10 +84,10 @@ public class PlayerController {
     }
 
     public void updateDirection(int newX) {
-        if (newX < initialPosX) {
+        if(newX < initialPosX) {
             playerView.setCurFrame(Math.max(0, playerView.getCurFrame() - 1));
             moving = true;
-        } else if (newX > initialPosX) {
+        } else if(newX > initialPosX) {
             playerView.setCurFrame(Math.min(31, playerView.getCurFrame() + 1));
             moving = true;
         } else {
@@ -99,14 +99,14 @@ public class PlayerController {
 
     public void update() {
         int curFrame = playerView.getCurFrame();
-        if (System.currentTimeMillis() - lastMoveTime > MOVE_TIMEOUT) {
+        if(System.currentTimeMillis() - lastMoveTime > MOVE_TIMEOUT) {
             moving = false;
         } else {
             moving = true;
         }
 
-        if (!moving && curFrame != 16) {
-            if (curFrame < 16) {
+        if(!moving && curFrame != 16) {
+            if(curFrame < 16) {
                 playerView.setCurFrame(curFrame + 1);
             } else {
                 playerView.setCurFrame(curFrame - 1);
@@ -116,7 +116,7 @@ public class PlayerController {
         //        if(curFrame >= 15 && curFrame < 32) {
 //        	curFrame++;
 //        }
-        if (exFrame < 52) {
+        if(exFrame < 52) {
             playerView.setExFrame(exFrame + 1);
         } else {
             playerView.setExFrame(0);

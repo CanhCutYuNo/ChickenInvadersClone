@@ -25,7 +25,7 @@ public abstract class LevelManager implements ILevelManager {
 
     @Override
     public void render(Graphics g) {
-        for (EnemyView view : enemyController.getEnemyViews()) {
+        for(EnemyView view : enemyController.getEnemyViews()) {
             view.render(g);
         }
     }

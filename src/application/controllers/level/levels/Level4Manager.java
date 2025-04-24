@@ -20,15 +20,15 @@ public class Level4Manager extends LevelManager implements EnemyDeathListener {
     public Level4Manager(SoundController soundController, EnemyController enemyController) {
         super(soundController, enemyController);
         this.random = new Random();
-        enemyController.addDeathListener(this); // Đăng ký lắng nghe sự kiện
+        enemyController.addDeathListener(this);
     }
 
     @Override
     protected void initEnemies() {
-        if (random == null) {
+        if(random == null) {
             random = new Random();
         }
-        for (int i = 0; i < NUM_EGG_SHELLS; i++) {
+        for(int i = 0; i < NUM_EGG_SHELLS; i++) {
             int posY = random.nextInt(100) - 300;
             int posX = random.nextInt(SCREEN_WIDTH - 200);
             Enemy model = new Enemy(75, 97, posX, posY, 0, Enemy.EnemyType.EGG_SHELL_ENEMY);
@@ -47,19 +47,19 @@ public class Level4Manager extends LevelManager implements EnemyDeathListener {
     }
 
     private void updateEggShells(float deltaTime) {
-        for (Enemy enemy : enemyController.getEnemyModels()) {
-            if (enemy.getType() == Enemy.EnemyType.EGG_SHELL_ENEMY && enemy.state != null) {
+        for(Enemy enemy : enemyController.getEnemyModels()) {
+            if(enemy.getType() == Enemy.EnemyType.EGG_SHELL_ENEMY && enemy.state != null) {
                 enemy.state.timeElapsed += deltaTime;
 
-                if (!enemy.state.isActive && enemy.state.timeElapsed >= enemy.state.timeDelay) {
+                if(!enemy.state.isActive && enemy.state.timeElapsed >= enemy.state.timeDelay) {
                     enemy.state.isActive = true;
                 }
 
-                if (enemy.state.isActive) {
+                if(enemy.state.isActive) {
                     float posY = enemy.getPosY() + EGG_SHELL_GRAVITY;
                     enemy.setPosY((int) posY);
 
-                    if (enemy.getPosY() > 1000) {
+                    if(enemy.getPosY() > 1000) {
                         enemy.setPosX(random.nextInt(1000) + 20);
                         enemy.setPosY(random.nextInt(100) - 300);
                         enemy.state.timeElapsed = 0;
@@ -72,12 +72,12 @@ public class Level4Manager extends LevelManager implements EnemyDeathListener {
     }
 
     private void updateChicks(float deltaTime) {
-        for (Enemy enemy : enemyController.getEnemyModels()) {
-            if (enemy.getType() == Enemy.EnemyType.CHICK_ENEMY) {
+        for(Enemy enemy : enemyController.getEnemyModels()) {
+            if(enemy.getType() == Enemy.EnemyType.CHICK_ENEMY) {
                 float posY = enemy.getPosY() + CHICK_GRAVITY;
                 enemy.setPosY((int) posY);
 
-                if (enemy.getPosY() > 1000) {
+                if(enemy.getPosY() > 1000) {
                     enemy.setPosX(random.nextInt(1000) + 20);
                     enemy.setPosY(random.nextInt(100)); 
                 }
@@ -87,7 +87,7 @@ public class Level4Manager extends LevelManager implements EnemyDeathListener {
 
     @Override
     public void onEnemyDeath(Enemy enemy, int index) {
-        if (enemy.getType() == Enemy.EnemyType.EGG_SHELL_ENEMY) {
+        if(enemy.getType() == Enemy.EnemyType.EGG_SHELL_ENEMY) {
             int chickPosX = enemy.getPosX() + (enemy.getModelWidth() - 46) / 2;
             int chickPosY = enemy.getPosY() + (enemy.getModelHeight() - 54) / 2;
             Enemy chickModel = new Enemy(46, 54, chickPosX, chickPosY, 0, Enemy.EnemyType.CHICK_ENEMY);

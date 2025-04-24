@@ -54,12 +54,12 @@ public class EnemyController {
     }
 
     public void update() {
-        for (int i = 0; i < enemyModels.size(); i++) {
+        for(int i = 0; i < enemyModels.size(); i++) {
             Enemy enemy = enemyModels.get(i);
             EnemyBehavior behavior = behaviors.get(enemy.getType());
-            if (behavior != null) {
+            if(behavior != null) {
                 behavior.update(enemy);
-                if (enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
+                if(enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
                     ((ChickenEnemy) behavior).createEggs(enemy, skillsManager);
                 }
             }
@@ -67,11 +67,10 @@ public class EnemyController {
     }
     
     public void checkAndNotifyDeaths() {
-        for (int i = enemyModels.size() - 1; i >= 0; i--) {
+        for(int i = enemyModels.size() - 1; i >= 0; i--) {
             Enemy enemy = enemyModels.get(i);
-            if (enemy.isDead()) {
-                // Phát sự kiện trước khi xóa
-                for (EnemyDeathListener listener : deathListeners) {
+            if(enemy.isDead()) {
+                for(EnemyDeathListener listener : deathListeners) {
                     listener.onEnemyDeath(enemy, i);
                 }
                 getDeathEffect(i);
@@ -81,18 +80,18 @@ public class EnemyController {
     }
 
     public void takeDamage(int index, int damage, String[] hitSounds, String[] deathSounds) {
-        if (index < 0 || index >= enemyModels.size()) {
+        if(index < 0 || index >= enemyModels.size()) {
             return;
         }
         Enemy enemy = enemyModels.get(index);
         enemy.setHp(enemy.getHp() - damage);
-        if (hitSounds != null && hitSounds.length > 0) {
+        if(hitSounds != null && hitSounds.length > 0) {
             soundController.playSoundEffect(getClass().getResource(hitSounds[random.nextInt(hitSounds.length)]).getPath());
         }
-        if (enemy.isDead()) {
+        if(enemy.isDead()) {
             deathEffectController.add(getDeathEffect(index));
             String deathSound = (deathSounds != null && deathSounds.length > 0) ? deathSounds[random.nextInt(deathSounds.length)] : null;
-            if (deathSound != null) {
+            if(deathSound != null) {
                 soundController.playSoundEffect(getClass().getResource(deathSound).getPath());
             }
         }
@@ -100,43 +99,43 @@ public class EnemyController {
     }
 
     public DeathEffect getDeathEffect(int index) {
-        if (index < 0 || index >= enemyModels.size()) {
+        if(index < 0 || index >= enemyModels.size()) {
             return null;
         }
         Enemy enemy = enemyModels.get(index);
-        if (enemy.getType() == Enemy.EnemyType.CHICK_ENEMY) {
+        if(enemy.getType() == Enemy.EnemyType.CHICK_ENEMY) {
             return new ChickDeathEffect(enemy.getCenterX(), enemy.getCenterY());
-        } else if (enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
+        } else if(enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
             return new ChickenDeathEffect(enemy.getCenterX(), enemy.getCenterY());
         }
         return null;
     }
 
     public Rectangle getHitbox(int index) {
-        if (index < 0 || index >= enemyModels.size()) {
+        if(index < 0 || index >= enemyModels.size()) {
             return null;
         }
         Enemy enemy = enemyModels.get(index);
         EnemyBehavior behavior = behaviors.get(enemy.getType());
-        if (behavior != null) {
+        if(behavior != null) {
             return behavior.getHitbox(enemy);
         }
         return new Rectangle(enemy.getPosX(), enemy.getPosY(), enemy.getModelWidth(), enemy.getModelHeight());
     }
 
     public void addSkills(int index, SkillType skillType, String imagePath) {
-        if (index < 0 || index >= enemyModels.size()) {
+        if(index < 0 || index >= enemyModels.size()) {
             return;
         }
         Enemy enemy = enemyModels.get(index);
         EnemyBehavior behavior = behaviors.get(enemy.getType());
-        if (behavior != null) {
+        if(behavior != null) {
             behavior.addSkills(enemy, skillType, imagePath);
         }
     }
 
     public void removeEnemy(int index) {
-        if (index >= 0 && index < enemyModels.size()) {
+        if(index >= 0 && index < enemyModels.size()) {
             enemyModels.remove(index);
             enemyViews.remove(index);
         }
@@ -156,11 +155,11 @@ public class EnemyController {
     }
 
     public void createHoleSkill(int index, EnemySkillsController skillsManager) {
-        if (index < 0 || index >= enemyModels.size()) {
+        if(index < 0 || index >= enemyModels.size()) {
             return;
         }
         Enemy enemy = enemyModels.get(index);
-        if (enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS && enemy.shouldCreateHole()) {
+        if(enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS && enemy.shouldCreateHole()) {
             skillsManager.addSkill(1920 / 2, 1080 / 2, 0, 100, SkillType.HOLE);
             soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/engineCrab.wav").getPath());
             enemy.setShouldCreateHole(false);
@@ -168,21 +167,21 @@ public class EnemyController {
     }
 
     public void createFireballBurst(int index, EnemySkillsController skillsManager) {
-        if (index < 0 || index >= enemyModels.size()) {
+        if(index < 0 || index >= enemyModels.size()) {
             return;
         }
         Enemy enemy = enemyModels.get(index);
-        if (enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS && enemy.shouldCreateFireballBurst()) {
+        if(enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS && enemy.shouldCreateFireballBurst()) {
             double centerX = 1920 / 2;
             double centerY = 1080 / 2;
             int damage = 1000;
             double speed = 5;
 
-            for (int i = 0; i < 10; i++) {
+            for(int i = 0; i < 10; i++) {
                 double angleStart = i * 36;
                 double angleEnd = (i + 1) * 36;
 
-                for (int j = 0; j < 2; j++) {
+                for(int j = 0; j < 2; j++) {
                     double angle = Math.toRadians(random.nextDouble() * (angleEnd - angleStart) + angleStart);
                     double speedX = speed * Math.cos(angle);
                     double speedY = speed * Math.sin(angle);

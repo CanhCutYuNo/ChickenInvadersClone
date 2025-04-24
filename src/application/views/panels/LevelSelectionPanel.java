@@ -40,7 +40,7 @@ public class LevelSelectionPanel extends JPanel {
     }
 
     public void setBackgroundPanel(JPanel backgroundPanel) {
-        if (this.backgroundPanel != null) {
+        if(this.backgroundPanel != null) {
             jLayeredPane.remove(this.backgroundPanel);
         }
         this.backgroundPanel = backgroundPanel;
@@ -62,12 +62,10 @@ public class LevelSelectionPanel extends JPanel {
         setLayout(new GridLayout(1, 1));
         jLayeredPane.setLayout(new OverlayLayout(jLayeredPane));
 
-        // Set null layout để đặt tọa độ
         JPanel containerPanel = new JPanel();
         containerPanel.setOpaque(false);
         containerPanel.setLayout(null); 
 
-        // Header
         JLabel headerLabel = new JLabel("Choose your level!");
         headerLabel.setFont(new Font("Comic Sans MS", Font.BOLD, (int)(40 * scaleX)));
         headerLabel.setForeground(Color.WHITE);
@@ -81,7 +79,7 @@ public class LevelSelectionPanel extends JPanel {
         createNextButton(containerPanel);
 
         buttonGroup = new ButtonGroup();
-        for (RadioButton radioButton : levelButtons) {
+        for(RadioButton radioButton : levelButtons) {
             buttonGroup.add(radioButton);
         }
 
@@ -91,7 +89,6 @@ public class LevelSelectionPanel extends JPanel {
     }
 
     private void createBackButton(JPanel containerPanel) {
-        // Back Button
         backButton = new Button("/asset/resources/gfx/button.png", "/asset/resources/gfx/button_hover.png");
         backButton.setText("Back");
         backButton.setFont(new Font("Comic Sans MS", Font.BOLD, (int)(30 * scaleX)));
@@ -100,12 +97,11 @@ public class LevelSelectionPanel extends JPanel {
 
             viewController.switchToMissionSelectionPanel();
         });
-        backButton.setBounds(scaledBounds(50, 950, 280, 110)); // x=466, y=690, width=348, height=70
+        backButton.setBounds(scaledBounds(50, 950, 280, 110));
         containerPanel.add(backButton);
     }
 
     private void createNextButton(JPanel containerPanel) {
-        // Next Button
         nextButton = new Button("/asset/resources/gfx/button.png", "/asset/resources/gfx/button_hover.png");
         nextButton.setText("Next!");
         nextButton.setFont(new Font("Comic Sans MS", Font.BOLD, (int) (30 * scaleX)));
@@ -119,23 +115,21 @@ public class LevelSelectionPanel extends JPanel {
             viewController.getManager().getCollisionManager().resetBulletPowerUp();
             viewController.switchToGameContainerPanel();
         });
-        nextButton.setBounds(scaledBounds(1590, 950, 280, 110)); // x=466, y=690, width=348, height=70
+        nextButton.setBounds(scaledBounds(1590, 950, 280, 110));
         containerPanel.add(nextButton);
     }
 
     private void createLevelSelectionPanels(JPanel containerPanel) {
-        for (int i = 1; i <= 5; i++) {
+        for(int i = 1; i <= 5; i++) {
             JPanel levelPanel = new JPanel();
             levelPanel.setOpaque(false);
             levelPanel.setLayout(null);
-            levelPanel.setBounds(scaledBounds(550, 200 + 100 * i, 900, 100)); // Kích cỡ và vị trí giống trước
-    
-            // Tạo Button thay cho JCheckBox
+            levelPanel.setBounds(scaledBounds(550, 200 + 100 * i, 900, 100)); 
+
             RadioButton levelButton;
             levelButton = new RadioButton("/asset/resources/gfx/checkbox.png",
                     "/asset/resources/gfx/checkbox_hover.png");
-            levelButton.setCheckedImage("/asset/resources/gfx/tick.png"); // Đặt hình ảnh dấu tick
-            // tạo trạng thái
+            levelButton.setCheckedImage("/asset/resources/gfx/tick.png");
             levelButton.setBounds(scaledBounds(230, 5, 100, 100));
             levelButton.addActionListener(e -> {
                 soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
@@ -145,8 +139,7 @@ public class LevelSelectionPanel extends JPanel {
             levelPanel.add(levelButton);
 
             levelButtons.add(levelButton);
-    
-            // Tạo JLabel cho chữ số
+
             JLabel levelLanel = new JLabel("Level " + i);
             levelLanel.setForeground(Color.WHITE);
             levelLanel.setFont(new Font("Comic Sans MS", Font.BOLD, (int) (30 * scaleX)));
@@ -159,7 +152,7 @@ public class LevelSelectionPanel extends JPanel {
     }
 
     public int getLevel(){
-        for (RadioButton levelButton : levelButtons) {
+        for(RadioButton levelButton : levelButtons) {
             if(levelButton.isSelected())return (levelButtons.indexOf(levelButton) + 1);
         }
         return 1;

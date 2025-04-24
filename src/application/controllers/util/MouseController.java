@@ -18,7 +18,7 @@ public class MouseController implements MouseListener, MouseMotionListener {
     public MouseController(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
         shootTimer = new Timer(SHOOT_DELAY, e -> {
-            if (!gamePanel.isPaused()) {
+            if(!gamePanel.getTransitionManager().isPaused()) {
                 gamePanel.getGameManager().getPlayerActionHandler().shoot();
             }
         });
@@ -27,22 +27,22 @@ public class MouseController implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (!gamePanel.isPaused()) {
+    	if(!gamePanel.getTransitionManager().isPaused()) {
             gamePanel.getGameManager().getPlayerActionHandler().movePlayer(e.getX(), e.getY());
         }
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (!gamePanel.isPaused()) {
+    	if(!gamePanel.getTransitionManager().isPaused()) {
             gamePanel.getGameManager().getPlayerActionHandler().movePlayer(e.getX(), e.getY());
         }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (SwingUtilities.isLeftMouseButton(e) && !gamePanel.isPaused()) { 
-            if (!shootTimer.isRunning() && !gamePanel.isGameOver()) {
+        if(SwingUtilities.isLeftMouseButton(e) && !gamePanel.getTransitionManager().isPaused()) { 
+            if(!shootTimer.isRunning() && !gamePanel.getTransitionManager().isGameOver()) {
                 gamePanel.getGameManager().getPlayerActionHandler().shoot();
                 shootTimer.start();
             }
@@ -51,7 +51,7 @@ public class MouseController implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (SwingUtilities.isLeftMouseButton(e)) {
+        if(SwingUtilities.isLeftMouseButton(e)) {
             shootTimer.stop();
         }
     }

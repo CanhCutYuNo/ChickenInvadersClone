@@ -23,12 +23,11 @@ public class ImageCache {
         String basePath = "/asset/resources/gfx";
         File directory = new File(getClass().getResource(basePath).getFile());
         
-        // Fix lỗi space trong đường dẫn
         directory = new File(directory.getAbsolutePath().replaceAll("%20", " ")); 
 
-        if (directory.exists() && directory.isDirectory()) {
-            for (File file : directory.listFiles()) {
-                if (file.isFile() && (file.getName().endsWith(".png") )|| file.getName().endsWith(".jpg") || file.getName().endsWith(".jpeg")) {
+        if(directory.exists() && directory.isDirectory()) {
+            for(File file : directory.listFiles()) {
+                if(file.isFile() && (file.getName().endsWith(".png") )|| file.getName().endsWith(".jpg") || file.getName().endsWith(".jpeg")) {
                     String path = basePath + "/" + file.getName();
                     cache.put(path, new ImageIcon(ImageCache.class.getResource(path)));
                 }
@@ -37,9 +36,9 @@ public class ImageCache {
     }
 
     public static ImageCache getInstance() {
-        if (instance == null) {
+        if(instance == null) {
             synchronized (lock) { 
-                if (instance == null) {
+                if(instance == null) {
                     instance = new ImageCache();
                 }
             }
@@ -48,14 +47,14 @@ public class ImageCache {
     }
 
     public Image getResourceImage(String path) {
-        if (!cache.containsKey(path)) {
+        if(!cache.containsKey(path)) {
             cache.put(path, new ImageIcon(ImageCache.class.getResource(path)));
         }
         return cache.get(path).getImage();
     }
 
     public ImageIcon getResourceImageIcon(String path) {
-        if (!cache.containsKey(path)) {
+        if(!cache.containsKey(path)) {
             cache.put(path, new ImageIcon(ImageCache.class.getResource(path)));
         }
         return cache.get(path);

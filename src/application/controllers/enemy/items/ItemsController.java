@@ -28,21 +28,21 @@ public class ItemsController {
         while (iterator.hasNext()) {
             ItemUnit unit = iterator.next();
             unit.update();
-            if (unit.isOffScreen()) {
+            if(unit.isOffScreen()) {
                 iterator.remove();
             }
         }
     }
 
     public void drawItems(Graphics g) {
-        for (ItemUnit unit : itemUnits) {
+        for(ItemUnit unit : itemUnits) {
             unit.draw(g);
         }
     }
 
     public Iterator<Items> iterator() {
         List<Items> itemsOnly = new ArrayList<>();
-        for (ItemUnit unit : itemUnits) {
+        for(ItemUnit unit : itemUnits) {
             itemsOnly.add(unit.model);
         }
         return itemsOnly.iterator();

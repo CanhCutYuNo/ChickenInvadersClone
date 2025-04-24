@@ -66,7 +66,6 @@ public class MenuPanel extends JPanel {
         jLayeredPane.setLayout(new OverlayLayout(jLayeredPane));
 
         containerPanel.setOpaque(false);
-        //containerPanel.setPreferredSize(new Dimension(985, 1110));
         containerPanel.setLayout(new GridLayout(2, 1));
 
         symbolPanel.setOpaque(false);
@@ -101,14 +100,14 @@ public class MenuPanel extends JPanel {
         button1 = createMenuButton("Play", "/asset/resources/gfx/button.png", "/asset/resources/gfx/button_hover.png", () -> {
             sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
             
-            if (viewController != null) {
+            if(viewController != null) {
                 viewController.switchToMissionSelectionPanel();
             }
         });
 
         button2 = createMenuButton("Options", "/asset/resources/gfx/button.png", "/asset/resources/gfx/button_hover.png", () -> {
             sound.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
-            if (viewController != null) {
+            if(viewController != null) {
                 viewController.switchToSettingPanel();
             }
         });

@@ -15,7 +15,7 @@ public class GameStateController {
     }
 
     public void checkLevelTransition(boolean isEnemiesEmpty) {
-        if (isEnemiesEmpty && !gameStates.isLevelTransitionTriggered() && !gameStates.isDelaying()) {
+        if(isEnemiesEmpty && !gameStates.isLevelTransitionTriggered() && !gameStates.isDelaying()) {
             gameStates.setLevel(gameStates.getLevel() + 1);
             gameStates.setDelaying(true);
             gameStates.setDelayStartTime(System.currentTimeMillis());
@@ -24,9 +24,9 @@ public class GameStateController {
     }
 
     public boolean updateLevelTransition() {
-        if (gameStates.isDelaying()) {
+        if(gameStates.isDelaying()) {
             long currentTime = System.currentTimeMillis();
-            if (currentTime - gameStates.getDelayStartTime() >= DELAY_DURATION) {
+            if(currentTime - gameStates.getDelayStartTime() >= DELAY_DURATION) {
                 gameStates.setDelaying(false);
                 gameStates.setLevelTransitionTriggered(true);
 
@@ -41,7 +41,7 @@ public class GameStateController {
     }
 
     public void updateFloatingTexts() {
-        for (BulletDame floatingText : gameStates.getFloatingTexts()) {
+        for(BulletDame floatingText : gameStates.getFloatingTexts()) {
             floatingText.update();
         }
         gameStates.removeExpiredFloatingTexts();

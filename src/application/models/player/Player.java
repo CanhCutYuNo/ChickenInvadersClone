@@ -9,7 +9,6 @@ public class Player {
     private int PosX;
     private int PosY;
 
-    // Constructor
     public Player(int hp, int damage, double shootSpeed, int PosX, int PosY) {
         this.hp = hp;
         this.damage = damage;
@@ -18,7 +17,6 @@ public class Player {
         this.PosY = PosY;
     }
 
-    // Getter & Setter
     public int getHp() {
         return hp;
     }

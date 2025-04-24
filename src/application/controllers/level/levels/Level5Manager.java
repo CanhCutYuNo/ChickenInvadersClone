@@ -27,9 +27,9 @@ public class Level5Manager extends LevelManager {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        for (int i = 0; i < enemyController.getEnemyModels().size(); i++) {
+        for(int i = 0; i < enemyController.getEnemyModels().size(); i++) {
             Enemy enemy = enemyController.getEnemyModels().get(i);
-            if (enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS) {
+            if(enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS) {
                 enemyController.createHoleSkill(i, enemyController.getSkillsManager());
                 enemyController.createFireballBurst(i, enemyController.getSkillsManager());
             }

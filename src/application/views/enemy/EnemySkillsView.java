@@ -59,33 +59,33 @@ public class EnemySkillsView {
         this.soundController = soundController;
         skillImages = new HashMap<>();
 
-        EggSprites = new ArrayList<>(); // Khởi tạo EggSprites
-        for (int[] frame : EggBrokenSprite) {
+        EggSprites = new ArrayList<>();
+        for(int[] frame : EggBrokenSprite) {
             EggSprites.add(frame);
         }
         try {     	
-            for (Map.Entry<SkillType, String> entry : skillImagePaths.entrySet()) {
+            for(Map.Entry<SkillType, String> entry : skillImagePaths.entrySet()) {
                 SkillType skillType = entry.getKey();
                 String path = entry.getValue();
 
-                if (skillType == SkillType.EGG) {
+                if(skillType == SkillType.EGG) {
                     Image image = imageCache.getResourceImage(path);
                     skillImages.put(skillType, image);
                     eggSheet = imageCache.getResourceImage("/asset/resources/gfx/eggbreak~1.png");
                     
-                } else if (skillType == SkillType.FIREBALL) {
+                } else if(skillType == SkillType.FIREBALL) {
                     InputStream inputStream = getClass().getResourceAsStream("/asset/resources/gfx/bullet-bolt1.png");
-                    if (inputStream == null) {
+                    if(inputStream == null) {
                         throw new IOException("Không tìm thấy hình ảnh: /asset/resources/gfx/bullet-bolt1.png");
                     }
                     fireballSheet = ImageIO.read(inputStream);
                     inputStream.close();
-                    for (int[] frame : BossBulletsSprite) {
+                    for(int[] frame : BossBulletsSprite) {
                         FireballSprites.add(frame);
                     }
                 } else {
                     InputStream inputStream = getClass().getResourceAsStream(path);
-                    if (inputStream == null) {
+                    if(inputStream == null) {
                         throw new IOException("Không tìm thấy hình ảnh: " + path);
                     }
                     BufferedImage originalImage = ImageIO.read(inputStream);
@@ -104,9 +104,9 @@ public class EnemySkillsView {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            for (SkillType skillType : skillImagePaths.keySet()) {
-                if (!skillImages.containsKey(skillType)) {
-                    if (skillType == SkillType.EGG) {
+            for(SkillType skillType : skillImagePaths.keySet()) {
+                if(!skillImages.containsKey(skillType)) {
+                    if(skillType == SkillType.EGG) {
                         skillImages.put(skillType, new BufferedImage(40, 80, BufferedImage.TYPE_INT_ARGB));
                     } else {
                         skillImages.put(skillType, new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB));
@@ -117,27 +117,27 @@ public class EnemySkillsView {
     }
 
     public void draw(Graphics g, EnemySkills skill) {
-        if (!skill.isActive()) {
+        if(!skill.isActive()) {
             return;
         }
 
-        if (skill.getSkillType() == SkillType.EGG) {
-            if (!skill.isExploding()) {
+        if(skill.getSkillType() == SkillType.EGG) {
+            if(!skill.isExploding()) {
                 Image eggImage = skillImages.get(SkillType.EGG);
-                if (eggImage != null) {
+                if(eggImage != null) {
                     g.drawImage(eggImage, (int) skill.getPosX(), (int) skill.getPosY(), 40, 80, null);
                 }
             } else {
                 drawEggBroken(g, skill, skill.getAnimationFrame());
-                if (skill.getAnimationFrame() == 0 && skill.isExploding()) {
+                if(skill.getAnimationFrame() == 0 && skill.isExploding()) {
               		 soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggSplat.wav").getPath());	
                    }
             }
-        } else if (skill.getSkillType() == SkillType.FIREBALL) {
+        } else if(skill.getSkillType() == SkillType.FIREBALL) {
             drawFireball(g, skill, skill.getAnimationFrame());
         } else {
             Image skillImage = skillImages.get(skill.getSkillType());
-            if (skillImage != null) {
+            if(skillImage != null) {
                 drawSkill(g, skill.getPosX(), skill.getPosY(), skill.getScale(), skill.getAngle(), skillImage);
             }
         }
@@ -169,12 +169,12 @@ public class EnemySkillsView {
 
     public void drawEggBroken(Graphics g, EnemySkills skill, int eFrame) {
 
-        if (eggSheet != null) {
-            if (eFrame < 2 && !skill.hasPlayedSound()) {
+        if(eggSheet != null) {
+            if(eFrame < 2 && !skill.hasPlayedSound()) {
                 URL soundURL = getClass().getResource("/asset/resources/sfx/eggSplat.wav");
-                if (soundURL != null) {
+                if(soundURL != null) {
                     soundController.playSoundEffect(soundURL.getPath());
-                    skill.setHasPlayedSound(true); // Đánh dấu đã phát âm thanh
+                    skill.setHasPlayedSound(true);
                 } else {
                     System.err.println("Không tìm thấy tệp âm thanh: /asset/resources/sfx/eggSplat.wav");
                 }
@@ -212,7 +212,7 @@ public class EnemySkillsView {
         int[] fireballFrame = FireballSprites.get(frameIndex);
         int fx = fireballFrame[0], fy = fireballFrame[1], fw = fireballFrame[2], fh = fireballFrame[3];
 
-        if (fw <= 0 || fh <= 0) {
+        if(fw <= 0 || fh <= 0) {
             return;
         }
 
@@ -246,7 +246,7 @@ public class EnemySkillsView {
 	public void clear() {
 		EggSprites.clear();
         EggSprites = new ArrayList<>();
-        for (int[] frame : EggBrokenSprite) {
+        for(int[] frame : EggBrokenSprite) {
             EggSprites.add(frame);
         }
 	}

@@ -20,16 +20,13 @@ public class GameSettings {
 
     private final String SETTINGS_FILE = "settings.properties";
 
-    // Danh sách listener cho các thay đổi
     private List<MuteAudioListener> muteAudioListeners = new ArrayList<>();
     private List<VolumeChangeListener> volumeChangeListeners = new ArrayList<>();
 
-    // Interface để thông báo khi muteAudio thay đổi
     public interface MuteAudioListener {
         void onMuteAudioChanged(boolean isMuted);
     }
 
-    // Interface để thông báo khi volume thay đổi
     public interface VolumeChangeListener {
         void onBackgroundMusicVolumeChanged(float volume);
         void onSoundEffectVolumeChanged(float volume);
@@ -50,9 +47,9 @@ public class GameSettings {
     }
 
     public static GameSettings getInstance() {
-        if (instance == null) {
+        if(instance == null) {
             synchronized (lock) { 
-                if (instance == null) {
+                if(instance == null) {
                     instance = new GameSettings();
                 }
             }
@@ -104,7 +101,6 @@ public class GameSettings {
         }
     }
 
-    // Getters and setters
     public Difficulty getDifficulty() {
         return difficulty;
     }
@@ -119,7 +115,7 @@ public class GameSettings {
 
     public void setBackgroundMusicVolume(float volume) {
         this.backgroundMusicVolume = Math.max(0.0f, Math.min(1.0f, volume));
-        for (VolumeChangeListener listener : volumeChangeListeners) {
+        for(VolumeChangeListener listener : volumeChangeListeners) {
             listener.onBackgroundMusicVolumeChanged(backgroundMusicVolume);
         }
     }
@@ -130,7 +126,7 @@ public class GameSettings {
 
     public void setSoundEffectVolume(float volume) {
         this.soundEffectVolume = Math.max(0.0f, Math.min(1.0f, volume));
-        for (VolumeChangeListener listener : volumeChangeListeners) {
+        for(VolumeChangeListener listener : volumeChangeListeners) {
             listener.onSoundEffectVolumeChanged(soundEffectVolume);
         }
     }
@@ -141,7 +137,7 @@ public class GameSettings {
 
     public void setMuteAudio(boolean muteAudio) {
         this.muteAudio = muteAudio;
-        for (MuteAudioListener listener : muteAudioListeners) {
+        for(MuteAudioListener listener : muteAudioListeners) {
             listener.onMuteAudioChanged(muteAudio);
         }
     }

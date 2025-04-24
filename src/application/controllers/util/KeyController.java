@@ -3,20 +3,17 @@ package application.controllers.util;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class Controller extends KeyAdapter {
+public class KeyController extends KeyAdapter {
     private ViewController viewController;
 
-    public Controller(ViewController viewController) {
-        if(viewController == null) {
-             throw new IllegalArgumentException("ViewController cannot be null in Controller");
-        }
+    public KeyController(ViewController viewController) {
         this.viewController = viewController;
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            if (viewController == null) {
+        if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            if(viewController == null) {
                 return;
             }
 

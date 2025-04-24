@@ -11,11 +11,10 @@ import java.util.concurrent.Executors;
 
 public class SoundController implements GameSettings.MuteAudioListener, GameSettings.VolumeChangeListener {
     private final ExecutorService ex = Executors.newCachedThreadPool();
-    private final List<Clip> clips = new ArrayList<>(); // Lưu danh sách Clip cho hiệu ứng âm thanh
-    private Clip backgroundClip; // Clip riêng cho nhạc nền
+    private final List<Clip> clips = new ArrayList<>();
+    private Clip backgroundClip;
 
     public SoundController() {
-        // Đăng ký SoundController làm listener cho GameSettings
         GameSettings.getInstance().addMuteAudioListener(this);
         GameSettings.getInstance().addVolumeChangeListener(this);
     }
@@ -26,7 +25,7 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
                 stopBackgroundMusic();
 
                 File file = new File(path.replaceAll("%20", " "));
-                if (!file.exists()) {
+                if(!file.exists()) {
                     System.err.println("Không tìm thấy file âm thanh: " + path);
                     return;
                 }
@@ -35,10 +34,9 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
                 backgroundClip = AudioSystem.getClip();
                 backgroundClip.open(audioStream);
 
-                // Áp dụng âm lượng cho backgroundClip
                 applyVolumeToBackgroundClip();
 
-                backgroundClip.loop(Clip.LOOP_CONTINUOUSLY); // Lặp vô hạn
+                backgroundClip.loop(Clip.LOOP_CONTINUOUSLY);
                 backgroundClip.start();
 
             } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
@@ -48,7 +46,7 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
     }
 
     public void stopBackgroundMusic() {
-        if (backgroundClip != null && backgroundClip.isRunning()) {
+        if(backgroundClip != null && backgroundClip.isRunning()) {
             backgroundClip.stop();
             backgroundClip.close();
             backgroundClip = null;
@@ -59,7 +57,7 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
         ex.submit(() -> {
             try {
                 File file = new File(path.replaceAll("%20", " "));
-                if (!file.exists()) {
+                if(!file.exists()) {
                     System.err.println("Không tìm thấy file âm thanh: " + path);
                     return;
                 }
@@ -76,7 +74,7 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
                 effectClip.start();
 
                 effectClip.addLineListener(event -> {
-                    if (event.getType() == LineEvent.Type.STOP) {
+                    if(event.getType() == LineEvent.Type.STOP) {
                         effectClip.close();
                         synchronized (clips) {
                             clips.remove(effectClip);
@@ -93,7 +91,7 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
     public void stopAll() {
         stopBackgroundMusic();
         synchronized (clips) {
-            for (Clip clip : clips) {
+            for(Clip clip : clips) {
                 clip.stop();
                 clip.close();
             }
@@ -106,9 +104,8 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
         ex.shutdown();
     }
 
-    // Phương thức để áp dụng âm lượng cho backgroundClip
     private void applyVolumeToBackgroundClip() {
-        if (backgroundClip != null && backgroundClip.isOpen()) {
+        if(backgroundClip != null && backgroundClip.isOpen()) {
                 FloatControl volumeControl = (FloatControl) backgroundClip.getControl(FloatControl.Type.MASTER_GAIN);
                 float volume = GameSettings.getInstance().isMuteAudio() ? 0.0f : GameSettings.getInstance().getBackgroundMusicVolume();
                 float dB = (float) (Math.log(volume == 0.0 ? 0.0001 : volume) / Math.log(10.0) * 20.0);
@@ -116,7 +113,6 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
         }
     }
 
-    // Phương thức để áp dụng âm lượng cho một effectClip
     private void applyVolumeToEffectClip(Clip clip) {
         FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
         float volume = GameSettings.getInstance().isMuteAudio() ? 0.0f : GameSettings.getInstance().getSoundEffectVolume();
@@ -124,7 +120,6 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
         volumeControl.setValue(dB);
     }
 
-    // Phương thức để áp dụng âm lượng với giá trị đã tính toán sẵn
     private void applyVolumeToClip(Clip clip, float volume) {
         FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
         float dB = (float) (Math.log(volume == 0.0 ? 0.0001 : volume) / Math.log(10.0) * 20.0);
@@ -133,21 +128,17 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
 
     @Override
     public void onMuteAudioChanged(boolean isMuted) {
-        // Lấy giá trị âm lượng một lần duy nhất
         float backgroundVolume = isMuted ? 0.0f : GameSettings.getInstance().getBackgroundMusicVolume();
         float effectVolume = isMuted ? 0.0f : GameSettings.getInstance().getSoundEffectVolume();
 
-        // Chuyển tác vụ cập nhật âm lượng sang luồng riêng
         ex.submit(() -> {
-            // Cập nhật âm lượng cho backgroundClip
-            if (backgroundClip != null && backgroundClip.isOpen()) {
+            if(backgroundClip != null && backgroundClip.isOpen()) {
                 applyVolumeToClip(backgroundClip, backgroundVolume);
             }
 
-            // Cập nhật âm lượng cho tất cả các Clip trong clips
             synchronized (clips) {
-                for (Clip clip : clips) {
-                    if (clip.isOpen()) {
+                for(Clip clip : clips) {
+                    if(clip.isOpen()) {
                         applyVolumeToClip(clip, effectVolume);
                     }
                 }
@@ -157,8 +148,7 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
 
     @Override
     public void onBackgroundMusicVolumeChanged(float volume) {
-        // Chỉ cập nhật nếu không bị mute
-        if (!GameSettings.getInstance().isMuteAudio()) {
+        if(!GameSettings.getInstance().isMuteAudio()) {
             ex.submit(() -> {
                 applyVolumeToClip(backgroundClip, volume);
             });
@@ -167,12 +157,11 @@ public class SoundController implements GameSettings.MuteAudioListener, GameSett
 
     @Override
     public void onSoundEffectVolumeChanged(float volume) {
-        // Chỉ cập nhật nếu không bị mute
-        if (!GameSettings.getInstance().isMuteAudio()) {
+        if(!GameSettings.getInstance().isMuteAudio()) {
             ex.submit(() -> {
                 synchronized (clips) {
-                    for (Clip clip : clips) {
-                        if (clip.isOpen()) {
+                    for(Clip clip : clips) {
+                        if(clip.isOpen()) {
                             applyVolumeToClip(clip, volume);
                         }
                     }

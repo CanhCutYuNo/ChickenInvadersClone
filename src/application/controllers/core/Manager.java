@@ -15,7 +15,6 @@ import application.controllers.util.GameSettings;
 import application.controllers.util.SoundController;
 import application.controllers.util.ViewController;
 import application.models.core.GameStates;
-import application.views.panels.GamePanel;
 import application.views.player.PlayerView;
 
 public class Manager {
@@ -30,14 +29,12 @@ public class Manager {
     private GameStateController gameStateController;
     private SoundController soundController;
     private GameLoop gameLoop;
-    private GamePanel gamePanel;
+    private TransitionManager TransitionManager;
     private ViewController viewController;
     
     private PlayerActionHandler playerActionHandler;
     private GameStateHandler gameStateHandler;
     private final LevelTransitionHandler levelTransitionHandler;
-
-
 
     private String[] deathSounds = {
             "/asset/resources/sfx/chickDie3.wav",
@@ -57,7 +54,7 @@ public class Manager {
             "/asset/resources/sfx/chicken5b(pluck).wav"
     };
 
-    public Manager(GameLoop _gameLoop, SoundController _soundController, GamePanel _gamePanel) {
+    public Manager(GameLoop _gameLoop, SoundController _soundController, TransitionManager _TransitionManager) {
         this.soundController = _soundController;
         GameStates gameStates = new GameStates();
         this.gameStateController = new GameStateController(gameStates);
@@ -72,7 +69,7 @@ public class Manager {
         this.playerController.setPlayerView(playerView);
         this.items = new ItemsController("");
         this.gameLoop = _gameLoop;
-        this.gamePanel = _gamePanel;
+        this.TransitionManager = _TransitionManager;
         this.collisionManager = new CollisionManager(playerController, enemyController, bullets,
                 skillsManager, items, gameStateController, soundController, hitSounds, deathSounds);
         this.playerActionHandler = new PlayerActionHandler(playerController, bullets, soundController);
@@ -133,7 +130,7 @@ public class Manager {
     }
 
     public void update(double deltaTime) {
-    	if(gamePanel.isPaused()) {
+    	if(TransitionManager.isPaused()) {
     		return;
     	}
     	
@@ -142,7 +139,7 @@ public class Manager {
             return;
         }
         
-        if(!gamePanel.isGameOver() && !gamePanel.isVictory()) {
+        if(!TransitionManager.isGameOver() && !TransitionManager.isVictory()) {
         	updateBullets();
         	playerController.update();
             items.updateItems();
@@ -152,12 +149,12 @@ public class Manager {
             gameStateController.updateFloatingTexts();
         }
 
-        if(gamePanel.isTransitionActive()) {
+        if(TransitionManager.isTransitionActive()) {
             return;
         }
 
         if(gameStateController.updateLevelTransition()) {
-            gamePanel.triggerTransition();
+            TransitionManager.triggerTransition();
             
             GameSettings gameSettings = GameSettings.getInstance();
             gameSettings.setContinueLevel(getGameStateController().getLevel());
@@ -192,8 +189,8 @@ public class Manager {
         gameStateController.spawnFloatingText(x, y, text, color);
     }
 
-    public void setGamePanel(GamePanel _gamePanel) {
-        this.gamePanel = _gamePanel;
+    public void setTransitionManager(TransitionManager _TransitionManager) {
+        this.TransitionManager = _TransitionManager;
     }
 
     public void load() {

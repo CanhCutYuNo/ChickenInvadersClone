@@ -15,6 +15,7 @@ import javax.swing.ImageIcon;
 
 import application.controllers.bullet.BulletController;
 import application.controllers.core.GameStateController;
+import application.controllers.core.TransitionManager;
 import application.controllers.enemy.death.DeathEffectController;
 import application.controllers.enemy.items.ItemsController;
 import application.controllers.enemy.skills.EnemySkillsController;
@@ -22,7 +23,6 @@ import application.controllers.level.ILevelManager;
 import application.controllers.util.ScreenUtil;
 import application.models.bullet.BulletDame;
 import application.views.bullet.BulletView;
-import application.views.panels.GamePanel;
 import application.views.player.PlayerView;
 
 public class GameRenderer {
@@ -34,7 +34,7 @@ public class GameRenderer {
     private final GameStateController gameStates;
     private final PlayerView playerView;
     private final ScreenUtil screenUtil;
-    private final GamePanel gamePanel;
+    private final TransitionManager transitionManager;
     private final Image hudBar;
     private final Font font;
 
@@ -45,7 +45,7 @@ public class GameRenderer {
 
     public GameRenderer(BulletController bulletController, EnemySkillsController skillsManager, ILevelManager levelManager,
                         DeathEffectController deathEffectController, ItemsController itemsController, GameStateController gameStates,
-                        PlayerView playerView, ScreenUtil screenUtil, GamePanel gamePanel) {
+                        PlayerView playerView, ScreenUtil screenUtil, TransitionManager transitionManager) {
         this.bulletController = bulletController;
         this.skillsManager = skillsManager;
         this.levelManager = levelManager;
@@ -54,7 +54,7 @@ public class GameRenderer {
         this.gameStates = gameStates;
         this.playerView = playerView;
         this.screenUtil = ScreenUtil.getInstance();
-        this.gamePanel = gamePanel;
+        this.transitionManager = transitionManager;
 
         this.hudBar = new ImageIcon(getClass().getResource("/asset/resources/gfx/infohud.png")).getImage();
         this.font = new Font("Arial", Font.BOLD, 24);
@@ -107,7 +107,7 @@ public class GameRenderer {
         }
 
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-        if(!isGameOver && !isVictory && !gamePanel.isPlayerDead()) {
+        if(!isGameOver && !isVictory && !transitionManager.isPlayerDead()) {
             renderPlayer(g);
             drawHUD(g, panelWidth, panelHeight);
         }
@@ -128,7 +128,7 @@ public class GameRenderer {
     }
 
     private void renderBullet(Graphics g) {
-        for (BulletView bulletView : bulletController.getBulletViews()) {
+        for(BulletView bulletView : bulletController.getBulletViews()) {
             bulletView.render(g);
         }
     }

@@ -12,7 +12,7 @@ import application.models.enemy.Items;
 
 public class ItemsView {
     private BufferedImage atomSpritesheet;
-    private BufferedImage[] atomSprites; // Mảng chứa các sprite đã cắt
+    private BufferedImage[] atomSprites;
     private Image foodImage;
     private Image itemImage;
     private int currentFrame = 0;
@@ -34,15 +34,13 @@ public class ItemsView {
             atomSpritesheet = ImageIO.read(getClass().getResource("/asset/resources/gfx/atom_1.png"));
             foodImage = new ImageIcon(getClass().getResource("/asset/resources/gfx/food_thighs.PNG")).getImage();
 
-            // Cắt toàn bộ sprite atom và lưu vào mảng
             atomSprites = new BufferedImage[SPRITE_ATOM.length];
-            for (int i = 0; i < SPRITE_ATOM.length; i++) {
+            for(int i = 0; i < SPRITE_ATOM.length; i++) {
                 int[] s = SPRITE_ATOM[i];
                 atomSprites[i] = atomSpritesheet.getSubimage(s[0], s[1], s[2], s[3]);
             }
 
-            // Gán sẵn ảnh item nếu là food
-            if (items.getType() == Items.ItemType.FOOD) {
+            if(items.getType() == Items.ItemType.FOOD) {
                 itemImage = foodImage;
             }
 
@@ -52,17 +50,16 @@ public class ItemsView {
     }
 
     public void draw(Graphics g, Items item) {
-        if (item.getType() == Items.ItemType.ATOM && atomSprites != null) {
+        if(item.getType() == Items.ItemType.ATOM && atomSprites != null) {
             frameCounter++;
-            if (frameCounter >= FRAME_DELAY) {
+            if(frameCounter >= FRAME_DELAY) {
                 currentFrame = (currentFrame + 1) % atomSprites.length;
                 frameCounter = 0;
             }
             g.drawImage(atomSprites[currentFrame], (int) item.getPosX(), (int) item.getPosY(), null);
-        } else if (item.getType() == Items.ItemType.FOOD && itemImage != null) {
+        } else if(item.getType() == Items.ItemType.FOOD && itemImage != null) {
             g.drawImage(itemImage, (int) item.getPosX(), (int) item.getPosY(), null);
 
-            // ✅ Vẽ hitbox 
 //            Rectangle hitbox = item.getHitbox();
 //            g.setColor(Color.RED);
 //            g.drawRect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);

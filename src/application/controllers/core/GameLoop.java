@@ -4,7 +4,6 @@ import javax.swing.JFrame;
 import javax.swing.Timer;
 
 import application.views.panels.BackgroundPanel;
-import application.views.panels.GamePanel;
 
 public class GameLoop {
 
@@ -17,11 +16,11 @@ public class GameLoop {
     private int tps = 0;
     private long lastUpdateTime = System.nanoTime();
     private final Manager gameManager;
-    private final GamePanel gamePanel;
+    private final TransitionManager transitionManager;
     
-    public GameLoop(GamePanel gamePanel, BackgroundPanel backgroundPanel, JFrame frame) {
-        this.gamePanel = gamePanel;
-        this.gameManager = gamePanel.getGameManager();
+    public GameLoop(TransitionManager transitionManager, BackgroundPanel backgroundPanel, JFrame frame) {
+        this.transitionManager = transitionManager;
+        this.gameManager = transitionManager.getGameManager();
         this.paused = false;
 
         updateTimer = new Timer(1000 / 60, e -> { 
@@ -30,7 +29,7 @@ public class GameLoop {
                 double deltaTime = (currentTime - lastUpdateTime) / 1_000_000_000.0;
                 lastUpdateTime = currentTime;
 
-                gamePanel.update(deltaTime);
+                transitionManager.update(deltaTime);
                 gameManager.update(deltaTime);
                 backgroundPanel.update(deltaTime);
 
@@ -54,7 +53,7 @@ public class GameLoop {
     public void start() {
         lastUpdateTime = System.nanoTime();
         paused = false;
-        gamePanel.setPaused(false);
+        transitionManager.setPaused(false);
         updateTimer.start();
         renderTimer.start();
     }
@@ -63,7 +62,7 @@ public class GameLoop {
         updateTimer.stop();
         renderTimer.stop();
         paused = true;
-        gamePanel.setPaused(true);
+        transitionManager.setPaused(true);
     }
 
     public void pause() {
@@ -71,7 +70,7 @@ public class GameLoop {
             paused = true;
             updateTimer.stop();
             renderTimer.stop();
-            gamePanel.setPaused(true);
+            transitionManager.setPaused(true);
         }
     }
 
@@ -81,7 +80,7 @@ public class GameLoop {
             lastUpdateTime = System.nanoTime();
             updateTimer.start();
             renderTimer.start();
-            gamePanel.setPaused(false);
+            transitionManager.setPaused(false);
         }
     }
 

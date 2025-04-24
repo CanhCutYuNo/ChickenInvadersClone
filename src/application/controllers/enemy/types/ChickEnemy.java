@@ -9,10 +9,9 @@ import application.models.enemy.EnemySkills.SkillType;
 public class ChickEnemy implements EnemyBehavior {
     @Override
     public void update(Enemy enemy) {
-        if (enemy.getType() != Enemy.EnemyType.CHICK_ENEMY) {
+        if(enemy.getType() != Enemy.EnemyType.CHICK_ENEMY) {
             return;
         }
-        // TODO: Thêm logic di chuyển hoặc hành vi nếu cần
     }
 
     @Override
@@ -22,6 +21,6 @@ public class ChickEnemy implements EnemyBehavior {
 
     @Override
     public void addSkills(Enemy enemy, SkillType skillType, String imagePath) {
-        // Hiện tại không có kỹ năng cho CHICK_ENEMY
+        // no skills
     }
 }

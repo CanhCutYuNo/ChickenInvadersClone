@@ -52,9 +52,8 @@ public class Items {
         return posY > 1000;
     }
 
-    // ✅ Hàm hitbox mới
     public Rectangle getHitbox() {
-        return new Rectangle(posX, posY, 40, 60); // hoặc thay đổi kích thước tùy game
+        return new Rectangle(posX, posY, 40, 60);
     }
 
     public ItemType getType(){return type;}

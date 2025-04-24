@@ -32,9 +32,9 @@ public final class ScreenUtil {
     }
 
     public static ScreenUtil getInstance() { 
-        if (instance == null) {
+        if(instance == null) {
             synchronized (lock) { 
-                if (instance == null) {
+                if(instance == null) {
                     instance = new ScreenUtil();
                 }
             }

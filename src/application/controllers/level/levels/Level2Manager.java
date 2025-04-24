@@ -25,10 +25,10 @@ public class Level2Manager extends LevelManager {
 
     @Override
     protected void initEnemies() {
-        if (rand == null) {
+        if(rand == null) {
             rand = new Random();
         }
-        for (int i = 0; i < NUM_ENEMIES; i++) {
+        for(int i = 0; i < NUM_ENEMIES; i++) {
             int posY = rand.nextInt(100) - 250;
             int posX = rand.nextInt(SCREEN_WIDTH - 200);
             Enemy model = new Enemy(64, 64, posX, posY, 0, Enemy.EnemyType.CHICKEN_ENEMY);
@@ -47,15 +47,15 @@ public class Level2Manager extends LevelManager {
     }
 
     private void updateEnemies(float deltaTime) {
-        for (Enemy enemy : enemyController.getEnemyModels()) {
-            if (enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY && enemy.state != null) {
+        for(Enemy enemy : enemyController.getEnemyModels()) {
+            if(enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY && enemy.state != null) {
                 enemy.state.timeElapsed += deltaTime;
 
-                if (!enemy.state.isActive && enemy.state.timeElapsed >= enemy.state.timeDelay) {
+                if(!enemy.state.isActive && enemy.state.timeElapsed >= enemy.state.timeDelay) {
                     enemy.state.isActive = true;
                 }
 
-                if (enemy.state.isActive) {
+                if(enemy.state.isActive) {
                     enemy.state.t += deltaTime * 100;
                     float posY = enemy.getPosY() + GRAVITY;
                     float offsetX = (float) Math.sin(posY * 0.005) * OSCILLATION_AMPLITUDE;
@@ -66,7 +66,7 @@ public class Level2Manager extends LevelManager {
                     enemy.setRotate((float) (20 * Math.sin(0.02 * enemy.state.t)));
 
                     // Tái sinh khi chạm đáy
-                    if (enemy.getPosY() > 1000) {
+                    if(enemy.getPosY() > 1000) {
                         enemy.setPosY(rand.nextInt(200) - 600); // Dùng rand
                         enemy.setPosX(rand.nextInt(1600) + 100);
                         enemy.state.timeElapsed = 0;

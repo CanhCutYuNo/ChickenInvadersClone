@@ -19,7 +19,7 @@ public class EnemyView {
     private int frameCount;
     private int spriteDelay;
     private long lastFrameTime;
-    private boolean isForward; // Thêm để điều khiển hướng animation
+    private boolean isForward;
     private int[] bodySprite;
     private int[] headSprite;
     private List<int[]> wingSprites;
@@ -73,17 +73,17 @@ public class EnemyView {
         this.frameCount = 0;
         this.spriteDelay = (enemyModel.getType() == Enemy.EnemyType.CHICKEN_BOSS) ? 30 : 0;
         this.lastFrameTime = System.currentTimeMillis();
-        this.isForward = true; // Khởi tạo hướng animation
+        this.isForward = true;
         this.wingSprites = new ArrayList<>();
         initializeSprites();
         loadImages();
     }
 
     private void initializeSprites() {
-        if (enemyModel.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
+        if(enemyModel.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
             this.bodySprite = SPRITE_BODY[(int) (Math.random() * SPRITE_BODY.length)];
             this.headSprite = SPRITE_HEAD[0];
-            for (int[] frame : SPRITE_WINGS) {
+            for(int[] frame : SPRITE_WINGS) {
                 this.wingSprites.add(frame);
             }
             this.wingOffsets = new int[][] {
@@ -94,13 +94,13 @@ public class EnemyView {
                 {-5, 3}, {-5, 3}, {-5, 3}, {-5, 4}, {-5, 4}, {-5, 4}, {-5, 4}, {-5, 5},
                 {-5, 5}, {-5, 5}, {-5, 5}, {-5, 5}, {-5, 5}, {-5, 5}, {-5, 5}, {-5, 5}, {-5, 5}
             };
-        } else if (enemyModel.getType() == Enemy.EnemyType.CHICK_ENEMY) {
+        } else if(enemyModel.getType() == Enemy.EnemyType.CHICK_ENEMY) {
             this.curFrame = (int) (Math.random() * SPRITE_CHICK.length);
         }
     }
 
     private void loadImages() {
-        if (enemyModel.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
+        if(enemyModel.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
             Image[] chickenImages = new Image[4];
             try {
                 chickenImages[0] = imageCache.getResourceImage("/asset/resources/gfx/chicken-body-stripes.png");
@@ -112,7 +112,7 @@ public class EnemyView {
                 e.printStackTrace();
             }
             images.put(Enemy.EnemyType.CHICKEN_ENEMY, chickenImages);
-        } else if (enemyModel.getType() == Enemy.EnemyType.EGG_SHELL_ENEMY) {
+        } else if(enemyModel.getType() == Enemy.EnemyType.EGG_SHELL_ENEMY) {
             Image[] eggShellImages = new Image[1];
             try {
                 eggShellImages[0] = imageCache.getResourceImage("/asset/resources/gfx/eggShell.png");
@@ -121,7 +121,7 @@ public class EnemyView {
                 e.printStackTrace();
             }
             images.put(Enemy.EnemyType.EGG_SHELL_ENEMY, eggShellImages);
-        } else if (enemyModel.getType() == Enemy.EnemyType.CHICKEN_BOSS) {
+        } else if(enemyModel.getType() == Enemy.EnemyType.CHICKEN_BOSS) {
             Image[] bossImages = new Image[1];
             try {
                 bossImages[0] = imageCache.getResourceImage("/asset/resources/gfx/boss.png");
@@ -130,7 +130,7 @@ public class EnemyView {
                 e.printStackTrace();
             }
             images.put(Enemy.EnemyType.CHICKEN_BOSS, bossImages);
-        } else if (enemyModel.getType() == Enemy.EnemyType.CHICK_ENEMY) {
+        } else if(enemyModel.getType() == Enemy.EnemyType.CHICK_ENEMY) {
             Image[] chickImages = new Image[1];
             try {
                 chickImages[0] = imageCache.getResourceImage("/asset/resources/gfx/chick.png");
@@ -144,40 +144,40 @@ public class EnemyView {
 
     public void updateAnimation() {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastFrameTime < spriteDelay) {
+        if(currentTime - lastFrameTime < spriteDelay) {
             return;
         }
 
-        if (enemyModel.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
-            if (isForward) {
-                if (curFrame < 48) { // Check before incrementing
+        if(enemyModel.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
+            if(isForward) {
+                if(curFrame < 48) {
                     curFrame+=2;
                 } else {
                     isForward = false;
                 }
             } else {
-                if (curFrame > 0) { // Check before decrementing
+                if(curFrame > 0) {
                     curFrame-=2;
                 } else {
                     isForward = true;
                 }
             }
             frameCount = (frameCount + 1) % 120;
-        } else if (enemyModel.getType() == Enemy.EnemyType.CHICK_ENEMY) {
-            if (isForward) {
-                if (curFrame < SPRITE_CHICK.length - 1) {
+        } else if(enemyModel.getType() == Enemy.EnemyType.CHICK_ENEMY) {
+            if(isForward) {
+                if(curFrame < SPRITE_CHICK.length - 1) {
                     curFrame++;
                 } else {
                     isForward = false;
                 }
             } else {
-                if (curFrame > 0) {
+                if(curFrame > 0) {
                     curFrame--;
                 } else {
                     isForward = true;
                 }
             }
-        } else if (enemyModel.getType() == Enemy.EnemyType.CHICKEN_BOSS) {
+        } else if(enemyModel.getType() == Enemy.EnemyType.CHICKEN_BOSS) {
             curFrame = (curFrame + 1) % SPRITE_BOSS.length;
         }
 
@@ -187,9 +187,9 @@ public class EnemyView {
     public void render(Graphics g) {
         updateAnimation();
 
-        if (enemyModel.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
+        if(enemyModel.getType() == Enemy.EnemyType.CHICKEN_ENEMY) {
             Image[] chickenImages = images.get(Enemy.EnemyType.CHICKEN_ENEMY);
-            if (chickenImages != null && chickenImages[0] != null && chickenImages[1] != null && chickenImages[2] != null && chickenImages[3] != null) {
+            if(chickenImages != null && chickenImages[0] != null && chickenImages[1] != null && chickenImages[2] != null && chickenImages[3] != null) {
                 int centerX = enemyModel.getPosX() + enemyModel.getModelWidth() / 2;
                 int centerY = enemyModel.getPosY() + enemyModel.getModelHeight() / 2;
                 Graphics2D g2d = (Graphics2D) g.create();
@@ -224,7 +224,7 @@ public class EnemyView {
                         bodySprite[0], bodySprite[1],
                         bodySprite[0] + bodySprite[2], bodySprite[1] + bodySprite[3], null);
 
-                if (frameCount < 20) {
+                if(frameCount < 20) {
                     g.drawImage(chickenImages[3], enemyModel.getPosX() + 23, enemyModel.getPosY() - 40, 50, 40, null);
                 }
 
@@ -234,16 +234,15 @@ public class EnemyView {
                 g.setColor(Color.RED);
                 g.fillRect(enemyModel.getPosX(), enemyModel.getPosY(), enemyModel.getModelWidth(), enemyModel.getModelHeight());
             }
-        } else if (enemyModel.getType() == Enemy.EnemyType.EGG_SHELL_ENEMY) {
+        } else if(enemyModel.getType() == Enemy.EnemyType.EGG_SHELL_ENEMY) {
             Image[] eggShellImages = images.get(Enemy.EnemyType.EGG_SHELL_ENEMY);
-            if (eggShellImages != null && eggShellImages[0] != null) {
-                // Xác định sprite dựa trên HP
+            if(eggShellImages != null && eggShellImages[0] != null) {
                 int state;
-                if (enemyModel.getHp() >= 300) {
+                if(enemyModel.getHp() >= 300) {
                     state = 0;
-                } else if (enemyModel.getHp() >= 200) {
+                } else if(enemyModel.getHp() >= 200) {
                     state = 1;
-                } else if (enemyModel.getHp() >= 100) {
+                } else if(enemyModel.getHp() >= 100) {
                     state = 2;
                 } else {
                     state = 3;
@@ -254,13 +253,11 @@ public class EnemyView {
                 int spriteWidth = SPRITE_SIZE_EGG_SHELL[0];
                 int spriteHeight = SPRITE_SIZE_EGG_SHELL[1];
 
-                // Tính tâm để xoay
                 int centerX = enemyModel.getPosX() + enemyModel.getModelWidth() / 2;
                 int centerY = enemyModel.getPosY() + enemyModel.getModelHeight() / 2;
                 Graphics2D g2d = (Graphics2D) g.create();
                 g2d.rotate(Math.toRadians(enemyModel.getRotate()), centerX, centerY);
 
-                // Vẽ sprite egg shell
                 g.drawImage(eggShellImages[0],
                         enemyModel.getPosX(), enemyModel.getPosY(),
                         enemyModel.getPosX() + 75, enemyModel.getPosY() + 97,
@@ -272,9 +269,9 @@ public class EnemyView {
                 g.setColor(Color.RED);
                 g.fillRect(enemyModel.getPosX(), enemyModel.getPosY(), enemyModel.getModelWidth(), enemyModel.getModelHeight());
             }
-        } else if (enemyModel.getType() == Enemy.EnemyType.CHICKEN_BOSS) {
+        } else if(enemyModel.getType() == Enemy.EnemyType.CHICKEN_BOSS) {
             Image[] bossImages = images.get(Enemy.EnemyType.CHICKEN_BOSS);
-            if (bossImages != null && bossImages[0] != null) {
+            if(bossImages != null && bossImages[0] != null) {
                 int frame = Math.min(curFrame, SPRITE_BOSS.length - 1);
                 frame = Math.max(frame, 0);
                 int spriteX = SPRITE_BOSS[frame][0] * SPRITE_SIZE_BOSS[0];
@@ -282,13 +279,11 @@ public class EnemyView {
                 int spriteWidth = SPRITE_SIZE_BOSS[0];
                 int spriteHeight = SPRITE_SIZE_BOSS[1];
 
-                // Tính tâm để xoay
                 int centerX = enemyModel.getPosX() + enemyModel.getModelWidth() / 2;
                 int centerY = enemyModel.getPosY() + enemyModel.getModelHeight() / 2;
                 Graphics2D g2d = (Graphics2D) g.create();
                 g2d.rotate(Math.toRadians(enemyModel.getRotate()), centerX, centerY);
 
-                // Vẽ sprite boss
                 g.drawImage(bossImages[0],
                     enemyModel.getPosX() - 200, enemyModel.getPosY() - 50, enemyModel.getPosX() + enemyModel.getModelWidth() + 200, enemyModel.getPosY() + enemyModel.getModelHeight() + 100,
                         spriteX, spriteY,
@@ -299,9 +294,9 @@ public class EnemyView {
                 g.setColor(Color.RED);
                 g.fillRect(enemyModel.getPosX(), enemyModel.getPosY(), enemyModel.getModelWidth(), enemyModel.getModelHeight());
             }
-        } else if (enemyModel.getType() == Enemy.EnemyType.CHICK_ENEMY) {
+        } else if(enemyModel.getType() == Enemy.EnemyType.CHICK_ENEMY) {
             Image[] chickImages = images.get(Enemy.EnemyType.CHICK_ENEMY);
-            if (chickImages != null && chickImages[0] != null) {
+            if(chickImages != null && chickImages[0] != null) {
                 int frame = Math.min(curFrame, SPRITE_CHICK.length - 1);
                 frame = Math.max(frame, 0);
                 Graphics2D g2d = (Graphics2D) g.create();

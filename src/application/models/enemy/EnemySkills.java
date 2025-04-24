@@ -71,39 +71,39 @@ public class EnemySkills {
         if(skillType == SkillType.EGG) {
             this.width = 31;
             this.height = 45;
-        } else if (skillType == SkillType.HOLE) {
+        } else if(skillType == SkillType.HOLE) {
             this.width = 300;
             this.height = 300;
-        } else if (skillType == SkillType.FIREBALL) {
+        } else if(skillType == SkillType.FIREBALL) {
             this.width = 153;
             this.height = 62;
         }
     }
 
     public void update() {
-        if (!isActive) {
+        if(!isActive) {
             return;
         }
 
         long currentTime = System.currentTimeMillis();
 
-        if (skillType == SkillType.HOLE) {
-            if (isHoldingMax) {
-                if (currentTime - scaleHoldStartTime >= maxScaleHoldTime) {
+        if(skillType == SkillType.HOLE) {
+            if(isHoldingMax) {
+                if(currentTime - scaleHoldStartTime >= maxScaleHoldTime) {
                     isHoldingMax = false;
                     isScalingUp = false;
                 }
             } else {
-                if (isScalingUp) {
+                if(isScalingUp) {
                     scale += 0.05;
-                    if (scale >= 4.0) {
+                    if(scale >= 4.0) {
                         scale = 4.0;
                         isHoldingMax = true;
                         scaleHoldStartTime = currentTime;
                     }
                 } else {
                     scale -= 0.05;
-                    if (scale <= 1.0) {
+                    if(scale <= 1.0) {
                         scale = 1.0;
                         isActive = false;
                         endTime = currentTime;
@@ -113,23 +113,23 @@ public class EnemySkills {
             }
             angle += Math.toRadians(2);
 
-            if (currentTime - startTime >= duration) {
+            if(currentTime - startTime >= duration) {
                 isActive = false;
                 endTime = currentTime;
             }
-        } else if (skillType == SkillType.EGG) {
-            if (!isExploding) {
+        } else if(skillType == SkillType.EGG) {
+            if(!isExploding) {
                 posY += speedY;
             } else {
                 animationFrame++;
             }
-        } else if (skillType == SkillType.FIREBALL) {
+        } else if(skillType == SkillType.FIREBALL) {
             posX += speedX;
             posY += speedY;
             animationFrame++;
             angle += Math.toRadians(5);
 
-            if (posX < -100 || posX > 2020 || posY < -100 || posY > 1180) {
+            if(posX < -100 || posX > 2020 || posY < -100 || posY > 1180) {
                 isActive = false;
                 endTime = currentTime;
             }
@@ -137,9 +137,9 @@ public class EnemySkills {
     }
 
     public boolean isOffScreen() {
-        if (skillType == SkillType.EGG) {
+        if(skillType == SkillType.EGG) {
             return posY > 1000;
-        } else if (skillType == SkillType.FIREBALL) {
+        } else if(skillType == SkillType.FIREBALL) {
             return posX < -100 || posX > 2020 || posY < -100 || posY > 1180;
         }
         return false;
@@ -213,7 +213,7 @@ public class EnemySkills {
 
         Rectangle2D rect = new Rectangle2D.Double(hitboxX, hitboxY, scaledWidth, scaledHeight);
 
-        if (skillType == SkillType.FIREBALL) {
+        if(skillType == SkillType.FIREBALL) {
             double angle = Math.atan2(speedY, speedX);
             AffineTransform transform = new AffineTransform();
             transform.rotate(angle, posX, posY);

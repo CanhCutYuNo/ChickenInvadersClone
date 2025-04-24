@@ -10,10 +10,9 @@ public class EggShellEnemy implements EnemyBehavior {
 
     @Override
     public void update(Enemy enemy) {
-        if (enemy.getType() != Enemy.EnemyType.EGG_SHELL_ENEMY) {
+        if(enemy.getType() != Enemy.EnemyType.EGG_SHELL_ENEMY) {
             return;
         }
-        // Không có logic di chuyển
     }
 
     @Override
@@ -27,9 +26,8 @@ public class EggShellEnemy implements EnemyBehavior {
     }
 
     public void nextFrame(Enemy enemy) {
-        if (enemy.getType() != Enemy.EnemyType.EGG_SHELL_ENEMY) {
+        if(enemy.getType() != Enemy.EnemyType.EGG_SHELL_ENEMY) {
             return;
         }
-        // Không có animation
     }
 }

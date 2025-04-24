@@ -79,7 +79,7 @@ public class PlayerView {
     }
 
     public void render(Graphics g) {
-        if (spriteSheet != null) {
+        if(spriteSheet != null) {
             int[] data = spriteData[curFrame];
             int sx = data[0], sy = data[1], sw = data[2], sh = data[3];
 
@@ -101,7 +101,7 @@ public class PlayerView {
                     playerController.getPosX() + offsetX + 100, playerController.getPosY() + offsetY + 100,
                     sx, sy, sx + sw, sy + sh, null);
 
-            if (exhaustImage != null) {
+            if(exhaustImage != null) {
                 int[] exhaustData = {1, 271, 80, 240};
                 int ex_sx = exhaustData[0], ex_sy = exhaustData[1];
                 int ex_sw = exhaustData[2], ex_sh = exhaustData[3];
@@ -149,16 +149,16 @@ public class PlayerView {
     }
 
     public void updateExplosion() {
-        if (exploding) {
+        if(exploding) {
             exFrame++;
-            if (exFrame >= 53) {
+            if(exFrame >= 53) {
                 exploding = false;
             }
         }
     }
 
     public void explosionRender(Graphics g) {
-        if (explosionSheet != null) {
+        if(explosionSheet != null) {
             int[] eData = explosionData[exFrame];
             int ex = eData[0], ey = eData[1], ew = eData[2], eh = eData[3];
 

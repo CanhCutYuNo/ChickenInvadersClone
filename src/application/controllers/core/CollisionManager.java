@@ -56,36 +56,36 @@ public class CollisionManager {
     }
 
     private void checkBulletEnemyCollisions() {
-        for (int i = bulletController.getBullets().size() - 1; i >= 0; i--) {
+        for(int i = bulletController.getBullets().size() - 1; i >= 0; i--) {
             Bullet bullet = bulletController.getBullets().get(i);
             if(isCollidingAtom && bullet.getType() == Bullet.BulletType.NORMAL){
                 bullet.transformToStrongerBullet();
 //                bulletController.removeBullet(i);
 //                bulletController.addBullet(bullet.getX(), bullet.getY(), bullet.getDamage(), bullet.getSpeedY(), bullet.getAcceleration(),bullet.getType());
             }
-            for (int j = enemyController.getEnemyModels().size() - 1; j >= 0; j--) {
-                if (isColliding(bullet, j)) {
+            for(int j = enemyController.getEnemyModels().size() - 1; j >= 0; j--) {
+                if(isColliding(bullet, j)) {
                     Enemy enemy = enemyController.getEnemyModels().get(j);
                     spawnFloatingText(enemy.getPosX() - 2, enemy.getPosY(), "- " + String.valueOf(bullet.getDamage()), Color.RED);
-                    if (enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY || enemy.getType() == Enemy.EnemyType.CHICK_ENEMY) {
+                    if(enemy.getType() == Enemy.EnemyType.CHICKEN_ENEMY || enemy.getType() == Enemy.EnemyType.CHICK_ENEMY) {
                         enemyController.takeDamage(j, bullet.getDamage(), hitSounds, deathSounds);
                     } 
-                    else if (enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS){
+                    else if(enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS){
                         enemyController.takeDamage(j, bullet.getDamage(), null, null);
                         soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/impactMetal2a.wav").getPath());    
-                        if (enemy.isDead()) {
+                        if(enemy.isDead()) {
                             soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/(chickbossdie).wav").getPath());    
                         }
                     }
                     else {
                         enemyController.takeDamage(j, bullet.getDamage(), null, null);
                         soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggshellCrack.wav").getPath());      
-                        if (enemy.isDead()) {
+                        if(enemy.isDead()) {
                             soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggshellBreak.wav").getPath());    
                         }
                     }
                     bulletController.removeBullet(i);
-                    if (enemy.isDead()) {
+                    if(enemy.isDead()) {
                         Random random = new Random();
                         Items.ItemType itemType = null;
                         float chance = 0;
@@ -108,8 +108,8 @@ public class CollisionManager {
                                 damageItem = -5;
                                 break;
                         }
-                        if (random.nextDouble() < chance) {
-                            if (!itemsController.hasDroppedAtom() && random.nextDouble() < chance) {
+                        if(random.nextDouble() < chance) {
+                            if(!itemsController.hasDroppedAtom() && random.nextDouble() < chance) {
                                 itemType = Items.ItemType.ATOM;
                                 itemsController.markAtomDropped();
                             } else {
@@ -128,11 +128,11 @@ public class CollisionManager {
     private void checkPlayerCollisionsWithItems() {
         List<ItemsController.ItemUnit> toRemove = new ArrayList<>();
 
-        for (ItemsController.ItemUnit unit : itemsController.getItemUnits()) {
+        for(ItemsController.ItemUnit unit : itemsController.getItemUnits()) {
             Items item = unit.model;
 
-            if (isColliding(playerController, item)) {
-                if (item.getType() == Items.ItemType.FOOD) {
+            if(isColliding(playerController, item)) {
+                if(item.getType() == Items.ItemType.FOOD) {
                     playerController.isDamaged(item.getDamage());
 
                     spawnFloatingText(playerController.getPosX(), playerController.getPosY() - 10,"+ " + Math.abs(item.getDamage()), Color.GREEN);
@@ -152,9 +152,9 @@ public class CollisionManager {
 
 
     private void checkPlayerCollisionsWithEnemies() {
-        for (int i = 0; i < enemyController.getEnemyModels().size(); i++) {
-            if (isColliding(playerController, i)) {
-                if (!gameStates.isPlayerExploded()) {
+        for(int i = 0; i < enemyController.getEnemyModels().size(); i++) {
+            if(isColliding(playerController, i)) {
+                if(!gameStates.isPlayerExploded()) {
                 	playerController.setHP(-1);
                     playerController.getPlayerView().startExplosion();
                     soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/explosionPlayer.wav").getPath());
@@ -167,13 +167,13 @@ public class CollisionManager {
 
     private void checkPlayerCollisionsWithSkills() {
         Iterator<EnemySkills> skillIterator = skillsManager.getSkills().iterator();
-        while (skillIterator.hasNext()) {
+        while(skillIterator.hasNext()) {
             EnemySkills skill = skillIterator.next();
-            if (skill.isActive() && isColliding(playerController, skill)) {
+            if(skill.isActive() && isColliding(playerController, skill)) {
                 playerController.isDamaged(skill.getDamage());
                 spawnFloatingText(playerController.getPosX(), playerController.getPosY() - 10, "- " + String.valueOf(skill.getDamage()), Color.RED);
                 soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/eggshellCrack.wav").getPath());
-                if (playerController.getHP() <= 0) {
+                if(playerController.getHP() <= 0) {
                     playerController.getPlayerView().startExplosion();
                     soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/explosionPlayer.wav").getPath());
                     gameStates.setPlayerExploded(true);

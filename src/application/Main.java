@@ -8,7 +8,7 @@ import javax.swing.SwingUtilities;
 
 import application.controllers.core.GameLoop;
 import application.controllers.core.Manager;
-import application.controllers.util.Controller;
+import application.controllers.util.KeyController;
 import application.controllers.util.ImageCache;
 import application.controllers.util.SoundController;
 import application.controllers.util.ViewController;
@@ -26,6 +26,7 @@ public class Main {
     private static CardLayout cardLayout;
     private static JPanel mainPanel;
     private static Manager gameManager;
+    
     private static GamePanel gamePanel;
     private static BackgroundPanel backgroundPanel;
     private static MenuPanel menuPanel;
@@ -64,10 +65,9 @@ public class Main {
             pausePanel = new PausePanel(viewController, soundController);
 
             gamePanel = new GamePanel(gameManager, soundController);
-            gameManager.setGamePanel(gamePanel);
-            gameLoop = new GameLoop(gamePanel, backgroundPanel, frame);
+            gameLoop = new GameLoop(gamePanel.getTransitionManager(), backgroundPanel, frame);
             gameManager.setGameLoop(gameLoop);
-
+            gameManager.setTransitionManager(gamePanel.getTransitionManager());
             menuPanel = new MenuPanel(viewController);
             viewController.setMenuPanel(menuPanel);
 
@@ -92,7 +92,7 @@ public class Main {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
 
-            gamePanel.addKeyListener(new Controller(viewController));
+            gamePanel.addKeyListener(new KeyController(viewController));
             frame.setFocusable(true);
             frame.requestFocus();
         });
