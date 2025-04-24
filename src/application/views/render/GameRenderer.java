@@ -74,11 +74,7 @@ public class GameRenderer {
         
         if(!isGameOver && !isVictory) {
         	renderBullet(g);
-            deathEffectController.render(g);
             itemsController.drawItems(g);
-            for(BulletDame text : gameStates.getFloatingTexts()) {
-                text.render(g);
-            }
             skillsManager.drawSkills(g);
         }
 
@@ -103,6 +99,13 @@ public class GameRenderer {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
             if(levelManager != null) {
                 levelManager.render(g);
+            }
+        }
+        
+        if(!isGameOver && !isVictory) {
+            deathEffectController.render(g);
+            for(BulletDame text : gameStates.getFloatingTexts()) {
+                text.render(g);
             }
         }
 

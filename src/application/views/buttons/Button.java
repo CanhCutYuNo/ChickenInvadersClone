@@ -12,8 +12,7 @@ public class Button extends JButton {
     private boolean isEntered = false;
     private BufferedImage buttonImage;
     private BufferedImage buttonHoverImage;
-    private boolean isChecked = false;
-    private BufferedImage checkedImage; 
+    private BufferedImage checkedImage;
 
     public Button(String normalImagePath, String hoverImagePath) {
         setContentAreaFilled(false);
@@ -58,15 +57,6 @@ public class Button extends JButton {
     public void setCheckedImage(String checkedImagePath) {
         BufferedImage image = loadImage(checkedImagePath);
         checkedImage = image;
-    }
-
-    public boolean isChecked() {
-        return isChecked;
-    }
-
-    public void setChecked(boolean checked) {
-        this.isChecked = checked;
-        repaint();
     }
 
     @Override

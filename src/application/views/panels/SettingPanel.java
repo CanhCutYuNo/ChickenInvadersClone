@@ -223,12 +223,14 @@ public class SettingPanel extends JPanel {
         muteAudioPanel.add(muteAudioLabel);
 
         Button muteAudioButton = new Button("/asset/resources/gfx/checkbox.png", "/asset/resources/gfx/checkbox_hover.png");
-        muteAudioButton.setCheckedImage("/asset/resources/gfx/tick.png");
-        muteAudioButton.setChecked(GameSettings.getInstance().isMuteAudio());
+
+        muteAudioButton.setCheckedImage("/asset/resources/gfx/tick.png"); 
+        muteAudioButton.setSelected(GameSettings.getInstance().isMuteAudio());
         muteAudioButton.setBounds(scaledBounds(230, 5, 100, 100)); 
         muteAudioButton.addActionListener(e -> {
-            muteAudioButton.setChecked(!muteAudioButton.isChecked());
-            GameSettings.getInstance().setMuteAudio(muteAudioButton.isChecked());
+            muteAudioButton.setSelected(!muteAudioButton.isSelected()); 
+            GameSettings.getInstance().setMuteAudio(muteAudioButton.isSelected());
+
             GameSettings.getInstance().saveSettings();
             soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
         });
@@ -244,7 +246,7 @@ public class SettingPanel extends JPanel {
             soundClick.playSoundEffect(getClass().getResource("/asset/resources/sfx/clickXP.wav").getPath());
             viewController.switchToMenuPanel();
         });
-        buttonDone.setBounds(scaledBounds(50, 950, 280, 110)); // x=466, y=690, width=348, height=70
+        buttonDone.setBounds(scaledBounds(50, 950, 280, 110));
         containerPanel.add(buttonDone);
 
         jLayeredPane.setLayer(containerPanel, 1);
