@@ -3,12 +3,12 @@ package application.models.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import application.models.bullet.BulletDame;
+import application.models.bullet.FloattingText;
 
 public class GameStates {
     private int level;
     private int foodCounts;
-    private List<BulletDame> floatingTexts;
+    private List<FloattingText> floatingTexts;
     private boolean levelTransitionTriggered;
     private boolean isDelaying;
     private long delayStartTime;
@@ -43,16 +43,16 @@ public class GameStates {
         this.foodCounts = foodCounts;
     }
 
-    public List<BulletDame> getFloatingTexts() {
+    public List<FloattingText> getFloatingTexts() {
         return new ArrayList<>(floatingTexts);
     }
 
-    public void addFloatingText(BulletDame text) {
+    public void addFloatingText(FloattingText text) {
         this.floatingTexts.add(text);
     }
     
     public void removeExpiredFloatingTexts() {
-        floatingTexts.removeIf(BulletDame::isExpired);
+        floatingTexts.removeIf(FloattingText::isExpired);
     }
 
     public boolean isLevelTransitionTriggered() {

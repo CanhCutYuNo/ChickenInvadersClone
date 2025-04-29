@@ -129,13 +129,6 @@ public class PlayerView {
             g.setColor(Color.RED);
             g.fillRect(playerController.getPosX(), playerController.getPosY(), 64, 64);
         }
-        // Vẽ hitbox
-//        Graphics2D g2d = (Graphics2D) g;
-//        g2d.setColor(Color.RED);
-//        Rectangle hitbox = playerController.getHitbox();
-//        g2d.draw(hitbox);
-
-
 
     }
 

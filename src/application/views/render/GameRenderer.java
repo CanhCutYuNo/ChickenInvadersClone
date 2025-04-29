@@ -21,7 +21,7 @@ import application.controllers.enemy.items.ItemsController;
 import application.controllers.enemy.skills.EnemySkillsController;
 import application.controllers.level.ILevelManager;
 import application.controllers.util.ScreenUtil;
-import application.models.bullet.BulletDame;
+import application.models.bullet.FloattingText;
 import application.views.bullet.BulletView;
 import application.views.player.PlayerView;
 
@@ -104,7 +104,7 @@ public class GameRenderer {
         
         if(!isGameOver && !isVictory) {
             deathEffectController.render(g);
-            for(BulletDame text : gameStates.getFloatingTexts()) {
+            for(FloattingText text : gameStates.getFloatingTexts()) {
                 text.render(g);
             }
         }
@@ -195,7 +195,7 @@ public class GameRenderer {
 
     private void loadVictoryImage() {
         try {
-            victoryImage = ImageIO.read(getClass().getResource("/asset/resources/gfx/victory.png"));
+            victoryImage = ImageIO.read(getClass().getResource("/asset/resources/gfx/Victory.png"));
             if(victoryImage == null) {
                 System.out.println("Failed to load victoryImage");
                 victoryImage = new BufferedImage(400, 200, BufferedImage.TYPE_INT_ARGB);

@@ -112,10 +112,8 @@ public class PlayerController {
                 playerView.setCurFrame(curFrame - 1);
             }
         }
+        
         int exFrame = playerView.getExFrame();
-        //        if(curFrame >= 15 && curFrame < 32) {
-//        	curFrame++;
-//        }
         if(exFrame < 52) {
             playerView.setExFrame(exFrame + 1);
         } else {

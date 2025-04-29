@@ -70,7 +70,7 @@ public class GameSettings {
         Properties props = new Properties();
         try (FileInputStream fis = new FileInputStream(SETTINGS_FILE)) {
             props.load(fis);
-            difficulty = Difficulty.valueOf(props.getProperty("difficulty", "PEACEFUL"));
+            difficulty = Difficulty.valueOf(props.getProperty("difficulty", "EASY"));
             backgroundMusicVolume = Float.parseFloat(props.getProperty("backgroundMusicVolume", "1.0"));
             soundEffectVolume = Float.parseFloat(props.getProperty("soundEffectVolume", "1.0"));
             muteAudio = Boolean.parseBoolean(props.getProperty("muteAudio", "false"));

@@ -23,7 +23,7 @@ public class GameLoop {
         this.gameManager = transitionManager.getGameManager();
         this.paused = false;
 
-        updateTimer = new Timer(1000 / 60, e -> { 
+        updateTimer = new Timer(1000 / 240, e -> { 
             if(!paused) {
                 long currentTime = System.nanoTime();
                 double deltaTime = (currentTime - lastUpdateTime) / 1_000_000_000.0;

@@ -58,7 +58,7 @@ public class Level1Manager extends LevelManager {
             }
 
             if(state.isActive) {
-                state.t += deltaTime * 50 * state.direction;
+                state.t += deltaTime * 70 * state.direction;
 
                 List<Enemy> rowEnemies = new ArrayList<>();
                 for(Enemy enemy : enemyController.getEnemyModels()) {

@@ -16,7 +16,7 @@ import application.controllers.player.PlayerController;
 import application.controllers.util.GameSettings;
 import application.controllers.util.SoundController;
 import application.models.bullet.Bullet;
-import application.models.bullet.BulletDame;
+import application.models.bullet.FloattingText;
 import application.models.enemy.Enemy;
 import application.models.enemy.EnemySkills;
 import application.models.enemy.Items;
@@ -191,7 +191,7 @@ public class CollisionManager {
 
 
     private void spawnFloatingText(int x, int y, String text, Color color) {
-        gameStates.getGameStates().addFloatingText(new BulletDame(x, y, text, color));
+        gameStates.getGameStates().addFloatingText(new FloattingText(x, y, text, color));
     }
 
     private boolean isColliding(Bullet bullet, int enemyIndex) {

@@ -4,14 +4,14 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
-public class BulletDame {
+public class FloattingText {
     private float x, y;
     private String text;
     private Color color;
     private long startTime;
     private static final long LIFESPAN = 1000; 
 
-    public BulletDame(int x, int y, String text, Color color){
+    public FloattingText(int x, int y, String text, Color color){
         this.x = x;
         this.y = y;
         this.text = text;

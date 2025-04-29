@@ -1,6 +1,6 @@
 package application.controllers.core;
 
-import application.models.bullet.BulletDame;
+import application.models.bullet.FloattingText;
 import application.models.core.GameStates;
 
 import java.awt.Color;
@@ -19,7 +19,6 @@ public class GameStateController {
             gameStates.setLevel(gameStates.getLevel() + 1);
             gameStates.setDelaying(true);
             gameStates.setDelayStartTime(System.currentTimeMillis());
-
         }
     }
 
@@ -41,14 +40,14 @@ public class GameStateController {
     }
 
     public void updateFloatingTexts() {
-        for(BulletDame floatingText : gameStates.getFloatingTexts()) {
+        for(FloattingText floatingText : gameStates.getFloatingTexts()) {
             floatingText.update();
         }
         gameStates.removeExpiredFloatingTexts();
     }
 
     public void spawnFloatingText(int x, int y, String text, Color color) {
-        gameStates.addFloatingText(new BulletDame(x, y, text, color));
+        gameStates.addFloatingText(new FloattingText(x, y, text, color));
     }
 
     public void clearAllFloatingTexts() {
@@ -91,7 +90,7 @@ public class GameStateController {
         gameStates.setLevel(level);
     }
 
-	public List<BulletDame> getFloatingTexts() {
+	public List<FloattingText> getFloatingTexts() {
 		return gameStates.getFloatingTexts();
 	}
 	

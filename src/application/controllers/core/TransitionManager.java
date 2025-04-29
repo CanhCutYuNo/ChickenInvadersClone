@@ -107,10 +107,6 @@ public class TransitionManager {
                 triggerVictory();
             }
         }
-
-        if(transitionComplete && !isGameOver && !isVictory) {
-            gameManager.update(deltaTime);
-        }
     }
 
     public void triggerGameOver() {

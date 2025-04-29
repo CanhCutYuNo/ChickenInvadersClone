@@ -15,7 +15,6 @@ public class EnemySkills {
     private double scale = 1.0;
     private double angle = 0.0;
     private boolean isScalingUp = true;
-    private int maxScaleHoldTime = 3000;
     private long scaleHoldStartTime = 0;
     private boolean isHoldingMax = false;
     private boolean isActive = true;
@@ -77,62 +76,6 @@ public class EnemySkills {
         } else if(skillType == SkillType.FIREBALL) {
             this.width = 153;
             this.height = 62;
-        }
-    }
-
-    public void update() {
-        if(!isActive) {
-            return;
-        }
-
-        long currentTime = System.currentTimeMillis();
-
-        if(skillType == SkillType.HOLE) {
-            if(isHoldingMax) {
-                if(currentTime - scaleHoldStartTime >= maxScaleHoldTime) {
-                    isHoldingMax = false;
-                    isScalingUp = false;
-                }
-            } else {
-                if(isScalingUp) {
-                    scale += 0.05;
-                    if(scale >= 4.0) {
-                        scale = 4.0;
-                        isHoldingMax = true;
-                        scaleHoldStartTime = currentTime;
-                    }
-                } else {
-                    scale -= 0.05;
-                    if(scale <= 1.0) {
-                        scale = 1.0;
-                        isActive = false;
-                        endTime = currentTime;
-                        return;
-                    }
-                }
-            }
-            angle += Math.toRadians(2);
-
-            if(currentTime - startTime >= duration) {
-                isActive = false;
-                endTime = currentTime;
-            }
-        } else if(skillType == SkillType.EGG) {
-            if(!isExploding) {
-                posY += speedY;
-            } else {
-                animationFrame++;
-            }
-        } else if(skillType == SkillType.FIREBALL) {
-            posX += speedX;
-            posY += speedY;
-            animationFrame++;
-            angle += Math.toRadians(5);
-
-            if(posX < -100 || posX > 2020 || posY < -100 || posY > 1180) {
-                isActive = false;
-                endTime = currentTime;
-            }
         }
     }
 
@@ -237,5 +180,90 @@ public class EnemySkills {
 
     public void setHasPlayedSound(boolean hasPlayedSound) {
         this.hasPlayedSound = hasPlayedSound;
+    }
+
+    // New getters and setters for variables in update()
+    public void setPosX(double posX) {
+        this.posX = posX;
+    }
+
+    public void setPosY(double posY) {
+        this.posY = posY;
+    }
+
+    public void setSpeedX(double speedX) {
+        this.speedX = speedX;
+    }
+
+    public void setSpeedY(double speedY) {
+        this.speedY = speedY;
+    }
+
+    public void setIsExploding(boolean isExploding) {
+        this.isExploding = isExploding;
+    }
+
+    public void setAnimationFrame(int animationFrame) {
+        this.animationFrame = animationFrame;
+    }
+
+    public void setScale(double scale) {
+        this.scale = scale;
+    }
+
+    public void setAngle(double angle) {
+        this.angle = angle;
+    }
+
+    public void setIsScalingUp(boolean isScalingUp) {
+        this.isScalingUp = isScalingUp;
+    }
+
+    public boolean isScalingUp() {
+        return isScalingUp;
+    }
+
+    public void setIsHoldingMax(boolean isHoldingMax) {
+        this.isHoldingMax = isHoldingMax;
+    }
+
+    public boolean isHoldingMax() {
+        return isHoldingMax;
+    }
+
+    public void setScaleHoldStartTime(long scaleHoldStartTime) {
+        this.scaleHoldStartTime = scaleHoldStartTime;
+    }
+
+    public long getScaleHoldStartTime() {
+        return scaleHoldStartTime;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setSkillType(SkillType skillType) {
+        this.skillType = skillType;
     }
 }
