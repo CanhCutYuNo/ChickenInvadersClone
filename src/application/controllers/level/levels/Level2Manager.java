@@ -12,7 +12,7 @@ import application.views.enemy.EnemyView;
 public class Level2Manager extends LevelManager {
     private static final int SCREEN_WIDTH = 1920;
     private static final int NUM_ENEMIES = 20;
-    private static final float GRAVITY = 2.0f;
+    private static final float GRAVITY = 5.0f;
     private static final float OSCILLATION_SPEED = 0.5f;
     private static final float OSCILLATION_AMPLITUDE = 1.0f;
 
@@ -65,9 +65,8 @@ public class Level2Manager extends LevelManager {
                     enemy.setPosY((int) posY);
                     enemy.setRotate((float) (20 * Math.sin(0.02 * enemy.state.t)));
 
-                    // Tái sinh khi chạm đáy
-                    if(enemy.getPosY() > 1000) {
-                        enemy.setPosY(rand.nextInt(200) - 600); // Dùng rand
+                    if(enemy.getPosY() > 1100) {
+                        enemy.setPosY(rand.nextInt(200) - 600);
                         enemy.setPosX(rand.nextInt(1600) + 100);
                         enemy.state.timeElapsed = 0;
                         enemy.state.isActive = false;

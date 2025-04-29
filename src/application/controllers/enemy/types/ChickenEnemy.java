@@ -36,7 +36,7 @@ public class ChickenEnemy implements EnemyBehavior {
             return;
         }
         if(random.nextDouble() < enemy.getEggProbability()) {
-            skillsManager.addSkill(enemy.getPosX(), enemy.getPosY(), 5, enemy.getEggDamage(), SkillType.EGG);
+            if(enemy.getCenterX() > 0) skillsManager.addSkill(enemy.getPosX(), enemy.getPosY(), 8, enemy.getEggDamage(), SkillType.EGG);
         }
     }
 }

@@ -70,16 +70,16 @@ public class Enemy {
         this.isMovingToCenter = type == EnemyType.CHICKEN_BOSS;
         this.startY = type == EnemyType.CHICKEN_BOSS ? 1400 : posY;
         this.targetY = type == EnemyType.CHICKEN_BOSS ? (1080 - 600) / 2 : posY;
-        this.moveSpeed = type == EnemyType.CHICKEN_BOSS ? 2 : 0;
+        this.moveSpeed = type == EnemyType.CHICKEN_BOSS ? 4 : 0;
         this.lastHoleSkillTime = type == EnemyType.CHICKEN_BOSS ? System.currentTimeMillis() : 0;
         this.lastFireballSkillTime = type == EnemyType.CHICKEN_BOSS ? System.currentTimeMillis() : 0;
         this.holeSkillCooldown = type == EnemyType.CHICKEN_BOSS ? 15000 : 0;
         this.fireballSkillCooldown = type == EnemyType.CHICKEN_BOSS ? 5000 : 0;
-        this.skillsDelay = type == EnemyType.CHICKEN_BOSS ? 5000 : 0;
+        this.skillsDelay = type == EnemyType.CHICKEN_BOSS ? 10000 : 0;
         this.skillState = 0;
         this.shouldCreateHole = false;
         this.shouldCreateFireballBurst = false;
-        this.moveCounter = 0; // Khởi tạo moveCounter
+        this.moveCounter = 0;
         this.state = null;
 
         if(type == EnemyType.CHICKEN_ENEMY) {

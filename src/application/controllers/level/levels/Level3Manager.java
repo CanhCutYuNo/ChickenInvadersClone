@@ -19,7 +19,7 @@ public class Level3Manager extends LevelManager {
     private static final int NUM_CHICKEN_ROWS = 4;
     private static final int NUM_CHICKENS_PER_ROW = 5;
     private static final int NUM_CHICKS = 20;
-    private static final float GRAVITY = 2.0f;
+    private static final float GRAVITY = 5.0f;
     private static final float OSCILLATION_SPEED = 0.5f;
     private static final float OSCILLATION_AMPLITUDE = 1.0f;
     private static final int CHICKEN_START_Y = 100;
@@ -33,7 +33,7 @@ public class Level3Manager extends LevelManager {
         this.rand = new Random();
         chickenRowStates = new ArrayList<>();
         for(int i = 0; i < NUM_CHICKEN_ROWS; i++) {
-            chickenRowStates.add(new RowState(CHICKEN_START_Y + 100 * i, CHICKEN_TIME_DELAY * i));
+            chickenRowStates.add(new RowState(CHICKEN_START_Y + 150 * i, CHICKEN_TIME_DELAY * i));
         }
     }
 
@@ -82,7 +82,7 @@ public class Level3Manager extends LevelManager {
             }
 
             if(state.isActive) {
-                state.t += deltaTime * 100 * state.direction;
+                state.t += deltaTime * 150 * state.direction;
 
                 List<Enemy> rowEnemies = new ArrayList<>();
                 for(Enemy enemy : enemyController.getEnemyModels()) {

@@ -160,7 +160,7 @@ public class EnemyController {
         }
         Enemy enemy = enemyModels.get(index);
         if(enemy.getType() == Enemy.EnemyType.CHICKEN_BOSS && enemy.shouldCreateHole()) {
-            skillsManager.addSkill(1920 / 2, 1080 / 2, 0, 100, SkillType.HOLE);
+            skillsManager.addSkill(1920 / 2, 1080 / 2, 0, 1000, SkillType.HOLE);
             soundController.playSoundEffect(getClass().getResource("/asset/resources/sfx/engineCrab.wav").getPath());
             enemy.setShouldCreateHole(false);
         }
@@ -175,7 +175,7 @@ public class EnemyController {
             double centerX = 1920 / 2;
             double centerY = 1080 / 2;
             int damage = 1000;
-            double speed = 5;
+            double speed = 15;
 
             for(int i = 0; i < 10; i++) {
                 double angleStart = i * 36;

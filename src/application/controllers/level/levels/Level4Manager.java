@@ -12,8 +12,8 @@ import application.views.enemy.EnemyView;
 public class Level4Manager extends LevelManager implements EnemyDeathListener {
     private static final int SCREEN_WIDTH = 1920;
     private static final int NUM_EGG_SHELLS = 10;
-    private static final float EGG_SHELL_GRAVITY = 1.0f; 
-    private static final float CHICK_GRAVITY = 2.0f;
+    private static final float EGG_SHELL_GRAVITY = 4.0f; 
+    private static final float CHICK_GRAVITY = 5.0f;
 
     private Random random;
 
@@ -79,7 +79,7 @@ public class Level4Manager extends LevelManager implements EnemyDeathListener {
 
                 if(enemy.getPosY() > 1000) {
                     enemy.setPosX(random.nextInt(1000) + 20);
-                    enemy.setPosY(random.nextInt(100)); 
+                    enemy.setPosY(random.nextInt(100) - 300); 
                 }
             }
         }
