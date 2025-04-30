@@ -68,14 +68,14 @@ public class EnemySkillsController {
                 }
             } else {
                 if (skill.isScalingUp()) {
-                    skill.setScale(skill.getScale() + 0.05);
+                    skill.setScale(skill.getScale() + 0.075);
                     if (skill.getScale() >= 4.0) {
                         skill.setScale(4.0);
                         skill.setIsHoldingMax(true);
                         skill.setScaleHoldStartTime(currentTime);
                     }
                 } else {
-                    skill.setScale(skill.getScale() - 0.05);
+                    skill.setScale(skill.getScale() - 0.075);
                     if (skill.getScale() <= 1.0) {
                         skill.setScale(1.0);
                         skill.setIsActive(false);

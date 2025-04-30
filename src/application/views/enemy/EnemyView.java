@@ -11,6 +11,7 @@ import java.util.Map;
 
 import application.controllers.util.ImageCache;
 import application.models.enemy.Enemy;
+import application.models.enemy.Enemy.EnemyType;
 
 public class EnemyView {
     private Enemy enemyModel;
@@ -71,7 +72,20 @@ public class EnemyView {
         this.images = new HashMap<>();
         this.curFrame = 0;
         this.frameCount = 0;
-        this.spriteDelay = (enemyModel.getType() == Enemy.EnemyType.CHICKEN_BOSS) ? 30 : 0;
+        switch (enemyModel.getType()) {
+            case Enemy.EnemyType.CHICKEN_ENEMY:
+                spriteDelay = 12;
+                break;
+            case Enemy.EnemyType.CHICK_ENEMY:
+                spriteDelay = 7;
+                break;
+            case Enemy.EnemyType.CHICKEN_BOSS:
+                spriteDelay = 30;
+                break;
+            default:
+                spriteDelay = 0;
+                break;
+        }
         this.lastFrameTime = System.currentTimeMillis();
         this.isForward = true;
         this.wingSprites = new ArrayList<>();
